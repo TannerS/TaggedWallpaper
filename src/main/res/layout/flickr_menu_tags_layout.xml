@@ -20,7 +20,6 @@
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:textColor="#ffffff"
-        android:text="TEST"
         android:shadowColor="@color/text_shadow_white"
         android:textSize="15dp"
 

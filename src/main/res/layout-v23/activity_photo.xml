@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:layout_scrollFlags="scroll|enterAlways">
+        app:layout_scrollFlags="scroll|enterAlways"
+        android:contextClickable="false">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/photo_tool_bar"
@@ -23,11 +24,12 @@
             android:layout_height="?attr/actionBarSize"
             android:background="#020241"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            android:maxLines="1"
+            android:singleLine="true"
             android:text="Toolbar Title"
             android:textColor="@android:color/white"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -52,21 +54,13 @@
             android:layout_weight=".5"
             android:fillViewport="true"
             android:id="@+id/scroll_view"
-            android:layout_marginTop="25dp">
+            android:layout_marginTop="25dp"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <!--<TextView-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="0dp"-->
-                    <!--android:layout_weight=".8"-->
-                    <!--android:lineSpacingExtra="5dp"-->
-                    <!--android:paddingStart="10dp"-->
-                    <!--android:paddingEnd="10dp"-->
-                    <!--android:text="Author and site information"/>-->
 
                 <TextView
                     android:layout_width="match_parent"
@@ -74,8 +68,8 @@
                     android:layout_weight=".8"
                     android:id="@+id/text_view"
                     android:lineSpacingExtra="5dp"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"/>
+                    android:paddingLeft="10dp"
+                    />
 
                 <Button
                     android:id="@+id/set_wallpaper"
