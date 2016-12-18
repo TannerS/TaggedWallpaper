@@ -14,9 +14,7 @@ public class FireBaseUtil
     private Context context;
     private Firebase fb;
     private final String FIREBASE_HOME = "https://smartwallpaper.firebaseio.com/";
-
     private final String TAGS = "tags";
-    private final String BAD_TAGS = "blocked_words";
     private HashMap<String, HashMap<String, HashMap<String,String>>> root;
     private StringBuilder str;
     private String tag;
@@ -28,13 +26,9 @@ public class FireBaseUtil
         fb = new Firebase(FIREBASE_HOME);
     }
 
-
     public String searchGroupByTag(String tag_)
     {
         this.tag = tag_;
-
-        Log.i("new", "before fb call");
-
 
         fb.child(TAGS).addValueEventListener(new ValueEventListener() {
             @Override
@@ -49,14 +43,10 @@ public class FireBaseUtil
                         categories.keySet().toArray(values);
                         String value = values[generator.nextInt(values.length)];
                         flickr_group = String.valueOf((root.get(tag)).get(value));
-                        Log.i("new", "valu->>: " + flickr_group);
-                        Log.i("new", "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
                         break;
                     }
                 }
             }
-
-
 
             @Override
             public void onCancelled(FirebaseError error) {
@@ -64,70 +54,13 @@ public class FireBaseUtil
             }
         });
 
-        // we need data from the firebase call put it has a delay
-        try {
-            Thread.sleep(850);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        // we need data from the firebase call put it has a delay
+//        try {
+//            Thread.sleep(850);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
-        Log.i("new","after fb call");
-        //Log.i("new", "return flickr");
         return flickr_group;
     }
-
-    public String getPhotoGroupIds()
-    {
-        /*
-        fb.child(TAGS).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot)
-            {
-                root = snapshot.getValue(HashMap.class);
-              //  HashMap<String, HashMap<String, String>> temp = root.get(BAD_TAGS);
-                str = new StringBuilder();
-                HashMap<String, HashMap<String, String>> temp;
-
-
-                Log.i("new", "KeySet: " + root.keySet());
-                for(HashMap<String, HashMap<String, String>> categories : root.values())
-                {
-                    for(HashMap<String, String> groups : categories.values())
-                    {
-
-                                           String value = values[generator.nextInt(values.length)];
-                        flickr_group = String.valueOf((root.get(tag)).get(value));
-
-
-
-                     //   for(String groups_info : groups.values())
-                      //  {
-
-                          //  str.append(groups_info);
-                          //  Log.i("new", "!!!!!!!!!!!!!!!!!: " + str);
-                          //  str.append(",");
-                      //  }
-                    }
-                }
-                str.deleteCharAt(str.length()-1);
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError error) {
-            }
-        });
-
-        //let the listner load whith its delays
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    */
-
-        return str.toString();
-    }
-
-
 }

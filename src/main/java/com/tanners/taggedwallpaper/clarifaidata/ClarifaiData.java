@@ -11,49 +11,34 @@ import com.clarifai.api.RecognitionRequest;
 import com.clarifai.api.RecognitionResult;
 import com.clarifai.api.Tag;
 import com.clarifai.api.exception.ClarifaiException;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.tanners.taggedwallpaper.R;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
 
 public class ClarifaiData extends ClarifaiClient
 {
     private final static String APP_ID = "Xijy3WCA1l4UwEb_zLDx10Kixh068oitW7PcHMv8";
     private final static String APP_SECRET = "U-e8tQDPSQxKl2MTvoQW1W1MbOE59oepZr8j92Gf";
-    private final String ERROR_REC_IMAGE = "Unable to recognize image";
-    private final String ERROR_LOAD_IMAGE = "Unable to load image";
-    private final int OK_CODE = 1;
     private Context context;
-    private Firebase fire_base;
-    private final String FIREBASE_HOME = "https://smartwallpaper.firebaseio.com/";
-    private HashMap<String, String> questionable_tags;
-    private HashMap<String, String> bad_tags;
     private ArrayList<String> approved_tags;
-    private final String FIREBASE_BAD_TAGS = "blocked_words";
 
     public ClarifaiData(Context context)
     {
         super(APP_ID, APP_SECRET);
         this.context = context;
-        initFireBase();
     }
 
     public int getOKCode()
     {
+        int OK_CODE = 1;
         return OK_CODE;
     }
 
     public boolean addTags(RecognitionResult result)
     {
-        initFireBase();
         approved_tags = new ArrayList<String>();
 
         if (result != null)
@@ -62,10 +47,7 @@ public class ClarifaiData extends ClarifaiClient
             {
                 for(Tag t : result.getTags())
                 {
-                    if(filerTags(t.getName()))
-                    {
-                        approved_tags.add(t.getName());
-                    }
+                    approved_tags.add(t.getName());
                 }
             }
             else
@@ -77,6 +59,7 @@ public class ClarifaiData extends ClarifaiClient
         {
             return false;
         }
+
         return true;
     }
 
@@ -111,43 +94,14 @@ public class ClarifaiData extends ClarifaiClient
 
     public String getRecError()
     {
+        String ERROR_REC_IMAGE = "Unable to recognize image";
         return ERROR_REC_IMAGE;
     }
 
     public String getLoadError()
     {
+        String ERROR_LOAD_IMAGE = "Unable to load image";
         return ERROR_LOAD_IMAGE;
-    }
-
-    private void initFireBase()
-    {
-        Firebase.setAndroidContext(context);
-        fire_base = new Firebase(FIREBASE_HOME);
-
-        fire_base.child("blocked_words").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                bad_tags = snapshot.getValue(HashMap.class);
-            }
-
-            @Override
-            public void onCancelled(FirebaseError error) {
-
-            }
-        });
-    }
-
-    synchronized private boolean filerTags(String tag)
-    {
-        for(String bad_tag : bad_tags.values())
-        {
-            if(tag.equals(bad_tag))
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     public List<String> getTags()
