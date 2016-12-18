@@ -1,19 +1,16 @@
 # Tagged Wallpaper!
 
 Tagged Wallpaper is an app focuses on supplying the user with high-def. photos to be used as wallpaper for their personal smart device! Tagged Wallpaper comes with a simple UI to make navigating the photos easier for the average user. As an added bonus, have you ever thought of what related photos may go with a photo of your choosing? Well with Clarifai technology, any image can be searched for related tags and then searched against the Flickr.com database where all images are pulled from!
-## Getting Started
 
+## Getting Started
 
 ### Prerequisities
 
 Min Android version: Android 4.0.3*
 
-*This goes without any testing at the time of this writing
-
-
 ## Deployment
 
-just download and install!
+Just download and install!
 
 ## Built With
 
@@ -26,7 +23,7 @@ just download and install!
  
 ## Contributing
 
- http://stackoverflow.com/ & http://google.com
+http://stackoverflow.com/ & https://google.com/
 
 ## Authors
 
