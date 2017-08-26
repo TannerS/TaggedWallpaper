@@ -2,11 +2,11 @@ package com.tanners.taggedwallpaper.flickrdata;
 
 import android.content.Context;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tanners.taggedwallpaper.firebase.FireBaseUtil;
-import com.tanners.taggedwallpaper.flickrdata.photodata.FlickrPhotoContainer;
-import com.tanners.taggedwallpaper.flickrdata.photodata.FlickrPhotoItem;
+import com.tanners.taggedwallpaper.util.FireBaseUtil;
+import com.tanners.taggedwallpaper.data.photodata.PhotoContainer;
+import com.tanners.taggedwallpaper.data.photodata.PhotoItem;
 import com.tanners.taggedwallpaper.flickrdata.urldata.FlickrURLBuilder;
-import com.tanners.taggedwallpaper.urlutil.URLConnection;
+import com.tanners.taggedwallpaper.util.URLConnection;
 import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -38,10 +38,10 @@ public class FlickrDataPhotosSearch
         this.per_page = 1000;
     }
 
-    public List<FlickrPhotoItem> searchFlickr(String tag, int selection)
+    public List<PhotoItem> searchFlickr(String tag, int selection)
     {
-        FlickrPhotoContainer flickr = null;
-        List<FlickrPhotoItem> photos = new ArrayList<FlickrPhotoItem>();
+        PhotoContainer flickr = null;
+        List<PhotoItem> photos = new ArrayList<PhotoItem>();
         URLConnection connection = null;
 
         try
@@ -62,7 +62,7 @@ public class FlickrDataPhotosSearch
             {
                 String response = IOUtils.toString(connection.getHttpURLConnection().getInputStream());
                 ObjectMapper objectMapper = new ObjectMapper();
-                flickr = objectMapper.readValue(response, FlickrPhotoContainer.class);
+                flickr = objectMapper.readValue(response, PhotoContainer.class);
             }
 
             if(flickr != null)

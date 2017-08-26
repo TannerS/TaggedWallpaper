@@ -1,4 +1,4 @@
-package com.tanners.taggedwallpaper.clarifaidata;
+package com.tanners.taggedwallpaper.fragments;
 
 import android.Manifest;
 import android.app.Activity;
@@ -33,22 +33,21 @@ import com.bumptech.glide.Glide;
 import com.clarifai.api.RecognitionRequest;
 import com.clarifai.api.RecognitionResult;
 import com.clarifai.api.Tag;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.tanners.taggedwallpaper.MainActivity;
 import com.tanners.taggedwallpaper.R;
+import com.tanners.taggedwallpaper.clarifaidata.ClarifaiData;
 import com.tanners.taggedwallpaper.flickrdata.FlickrDataPhotosSearch;
-import com.tanners.taggedwallpaper.flickrdata.FlickrPhotoSearchFragment;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class ClarifaiFragment extends Fragment
+public class SimilarTagsFragment extends Fragment
 {
+    public static String SIMILAR = "Similar Tags";
+
     private ClarifaiData cdata = null;
     private Context context;
     private ImageView image_view;
@@ -63,6 +62,10 @@ public class ClarifaiFragment extends Fragment
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+
+    public static SimilarTagsFragment newInstance() {
+        return new SimilarTagsFragment();
+    }
 
     @Override
     public void onAttach(Context context)
@@ -428,9 +431,9 @@ public class ClarifaiFragment extends Fragment
 
                         for (Fragment f : fragments)
                         {
-                            if (f.getClass().equals(FlickrPhotoSearchFragment.class))
+                            if (f.getClass().equals(PhotoSearchFragment.class))
                             {
-                                FlickrPhotoSearchFragment temp = (FlickrPhotoSearchFragment) fragments.get(count);
+                                PhotoSearchFragment temp = (PhotoSearchFragment) fragments.get(count);
                                 temp.searchByTag(tag, FlickrDataPhotosSearch.OPEN_SEARCH);
                                 ((MainActivity)getActivity()).getViewPager().setCurrentItem(1);
                             }

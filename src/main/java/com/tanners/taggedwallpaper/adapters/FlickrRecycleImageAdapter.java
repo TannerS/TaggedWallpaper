@@ -1,4 +1,4 @@
-package com.tanners.taggedwallpaper.flickrdata;
+package com.tanners.taggedwallpaper.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tanners.taggedwallpaper.PhotoActivity;
 import com.tanners.taggedwallpaper.R;
-import com.tanners.taggedwallpaper.flickrdata.photodata.FlickrPhotoItem;
+import com.tanners.taggedwallpaper.flickrdata.FlickrDataUserInfo;
+import com.tanners.taggedwallpaper.data.photodata.PhotoItem;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,12 +25,12 @@ import android.support.v7.widget.RecyclerView.*;
 public class FlickrRecycleImageAdapter extends RecyclerView.Adapter<FlickrRecycleImageAdapter.ImageViewHolder>
 {
     Context context;
-    List<FlickrPhotoItem> photos;
+    List<PhotoItem> photos;
     FlickrDataUserInfo user_data;
     DisplayMetrics metrics;
     View view;
 
-    public FlickrRecycleImageAdapter(Context context, List<FlickrPhotoItem> photos, DisplayMetrics metrics)
+    public FlickrRecycleImageAdapter(Context context, List<PhotoItem> photos, DisplayMetrics metrics)
     {
         super();
         this.context = context;
@@ -51,7 +52,7 @@ public class FlickrRecycleImageAdapter extends RecyclerView.Adapter<FlickrRecycl
     public String getInfo(int position)
     {
         StringBuilder photo_info = new StringBuilder("");
-        FlickrPhotoItem data = photos.get(position);
+        PhotoItem data = photos.get(position);
         new GetUserInfo().execute(data.getOwner());
         photo_info.append("Name: " + user_data.getFullName() + "\n");
         photo_info.append("Username: " + user_data.getUsername() + "\n");
@@ -66,8 +67,8 @@ public class FlickrRecycleImageAdapter extends RecyclerView.Adapter<FlickrRecycl
         holder.image_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FlickrPhotoItem data = photos.get(position);
-                ArrayList<FlickrPhotoItem> url_list = new ArrayList<FlickrPhotoItem>();
+                PhotoItem data = photos.get(position);
+                ArrayList<PhotoItem> url_list = new ArrayList<PhotoItem>();
                 url_list.add(data);
                 Bundle urls = new Bundle();
                 urls.putSerializable("urls", url_list);
@@ -81,7 +82,7 @@ public class FlickrRecycleImageAdapter extends RecyclerView.Adapter<FlickrRecycl
             }
         });
 
-        FlickrPhotoItem data = photos.get(position);
+        PhotoItem data = photos.get(position);
         String url = "";
 
         if (data.getUrl_z() == null || (data.getUrl_z().length() <= 0))

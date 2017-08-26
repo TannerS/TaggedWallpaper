@@ -1,11 +1,11 @@
-package com.tanners.taggedwallpaper.flickrdata.photodata;
+package com.tanners.taggedwallpaper.data.photodata;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FlickrPhotoItem implements Serializable
+public class PhotoItem implements Serializable
 {
     private float id;
     private String title;

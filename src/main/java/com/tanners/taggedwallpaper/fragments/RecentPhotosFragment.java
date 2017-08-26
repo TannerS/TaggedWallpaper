@@ -1,4 +1,4 @@
-package com.tanners.taggedwallpaper.flickrdata;
+package com.tanners.taggedwallpaper.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,12 +17,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.tanners.taggedwallpaper.R;
-import com.tanners.taggedwallpaper.flickrdata.photodata.FlickrPhotoContainer;
-import com.tanners.taggedwallpaper.flickrdata.photodata.FlickrPhotoItem;
+import com.tanners.taggedwallpaper.flickrdata.FlickrDataPhotosRecent;
+import com.tanners.taggedwallpaper.adapters.FlickrRecycleImageAdapter;
+import com.tanners.taggedwallpaper.data.photodata.PhotoContainer;
+import com.tanners.taggedwallpaper.data.photodata.PhotoItem;
 import java.util.List;
 
-public class FlickrRecentPhotosFragment extends Fragment
+public class RecentPhotosFragment extends Fragment
 {
+    public static String RECENT = "Recent Tags";
+
     private Context context;
     private View view;
     private GridLayoutManager grid;
@@ -32,7 +36,7 @@ public class FlickrRecentPhotosFragment extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        context = getActivity().getApplicationContext();
+//        context = getActivity().getApplicationContext();
         new CollectRecentPhotos().execute();
         grid = new GridLayoutManager(context, 2);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -42,6 +46,19 @@ public class FlickrRecentPhotosFragment extends Fragment
         recycle_view.setLayoutManager(grid);
     }
 
+    public static RecentPhotosFragment newInstance() {
+        return new RecentPhotosFragment();
+    }
+
+
+    @Override
+    public void onAttach(Context context)
+    {
+        super.onAttach(context);
+        this.context = context;
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -49,7 +66,7 @@ public class FlickrRecentPhotosFragment extends Fragment
         return view;
     }
 
-    public class CollectRecentPhotos extends AsyncTask<Void, Void, FlickrPhotoContainer>
+    public class CollectRecentPhotos extends AsyncTask<Void, Void, PhotoContainer>
     {
         private FlickrDataPhotosRecent photos;
         private ProgressDialog dialog;
@@ -60,7 +77,7 @@ public class FlickrRecentPhotosFragment extends Fragment
         }
 
         @Override
-        protected FlickrPhotoContainer doInBackground(Void... v)
+        protected PhotoContainer doInBackground(Void... v)
         {
             return photos.populateFlickrPhotos();
         }
@@ -78,7 +95,7 @@ public class FlickrRecentPhotosFragment extends Fragment
        }
 
         @Override
-        protected void onPostExecute(FlickrPhotoContainer result)
+        protected void onPostExecute(PhotoContainer result)
         {
             super.onPostExecute(result);
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -86,7 +103,7 @@ public class FlickrRecentPhotosFragment extends Fragment
 
             if(result != null)
             {
-                List<FlickrPhotoItem> flickr_objects = result.getPhotos().getPhoto();
+                List<PhotoItem> flickr_objects = result.getPhotos().getPhoto();
 
                 if (flickr_objects == null || (flickr_objects.size() == 0))
                 {

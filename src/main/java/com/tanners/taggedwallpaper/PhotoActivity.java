@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
-import com.tanners.taggedwallpaper.flickrdata.photodata.FlickrPhotoItem;
+import com.tanners.taggedwallpaper.data.photodata.PhotoItem;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,8 +39,8 @@ public class PhotoActivity extends AppCompatActivity
         Bundle extra = intent.getBundleExtra("extra");
         String info = intent.getStringExtra("info");
 
-        ArrayList<FlickrPhotoItem> url_list = (ArrayList<FlickrPhotoItem>) extra.getSerializable("urls");
-        final FlickrPhotoItem data = url_list.get(0);
+        ArrayList<PhotoItem> url_list = (ArrayList<PhotoItem>) extra.getSerializable("urls");
+        final PhotoItem data = url_list.get(0);
 
 
         ImageView image = (ImageView) findViewById(R.id.image);

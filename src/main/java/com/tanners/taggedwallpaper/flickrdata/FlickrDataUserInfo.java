@@ -1,7 +1,7 @@
 package com.tanners.taggedwallpaper.flickrdata;
 
 import com.tanners.taggedwallpaper.flickrdata.urldata.FlickrURLBuilder;
-import com.tanners.taggedwallpaper.urlutil.URLConnection;
+import com.tanners.taggedwallpaper.util.URLConnection;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;

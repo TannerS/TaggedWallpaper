@@ -1,9 +1,9 @@
 package com.tanners.taggedwallpaper.flickrdata;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tanners.taggedwallpaper.flickrdata.photodata.FlickrPhotoContainer;
+import com.tanners.taggedwallpaper.data.photodata.PhotoContainer;
 import com.tanners.taggedwallpaper.flickrdata.urldata.FlickrURLBuilder;
-import com.tanners.taggedwallpaper.urlutil.URLConnection;
+import com.tanners.taggedwallpaper.util.URLConnection;
 import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -17,9 +17,9 @@ public class FlickrDataPhotosRecent
         url = new FlickrURLBuilder();
     }
 
-    public FlickrPhotoContainer populateFlickrPhotos()
+    public PhotoContainer populateFlickrPhotos()
     {
-        FlickrPhotoContainer flickr = null;
+        PhotoContainer flickr = null;
         URLConnection connection = null;
 
         try
@@ -30,7 +30,7 @@ public class FlickrDataPhotosRecent
             {
                 String responseStr = IOUtils.toString(connection.getHttpURLConnection().getInputStream());
                 ObjectMapper objectMapper = new ObjectMapper();
-                flickr = objectMapper.readValue(responseStr, FlickrPhotoContainer.class);
+                flickr = objectMapper.readValue(responseStr, PhotoContainer.class);
             }
         }
         catch (MalformedURLException e)

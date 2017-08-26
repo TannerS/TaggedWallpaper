@@ -1,4 +1,4 @@
-package com.tanners.taggedwallpaper.flickrdata;
+package com.tanners.taggedwallpaper.fragments;
 
 import android.app.ProgressDialog;
 import android.app.SearchManager;
@@ -23,12 +23,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.tanners.taggedwallpaper.R;
-import com.tanners.taggedwallpaper.flickrdata.photodata.FlickrPhotoItem;
+import com.tanners.taggedwallpaper.flickrdata.FlickrDataPhotosSearch;
+import com.tanners.taggedwallpaper.adapters.FlickrRecycleImageAdapter;
+import com.tanners.taggedwallpaper.data.photodata.PhotoItem;
 import java.util.Collections;
 import java.util.List;
 
-public class FlickrPhotoSearchFragment extends Fragment
+public class PhotoSearchFragment extends Fragment
 {
+    public static String SEARCH = "Search Tags";
     private Context context;
     private GridLayoutManager grid;
     private RecyclerView recycle_view;
@@ -38,11 +41,23 @@ public class FlickrPhotoSearchFragment extends Fragment
     private int page;
 
     @Override
+    public void onAttach(Context context)
+    {
+        super.onAttach(context);
+        this.context = context;
+    }
+
+    public static PhotoSearchFragment newInstance() {
+        return new PhotoSearchFragment();
+    }
+
+
+    @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        context = getActivity().getApplicationContext();
+//        context = getActivity().getApplicationContext();
         per_page = 1000;
         page = 1;
         grid = new GridLayoutManager(context, 2);
@@ -104,7 +119,7 @@ public class FlickrPhotoSearchFragment extends Fragment
         new CollectTaggedPhotos(recycle_view, context, selection).execute(tag);
     }
 
-    private class CollectTaggedPhotos extends AsyncTask<String, Void, List<FlickrPhotoItem>>
+    private class CollectTaggedPhotos extends AsyncTask<String, Void, List<PhotoItem>>
     {
         private FlickrDataPhotosSearch flickr_object;
         private RecyclerView recycler_view;
@@ -133,13 +148,13 @@ public class FlickrPhotoSearchFragment extends Fragment
         }
 
         @Override
-        protected List<FlickrPhotoItem> doInBackground(String... str)
+        protected List<PhotoItem> doInBackground(String... str)
         {
             return flickr_object.searchFlickr(str[0], selection);
         }
 
         @Override
-        protected void onPostExecute(List<FlickrPhotoItem> result)
+        protected void onPostExecute(List<PhotoItem> result)
         {
             super.onPostExecute(result);
             Collections.shuffle(result);

@@ -1,4 +1,4 @@
-package com.tanners.taggedwallpaper.urlutil;
+package com.tanners.taggedwallpaper.util;
 
 import org.apache.commons.io.IOUtils;
 import java.io.ByteArrayOutputStream;

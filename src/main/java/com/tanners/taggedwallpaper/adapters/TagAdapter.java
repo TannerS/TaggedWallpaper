@@ -12,16 +12,15 @@ import android.widget.Button;
 import com.tanners.taggedwallpaper.MainActivity;
 import com.tanners.taggedwallpaper.R;
 import com.tanners.taggedwallpaper.flickrdata.FlickrDataPhotosSearch;
-import com.tanners.taggedwallpaper.flickrdata.FlickrPhotoSearchFragment;
+import com.tanners.taggedwallpaper.fragments.PhotoSearchFragment;
 
-import java.util.Collections;
 import java.util.List;
 
 public class TagAdapter extends ArrayAdapter<String>
 {
     private Context context;
     private List<String> taglist;
-    private FlickrPhotoSearchFragment search_frag;
+    private PhotoSearchFragment search_frag;
     private int frag_count;
 
     public TagAdapter(Context context, int resource, List<String> objects)
@@ -79,8 +78,8 @@ public class TagAdapter extends ArrayAdapter<String>
 
         for (Fragment f : fragments)
         {
-            if (f.getClass().equals(FlickrPhotoSearchFragment.class))
-                search_frag = (FlickrPhotoSearchFragment) fragments.get(frag_count);
+            if (f.getClass().equals(PhotoSearchFragment.class))
+                search_frag = (PhotoSearchFragment) fragments.get(frag_count);
             frag_count++;
         }
     }

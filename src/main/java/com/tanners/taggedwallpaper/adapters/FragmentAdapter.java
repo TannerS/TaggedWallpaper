@@ -30,23 +30,14 @@ public class FragmentAdapter extends FragmentPagerAdapter
         return frags.size();
     }
 
-//    @Override
-//    public FragmentInfo getItem(int position)
-//    {
-//        return frags.get(position);
-//    }
-//
     @Override
     public Fragment getItem(int position)
     {
         return frags.get(position).getFrag();
     }
 
-    public void addTab(Fragment frag, String title, String tag)
+    public void addTab(Fragment frag, String title)
     {
-        Fragment currentFragment = new Fragment();
-        currentFragment
-        FragmentInfo currentFragmentInfo = new FragmentInfo(title, frag);
         frags.add(new FragmentInfo(title, frag));
     }
 

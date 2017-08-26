@@ -1,4 +1,4 @@
-package com.tanners.taggedwallpaper.firebase;
+package com.tanners.taggedwallpaper.util;
 
 import android.content.Context;
 import android.util.Log;
