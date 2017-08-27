@@ -2,44 +2,53 @@ package com.tanners.taggedwallpaper.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentAdapter extends FragmentPagerAdapter
+// TODO https://stackoverflow.com/questions/18747975/difference-between-fragmentpageradapter-and-fragmentstatepageradapter
+//public class FragmentAdapter extends FragmentPagerAdapter
+public class FragmentAdapter extends FragmentStatePagerAdapter
 {
-//    List<Fragment> frags;
-//    List<String> titles;
-    List<FragmentInfo> frags;
+    private List<FragmentInfo> frags;
 
-    public FragmentAdapter(FragmentManager manager)
+    public FragmentAdapter(FragmentManager manager, List<FragmentInfo> frags)
     {
         super(manager);
-
-
-
-        this.frags = new ArrayList<FragmentInfo>();
-//        frags = new ArrayList<Fragment>();
-//        titles = new ArrayList<String>();
+        this.frags = frags;
     }
 
     @Override
     public int getCount()
     {
-        return frags.size();
+        return this.frags.size() > 0 ? frags.size() : 0;
     }
 
     @Override
     public Fragment getItem(int position)
     {
-        return frags.get(position).getFrag();
+//        manager.beginTransaction().
+
+//        switch (position) {
+//            case 0:
+//                return ListProductsFragment.newInstance();
+//            case 1:
+//                return ListActiveSubstancesFragment.newInstance();
+//            case 2:
+//                return ListProductFunctionsFragment.newInstance();
+//            case 3:
+//                return ListCropsFragment.newInstance();
+//            default:
+//                return null;
+//        }
+
+        return this.frags != null ? this.frags.get(position).getFrag() : null;
     }
 
-    public void addTab(Fragment frag, String title)
-    {
-        frags.add(new FragmentInfo(title, frag));
-    }
+//    public void addTab(Fragment frag, String title)
+//    {
+//        frags.add(new FragmentInfo(title, frag));
+//    }
 
     @Override
     public CharSequence getPageTitle(int position)
@@ -47,12 +56,12 @@ public class FragmentAdapter extends FragmentPagerAdapter
         return frags.get(position).getTitle();
     }
 
-    private class FragmentInfo
+    public static class FragmentInfo
     {
         private String title;
         private Fragment frag;
 
-        public FragmentInfo(String title, Fragment frag)
+        public FragmentInfo(Fragment frag, String title)
         {
             this.frag = frag;
             this.title = title;
