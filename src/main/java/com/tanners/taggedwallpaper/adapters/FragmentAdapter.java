@@ -3,7 +3,6 @@ package com.tanners.taggedwallpaper.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-
 import java.util.List;
 
 // TODO https://stackoverflow.com/questions/18747975/difference-between-fragmentpageradapter-and-fragmentstatepageradapter
@@ -45,11 +44,6 @@ public class FragmentAdapter extends FragmentStatePagerAdapter
         return this.frags != null ? this.frags.get(position).getFrag() : null;
     }
 
-//    public void addTab(Fragment frag, String title)
-//    {
-//        frags.add(new FragmentInfo(title, frag));
-//    }
-
     @Override
     public CharSequence getPageTitle(int position)
     {
@@ -71,16 +65,12 @@ public class FragmentAdapter extends FragmentStatePagerAdapter
             return title;
         }
 
-        public void setTitle(String title) {
-            this.title = title;
-        }
+//        public void setTitle(String title) {
+//            this.title = title;
+//        }
 
         public Fragment getFrag() {
             return frag;
-        }
-
-        public void setFrag(Fragment frag) {
-            this.frag = frag;
         }
     }
 }

@@ -1,87 +1,67 @@
 package com.tanners.taggedwallpaper.adapters;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-
-import com.tanners.taggedwallpaper.MainActivity;
 import com.tanners.taggedwallpaper.R;
-import com.tanners.taggedwallpaper.flickrdata.FlickrDataPhotosSearch;
 import com.tanners.taggedwallpaper.fragments.PhotoSearchFragment;
-
+import com.tanners.taggedwallpaper.interfaces.IFindFragment;
 import java.util.List;
 
 public class TagAdapter extends ArrayAdapter<String>
 {
     private Context context;
-    private List<String> taglist;
-    private PhotoSearchFragment search_frag;
-    private int frag_count;
+    private List<String> tags;
 
-    public TagAdapter(Context context, int resource, List<String> objects)
+    public TagAdapter(Context context, int resource, List<String> tags)
     {
-        super(context, resource, objects);
+        super(context, resource, tags);
         this.context = context;
-        this.taglist = objects;
-        this.frag_count = 0;
+        this.tags = tags;
     }
 
     @Override
     public int getCount()
     {
-        return taglist.size();
+        return tags != null ? tags.size() : 0;
     }
 
+    @NonNull
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent)
+    public View getView(final int position, View convertView, @NonNull ViewGroup parent)
     {
+        FlickrViewHolder viewHolder;
+
         if(convertView == null)
         {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.flickr_menu_tags_layout, parent, false);
-            view_holder = new MainActivity.FlickrViewHolder();
-            view_holder.btn =  (Button) convertView.findViewById(R.id.flickr_tag_button);
-            convertView.setTag(view_holder);
+            viewHolder = new FlickrViewHolder();
+            viewHolder.btn =  (Button) convertView.findViewById(R.id.flickr_tag_button);
+            convertView.setTag(viewHolder);
         }
         else
         {
-            view_holder = (MainActivity.FlickrViewHolder) convertView.getTag();
+            viewHolder = (FlickrViewHolder) convertView.getTag();
         }
 
-        final String tag = this.taglist.get(position);
-        view_holder.btn.setText(tag);
-
-        view_holder.btn.setOnClickListener(new View.OnClickListener() {
+        viewHolder.btn.setText(this.tags.get(position));
+//
+        viewHolder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
-                if(search_frag == null)
-                    searchForFragment();
-                view_pager.setCurrentItem(1);
-                drawer.closeDrawer(GravityCompat.START);
-                search_frag.searchByTag(tag, FlickrDataPhotosSearch.GROUP_SEARCH);
-            }
+                IFindFragment finder = ((IFindFragment) (context));
 
+                finder.findFragmentByTitle(PhotoSearchFragment.SEARCH);
+            }
         });
 
         return convertView;
-    }
-
-    private void searchForFragment()
-    {
-        List<Fragment> fragments = getFragments();
-
-        for (Fragment f : fragments)
-        {
-            if (f.getClass().equals(PhotoSearchFragment.class))
-                search_frag = (PhotoSearchFragment) fragments.get(frag_count);
-            frag_count++;
-        }
     }
 
     static private class FlickrViewHolder

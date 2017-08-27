@@ -1,24 +1,19 @@
 package com.tanners.taggedwallpaper;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import android.widget.ListView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,17 +22,22 @@ import com.google.firebase.database.ValueEventListener;
 import com.tanners.taggedwallpaper.adapters.FragmentAdapter;
 import com.tanners.taggedwallpaper.adapters.TagAdapter;
 import com.tanners.taggedwallpaper.animations.ZoomOutPageTransformer;
-import com.tanners.taggedwallpaper.fragments.SimilarTagsFragment;
 import com.tanners.taggedwallpaper.fragments.PhotoSearchFragment;
 import com.tanners.taggedwallpaper.fragments.RecentPhotosFragment;
+import com.tanners.taggedwallpaper.fragments.SimilarTagsFragment;
+import com.tanners.taggedwallpaper.interfaces.IFindFragment;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IFindFragment
 {
     private DatabaseReference ref;
     private ListView nav_bar_list_view;
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private ViewPager view_pager;
+    private List<FragmentAdapter.FragmentInfo> frags;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -49,9 +49,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setUpNavBar();
         initFireBase();
         getFireBaseTags();
-//        setUpAdapter();
         setUpTabs();
-        setUpFragments();
+        setUpFragmentAdapters();
     }
 
     private void initFireBase()
@@ -99,13 +98,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         tab_layout.setupWithViewPager(view_pager);
     }
 
-    private void setUpFragments()
+    private void setUpFragmentAdapters()
     {
-        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
+        frags = new ArrayList<FragmentAdapter.FragmentInfo>() {{
+            add(new FragmentAdapter.FragmentInfo(RecentPhotosFragment.newInstance(), RecentPhotosFragment.RECENT));
+            add(new FragmentAdapter.FragmentInfo(PhotoSearchFragment.newInstance(), PhotoSearchFragment.SEARCH));
+            add(new FragmentAdapter.FragmentInfo(SimilarTagsFragment.newInstance(), SimilarTagsFragment.SIMILAR));
+        }};
 
-        adapter.addTab(RecentPhotosFragment.newInstance(), RecentPhotosFragment.RECENT);
-        adapter.addTab(PhotoSearchFragment.newInstance(), PhotoSearchFragment.SEARCH);
-        adapter.addTab(SimilarTagsFragment.newInstance(), SimilarTagsFragment.SIMILAR);
+        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(), frags);
 
         view_pager.setAdapter(adapter);
     }
@@ -163,35 +164,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-//    public List<Fragment> getFragments()
-//    {
-//
-//
-//
-//
-//
-////        List<Fragment> fragments = getSupportFragmentManager().G.getFragments();
-////        List<Fragment> fragments = getSupportFragmentManager().getFragments();
-////
-////        getSupportFragmentManager().registerFragmentLifecycleCallbacks(object : FragmentManager.FragmentLifecycleCallbacks() {
-////        override fun onFragmentAttached(fm: FragmentManager?, f: Fragment?, context: Context?) {
-////            f?.let { fList.add(it) }
-////        }
-////
-////        override fun onFragmentDetached(fm: FragmentManager?, f: Fragment?) {
-////            f?.let { fList.remove(it) }
-////        }
-////
-////    }, false)
-////
-////        if (fragments == null || fragments.isEmpty())
-////            return Collections.emptyList();
-////        return fragments;
-//    }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         return false;
     }
 
+    @Override
+    public Fragment findFragmentByTitle(String title) {
+
+        int pos = 0;
+
+        for(FragmentAdapter.FragmentInfo fragInfo : this.frags)
+        {
+            if(fragInfo.getTitle().equals(title))
+            {
+                drawer.closeDrawer(GravityCompat.START);
+                view_pager.setCurrentItem(pos);
+            }
+            else
+                pos++;
+        }
+
+        return null;
+    }
 }
