@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.tanners.taggedwallpaper.R;
 import com.tanners.taggedwallpaper.flickrdata.FlickrDataPhotosRecent;
-import com.tanners.taggedwallpaper.adapters.FlickrRecycleImageAdapter;
+import com.tanners.taggedwallpaper.adapters.ImageAdapter;
 import com.tanners.taggedwallpaper.data.photodata.PhotoContainer;
 import com.tanners.taggedwallpaper.data.photodata.PhotoItem;
 import java.util.List;
@@ -40,7 +40,7 @@ public class RecentPhotosFragment extends Fragment
         new CollectRecentPhotos().execute();
         grid = new GridLayoutManager(context, 2);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = inflater.inflate(R.layout.flickr_fragment_recent, null, false);
+        view = inflater.inflate(R.layout.fragment_recent, null, false);
         recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view);
         recycle_view.setHasFixedSize(true);
         recycle_view.setLayoutManager(grid);
@@ -112,7 +112,7 @@ public class RecentPhotosFragment extends Fragment
                 else
                 {
                     final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-                    FlickrRecycleImageAdapter adapter = new FlickrRecycleImageAdapter(context, flickr_objects, metrics);
+                    ImageAdapter adapter = new ImageAdapter(context, flickr_objects, metrics);
                     recycle_view.setAdapter(adapter);
                 }
             }

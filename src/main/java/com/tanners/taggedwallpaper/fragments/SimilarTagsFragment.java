@@ -35,7 +35,7 @@ import com.clarifai.api.RecognitionResult;
 import com.clarifai.api.Tag;
 import com.tanners.taggedwallpaper.MainActivity;
 import com.tanners.taggedwallpaper.R;
-import com.tanners.taggedwallpaper.clarifaidata.ClarifaiData;
+import com.tanners.taggedwallpaper.clarifaidata.ImageRec;
 import com.tanners.taggedwallpaper.flickrdata.FlickrDataPhotosSearch;
 
 import java.io.File;
@@ -48,7 +48,7 @@ public class SimilarTagsFragment extends Fragment
 {
     public static String SIMILAR = "Similar Tags";
 
-    private ClarifaiData cdata = null;
+    private ImageRec cdata = null;
     private Context context;
     private ImageView image_view;
     private Button selectButton;
@@ -128,7 +128,7 @@ public class SimilarTagsFragment extends Fragment
 
                 if (decision)
                 {
-                    cdata = new ClarifaiData(getActivity());
+                    cdata = new ImageRec(getActivity());
 
                     selectButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -155,7 +155,7 @@ public class SimilarTagsFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = layoutInflater.inflate(R.layout.clarifai_fragment_main, null, false);
+        view = layoutInflater.inflate(R.layout.fragment_similar, null, false);
 
         image_view = (ImageView) view.findViewById(R.id.image_view);
         selectButton = (Button) view.findViewById(R.id.select_button);
@@ -169,7 +169,7 @@ public class SimilarTagsFragment extends Fragment
         }
         else
         {
-            cdata = new ClarifaiData(getActivity());
+            cdata = new ImageRec(getActivity());
 
             selectButton.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -2,7 +2,7 @@ package com.tanners.taggedwallpaper.flickrdata;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tanners.taggedwallpaper.data.photodata.PhotoContainer;
-import com.tanners.taggedwallpaper.flickrdata.urldata.FlickrURLBuilder;
+import com.tanners.taggedwallpaper.network.FlickrURLBuilder;
 import com.tanners.taggedwallpaper.util.URLConnection;
 import org.apache.commons.io.IOUtils;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class FlickrDataPhotosRecent
         {
             connection = new URLConnection(url.getRecentPhotos(700, 1));
 
-            if(connection.isGood())
+            if(connection.isValidWebsite())
             {
                 String responseStr = IOUtils.toString(connection.getHttpURLConnection().getInputStream());
                 ObjectMapper objectMapper = new ObjectMapper();

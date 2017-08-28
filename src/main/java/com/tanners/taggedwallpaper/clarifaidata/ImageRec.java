@@ -18,14 +18,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClarifaiData extends ClarifaiClient
+public class ImageRec extends ClarifaiClient
 {
     private final static String APP_ID = "Xijy3WCA1l4UwEb_zLDx10Kixh068oitW7PcHMv8";
     private final static String APP_SECRET = "U-e8tQDPSQxKl2MTvoQW1W1MbOE59oepZr8j92Gf";
     private Context context;
     private ArrayList<String> approved_tags;
 
-    public ClarifaiData(Context context)
+    public ImageRec(Context context)
     {
         super(APP_ID, APP_SECRET);
         this.context = context;
@@ -47,6 +47,7 @@ public class ClarifaiData extends ClarifaiClient
             {
                 for(Tag t : result.getTags())
                 {
+                    // TODO google vision API used here?? or NLP to filter out bad words??
                     approved_tags.add(t.getName());
                 }
             }
@@ -63,6 +64,7 @@ public class ClarifaiData extends ClarifaiClient
         return true;
     }
 
+    // TODO computer vision api here
     public RecognitionResult recognizeBitmap(Uri uri)
     {
         try
@@ -72,7 +74,7 @@ public class ClarifaiData extends ClarifaiClient
             try
             {
                 LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View view = layoutInflater.inflate(R.layout.clarifai_fragment_main, null, false);
+                View view = layoutInflater.inflate(R.layout.fragment_similar, null, false);
                 ImageView image_view = (ImageView) view.findViewById(R.id.image_view);
                 image = Picasso.with(this.context).load(uri).get();
             }
@@ -81,6 +83,7 @@ public class ClarifaiData extends ClarifaiClient
                 e.printStackTrace();
             }
 
+            // TODO if u use glide it may auto shrink, not sure about picasso
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             image.compress(Bitmap.CompressFormat.JPEG, 70, out);
 
@@ -94,14 +97,12 @@ public class ClarifaiData extends ClarifaiClient
 
     public String getRecError()
     {
-        String ERROR_REC_IMAGE = "Unable to recognize image";
-        return ERROR_REC_IMAGE;
+        return "Unable to recognize image";
     }
 
     public String getLoadError()
     {
-        String ERROR_LOAD_IMAGE = "Unable to load image";
-        return ERROR_LOAD_IMAGE;
+        return "Unable to load image";
     }
 
     public List<String> getTags()

@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.tanners.taggedwallpaper.R;
 import com.tanners.taggedwallpaper.flickrdata.FlickrDataPhotosSearch;
-import com.tanners.taggedwallpaper.adapters.FlickrRecycleImageAdapter;
+import com.tanners.taggedwallpaper.adapters.ImageAdapter;
 import com.tanners.taggedwallpaper.data.photodata.PhotoItem;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +36,7 @@ public class PhotoSearchFragment extends Fragment
     private GridLayoutManager grid;
     private RecyclerView recycle_view;
     private View view;
-    private FlickrRecycleImageAdapter adapter;
+    private ImageAdapter adapter;
     private int per_page;
     private int page;
 
@@ -62,7 +62,7 @@ public class PhotoSearchFragment extends Fragment
         page = 1;
         grid = new GridLayoutManager(context, 2);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = inflater.inflate(R.layout.flickr_fragment_search, null, false);
+        view = inflater.inflate(R.layout.fragment_search, null, false);
         recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view_search);
         recycle_view.setHasFixedSize(true);
         recycle_view.setLayoutManager(grid);
@@ -166,7 +166,7 @@ public class PhotoSearchFragment extends Fragment
             else
             {
                 final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-                adapter = new FlickrRecycleImageAdapter(context, result, metrics);
+                adapter = new ImageAdapter(context, result, metrics);
                 recycler_view.setAdapter(adapter);
             }
 

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tanners.taggedwallpaper.util.FireBaseUtil;
 import com.tanners.taggedwallpaper.data.photodata.PhotoContainer;
 import com.tanners.taggedwallpaper.data.photodata.PhotoItem;
-import com.tanners.taggedwallpaper.flickrdata.urldata.FlickrURLBuilder;
+import com.tanners.taggedwallpaper.network.FlickrURLBuilder;
 import com.tanners.taggedwallpaper.util.URLConnection;
 import org.apache.commons.io.IOUtils;
 import java.io.IOException;
