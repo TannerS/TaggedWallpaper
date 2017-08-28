@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
+import com.tanners.taggedwallpaper.async.CollectUserData;
 import com.tanners.taggedwallpaper.data.photodata.PhotoItem;
 
 import java.io.IOException;
@@ -25,44 +26,54 @@ public class PhotoActivity extends AppCompatActivity
     private Toolbar toolbar;
     private String image_url;
 
+    private void setUpToolbar()
+    {
+        toolbar = (Toolbar) findViewById(R.id.photo_tool_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Photo Information");
+    }
+
+    private PhotoItem getExtras()
+    {
+        // TODO is this proper? or do we use savedInstanceState
+        Intent intent = getIntent();
+
+        // TODO may be info or data for key
+        ArrayList<PhotoItem> url_list = (ArrayList<PhotoItem>) intent.getBundleExtra("extra").getSerializable("photoData");
+
+        return url_list.get(0);
+    }
+
+    private void setUpImage(PhotoItem data, ImageView image)
+    {
+        if (data.getUrl_z() == null || (data.getUrl_z().length() <= 0))
+        {
+            if (data.getUrl_o() == null || (data.getUrl_o().length() <= 0))
+                image_url = data.getUrl_n();
+            else
+                image_url = data.getUrl_o();
+        }
+        else
+            image_url = data.getUrl_z();
+
+        Glide.with(this).load(image_url).fitCenter().into(image);
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
-
-        toolbar = (Toolbar) findViewById(R.id.photo_tool_bar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Photo Information");
-        Intent intent = getIntent();
-
-        Bundle extra = intent.getBundleExtra("extra");
-        String info = intent.getStringExtra("info");
-
-        ArrayList<PhotoItem> url_list = (ArrayList<PhotoItem>) extra.getSerializable("urls");
-        final PhotoItem data = url_list.get(0);
-
-
+        setUpToolbar();
+        final PhotoItem data = getExtras();
+        TextView userInfo = (TextView) findViewById(R.id.text_view);
+        new CollectUserData(userInfo).execute(data.getOwner());
         ImageView image = (ImageView) findViewById(R.id.image);
-        TextView text = (TextView) findViewById(R.id.text_view);
         Button wallpaper_btn = (Button) findViewById(R.id.set_wallpaper);
+        setUpImage(data, image);
 
-        if (data.getUrl_z() == null || (data.getUrl_z().length() <= 0))
-        {
-            if (data.getUrl_o() == null || (data.getUrl_o().length() <= 0))
-            {
-                image_url = data.getUrl_n();
-            }
-            else
-            {
-                image_url = data.getUrl_o();
-            }
-        }
-        else
-        {
-            image_url = data.getUrl_z();
-        }
-
+        // TODO find a better way
         wallpaper_btn.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -73,7 +84,7 @@ public class PhotoActivity extends AppCompatActivity
                         if (data.getUrl_b() == null || (data.getUrl_b().length() <= 0)) {
                             if (data.getUrl_c() == null || (data.getUrl_c().length() <= 0)) {
                                 if (data.getUrl_z() == null || (data.getUrl_z().length() <= 0)) {
-                                    new setWallpaper(getApplicationContext(), data.getUrl_o()).execute();
+                                    new setWallpaper(PhotoActivity.this, data.getUrl_o()).execute();
                                 } else {
                                     new setWallpaper(getApplicationContext(), data.getUrl_z()).execute();
                                 }
@@ -97,10 +108,11 @@ public class PhotoActivity extends AppCompatActivity
 
         });
 
-        Glide.with(this).load(image_url).fitCenter().into(image);
-        text.setText(info);
+
     }
 
+
+    // TODO look up newer way
     private class setWallpaper extends AsyncTask<Void, Void, Bitmap>
     {
         private Context context;
@@ -120,9 +132,7 @@ public class PhotoActivity extends AppCompatActivity
 
             try {
                 bitmap = Glide.with(PhotoActivity.this).load(url).asBitmap().into(-1,-1).get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
 
@@ -138,7 +148,7 @@ public class PhotoActivity extends AppCompatActivity
             try
             {
                 wallpaperManager.setBitmap(bitmap);
-               // wallpaperManager.suggestDesiredDimensions(width, height);
+                // wallpaperManager.suggestDesiredDimensions(width, height);
             }
             catch (IOException e)
             {

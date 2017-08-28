@@ -2,26 +2,19 @@ package com.tanners.taggedwallpaper.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 import com.tanners.taggedwallpaper.PhotoActivity;
 import com.tanners.taggedwallpaper.R;
-import com.tanners.taggedwallpaper.data.UserData;
 import com.tanners.taggedwallpaper.data.photodata.PhotoItem;
-import com.tanners.taggedwallpaper.network.ConnectionRequest;
-import com.tanners.taggedwallpaper.network.FlickrURLBuilder;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +25,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 //    private UserData user_data;
 //    private View.OnClickListener listener;
 
-//    public ImageAdapter(Context context, List<PhotoItem> photos, DisplayMetrics metrics)
+    //    public ImageAdapter(Context context, List<PhotoItem> photos, DisplayMetrics metrics)
 //    public ImageAdapter(Context context, List<PhotoItem> photos, View.OnClickListener listener)
     public ImageAdapter(Context context, List<PhotoItem> photos)
     {
@@ -84,14 +77,14 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
                 photoData.add(data);
 
-                Bundle urls = new Bundle();
+                Bundle bundle = new Bundle();
 
                 // TODO use enum or static var for bundle keys
-                urls.putSerializable("data", photoData);
+                bundle.putSerializable("photoData", photoData);
 
                 final Intent extra_intent = new Intent(context, PhotoActivity.class);
 
-                extra_intent.putExtra("info", data);
+                extra_intent.putExtra("extras", bundle);
 
 //                extra_intent.putExtra("info", getInfo(position));
 
@@ -134,7 +127,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
     {
         private final ImageButton image_button;
 
-//        public ImageViewHolder(View view, DisplayMetrics metrics)
+        //        public ImageViewHolder(View view, DisplayMetrics metrics)
         public ImageViewHolder(View view)
         {
             super(view);
