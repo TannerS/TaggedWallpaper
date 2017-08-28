@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -25,7 +24,7 @@ import android.widget.Toast;
 import com.tanners.taggedwallpaper.R;
 import com.tanners.taggedwallpaper.flickrdata.FlickrDataPhotosSearch;
 import com.tanners.taggedwallpaper.adapters.ImageAdapter;
-import com.tanners.taggedwallpaper.data.photodata.PhotoItem;
+import com.tanners.taggedwallpaper.mappings.photodata.PhotoItem;
 import java.util.Collections;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.tanners.taggedwallpaper.data.user;
+package com.tanners.taggedwallpaper.mappings.user;
 
 public class UserData
 {

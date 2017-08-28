@@ -1,4 +1,4 @@
-package com.tanners.taggedwallpaper.data.photodata;
+package com.tanners.taggedwallpaper.mappings.photodata;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

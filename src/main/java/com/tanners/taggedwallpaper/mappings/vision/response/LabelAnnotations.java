@@ -1,6 +1,4 @@
-package com.tanners.taggedwallpaper.vision.response;
-
-import java.util.ArrayList;
+package com.tanners.taggedwallpaper.mappings.vision.response;
 
 public class LabelAnnotations {
     private String mid;

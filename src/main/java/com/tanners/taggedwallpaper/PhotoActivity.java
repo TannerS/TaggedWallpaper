@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.tanners.taggedwallpaper.async.CollectUserData;
-import com.tanners.taggedwallpaper.data.photodata.PhotoItem;
+import com.tanners.taggedwallpaper.mappings.photodata.PhotoItem;
 
 import java.io.IOException;
 import java.util.ArrayList;

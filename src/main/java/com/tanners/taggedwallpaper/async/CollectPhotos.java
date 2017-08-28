@@ -12,8 +12,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.tanners.taggedwallpaper.R;
 import com.tanners.taggedwallpaper.adapters.ImageAdapter;
-import com.tanners.taggedwallpaper.data.photodata.PhotoContainer;
-import com.tanners.taggedwallpaper.data.photodata.PhotoItem;
+import com.tanners.taggedwallpaper.mappings.photodata.PhotoContainer;
+import com.tanners.taggedwallpaper.mappings.photodata.PhotoItem;
 import com.tanners.taggedwallpaper.network.ConnectionRequest;
 import com.tanners.taggedwallpaper.network.FlickrURLBuilder;
 

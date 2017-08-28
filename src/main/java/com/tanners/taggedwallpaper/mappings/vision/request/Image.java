@@ -1,4 +1,4 @@
-package com.tanners.taggedwallpaper.vision.request;
+package com.tanners.taggedwallpaper.mappings.vision.request;
 
 public class Image
 {

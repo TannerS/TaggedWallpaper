@@ -1,7 +1,6 @@
-package com.tanners.taggedwallpaper.vision.response;
+package com.tanners.taggedwallpaper.mappings.vision.response;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Response
 {

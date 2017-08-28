@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.tanners.taggedwallpaper.data.user.UserData;
+import com.tanners.taggedwallpaper.mappings.user.UserData;
 import com.tanners.taggedwallpaper.network.ConnectionRequest;
 import com.tanners.taggedwallpaper.network.FlickrURLBuilder;
 

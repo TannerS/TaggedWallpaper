@@ -13,7 +13,7 @@ import android.widget.ImageButton;
 import com.bumptech.glide.Glide;
 import com.tanners.taggedwallpaper.PhotoActivity;
 import com.tanners.taggedwallpaper.R;
-import com.tanners.taggedwallpaper.data.photodata.PhotoItem;
+import com.tanners.taggedwallpaper.mappings.photodata.PhotoItem;
 
 import java.util.ArrayList;
 import java.util.List;
