@@ -61,8 +61,8 @@ public class PhotoSearchFragment extends Fragment
         per_page = 1000;
         page = 1;
         grid = new GridLayoutManager(context, 2);
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = inflater.inflate(R.layout.fragment_search, null, false);
+//        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        view = inflater.inflate(R.layout.fragment_search, null, false);
         recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view_search);
         recycle_view.setHasFixedSize(true);
         recycle_view.setLayoutManager(grid);
@@ -105,12 +105,12 @@ public class PhotoSearchFragment extends Fragment
         });
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_search, container, false);
         return view;
     }
+
 
     public void searchByTag(String tag, int selection)
     {

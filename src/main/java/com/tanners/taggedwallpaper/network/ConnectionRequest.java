@@ -63,9 +63,12 @@ public class ConnectionRequest
         writer.close();
     }
 
-    public List<String> getResponse() throws IOException
+//    public List<String> getResponse() throws IOException
+    public String getResponse() throws IOException
     {
-        ArrayList<String> response = new ArrayList<String>();
+        StringBuilder builder = new StringBuilder();
+
+//        ArrayList<String> response = new ArrayList<String>();
 
         int status = connection.getResponseCode();
 
@@ -75,7 +78,8 @@ public class ConnectionRequest
             String line = null;
 
             while ((line = reader.readLine()) != null) {
-                response.add(line);
+//                response.add(line);
+                builder.append(line);
             }
 
             reader.close();
@@ -85,7 +89,8 @@ public class ConnectionRequest
             throw new IOException("ERROR: " + status);
         }
 
-        return response;
+//        return response;
+        return builder.toString();
     }
 
     public void closeConnection()

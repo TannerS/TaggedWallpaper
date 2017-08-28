@@ -74,12 +74,12 @@ public class SimilarTagsFragment extends Fragment
         this.context = context;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_similar, container, false);
         return view;
     }
+
 
     private String[] RequestNeededPermissions(String[] permissions)
     {
@@ -154,8 +154,8 @@ public class SimilarTagsFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
 
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = layoutInflater.inflate(R.layout.fragment_similar, null, false);
+//        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        view = layoutInflater.inflate(R.layout.fragment_similar, null, false);
 
         image_view = (ImageView) view.findViewById(R.id.image_view);
         selectButton = (Button) view.findViewById(R.id.select_button);
