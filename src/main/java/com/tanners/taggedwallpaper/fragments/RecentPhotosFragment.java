@@ -26,14 +26,12 @@ public class RecentPhotosFragment extends Fragment
         super.onCreate(savedInstanceState);
 
         GridLayoutManager grid = new GridLayoutManager(context, 2);
-//        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view);
         recycle_view.setHasFixedSize(true);
         recycle_view.setLayoutManager(grid);
 
         new CollectPhotos(context, recycle_view).execute();
-
     }
 
     public static RecentPhotosFragment newInstance() {

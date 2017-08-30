@@ -12,7 +12,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,12 +31,12 @@ public class PhotoSearchFragment extends Fragment
 {
     public static String SEARCH = "Search Tags";
     private Context context;
-    private GridLayoutManager grid;
     private RecyclerView recycle_view;
     private View view;
     private ImageAdapter adapter;
-    private int per_page;
-    private int page;
+    private final int per_page = 100;
+    private final int page = 1;
+    private final int gridRows = 2;
 
     @Override
     public void onAttach(Context context)
@@ -55,13 +54,9 @@ public class PhotoSearchFragment extends Fragment
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        // TODO test as false
         setHasOptionsMenu(true);
-//        context = getActivity().getApplicationContext();
-        per_page = 1000;
-        page = 1;
-        grid = new GridLayoutManager(context, 2);
-//        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        view = inflater.inflate(R.layout.fragment_search, null, false);
+        GridLayoutManager grid = new GridLayoutManager(context, gridRows);
         recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view_search);
         recycle_view.setHasFixedSize(true);
         recycle_view.setLayoutManager(grid);
@@ -79,10 +74,10 @@ public class PhotoSearchFragment extends Fragment
         search_view.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-            // would only work if on a seperate thread
             @Override
             public boolean onQueryTextSubmit(String query) {
                 final String tag = search_view.getQuery().toString();
+                // TODO async
                 new Runnable() {
                     @Override
                     public void run() {
@@ -91,9 +86,11 @@ public class PhotoSearchFragment extends Fragment
                         search_view.clearFocus();
                         search_view.setQuery("", false);
                         search_view.setFocusable(false);
-                        searchByTag(tag, FlickrDataPhotosSearch.OPEN_SEARCH);
+//                        searchByTag(tag, FlickrDataPhotosSearch.OPEN_SEARCH);
+                        searchByTag(tag);
                     }
                 }.run();
+
                 return false;
             }
 
@@ -110,28 +107,22 @@ public class PhotoSearchFragment extends Fragment
         return view;
     }
 
-
-    public void searchByTag(String tag, int selection)
+    public void searchByTag(String tag)
     {
         if(adapter != null)
             adapter.clear();
-        new CollectTaggedPhotos(recycle_view, context, selection).execute(tag);
+        new GatherTaggedPhotos().execute(tag);
     }
 
-    private class CollectTaggedPhotos extends AsyncTask<String, Void, List<PhotoItem>>
+    private class GatherTaggedPhotos extends AsyncTask<String, Void, List<PhotoItem>>
     {
+        // TODO redo
         private FlickrDataPhotosSearch flickr_object;
-        private RecyclerView recycler_view;
-        private Context context;
         private ProgressDialog dialog;
-        private int selection;
 
-        public CollectTaggedPhotos(RecyclerView recycler_view, Context context, int selection)
+        private GatherTaggedPhotos()
         {
             flickr_object = new FlickrDataPhotosSearch(context, per_page, page);
-            this.recycler_view = recycler_view;
-            this.context = context;
-            this.selection = selection;
         }
 
         @Override
@@ -149,7 +140,7 @@ public class PhotoSearchFragment extends Fragment
         @Override
         protected List<PhotoItem> doInBackground(String... str)
         {
-            return flickr_object.searchFlickr(str[0], selection);
+            return flickr_object.searchFlickr(str[0]);
         }
 
         @Override
@@ -164,9 +155,8 @@ public class PhotoSearchFragment extends Fragment
             }
             else
             {
-                final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-                adapter = new ImageAdapter(context, result, metrics);
-                recycler_view.setAdapter(adapter);
+                adapter = new ImageAdapter(context, result);
+                recycle_view.setAdapter(adapter);
             }
 
             dialog.dismiss();

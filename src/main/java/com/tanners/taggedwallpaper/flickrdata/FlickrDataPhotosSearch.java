@@ -57,7 +57,7 @@ public class FlickrDataPhotosSearch
                     connection = new URLConnection(url.getAllPhotos(tag, per_page, page));
                     break;
             }
-            
+//
             if(connection.getHttpURLConnection() != null)
             {
                 String response = IOUtils.toString(connection.getHttpURLConnection().getInputStream());
