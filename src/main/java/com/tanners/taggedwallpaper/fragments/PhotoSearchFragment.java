@@ -21,15 +21,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import com.tanners.taggedwallpaper.R;
-import com.tanners.taggedwallpaper.flickrdata.FlickrDataPhotosSearch;
+import com.tanners.taggedwallpaper.mappings.photodata.PhotoContainer;
+import com.tanners.taggedwallpaper.network.images.ImageRequest;
 import com.tanners.taggedwallpaper.adapters.ImageAdapter;
 import com.tanners.taggedwallpaper.mappings.photodata.PhotoItem;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class PhotoSearchFragment extends Fragment
 {
-    public static String SEARCH = "Search Tags";
+    public final static String SEARCH = "Search Tags";
     private Context context;
     private RecyclerView recycle_view;
     private View view;
@@ -49,13 +52,17 @@ public class PhotoSearchFragment extends Fragment
         return new PhotoSearchFragment();
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         // TODO test as false
         setHasOptionsMenu(true);
+        setUpList();
+    }
+
+    private void setUpList()
+    {
         GridLayoutManager grid = new GridLayoutManager(context, gridRows);
         recycle_view = (RecyclerView) view.findViewById(R.id.recycler_view_search);
         recycle_view.setHasFixedSize(true);
@@ -68,7 +75,8 @@ public class PhotoSearchFragment extends Fragment
         inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.search_bar, menu);
         final MenuItem search_bar = menu.findItem(R.id.menu_search);
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(getActivity().SEARCH_SERVICE);
+//        SearchManager searchManager = (SearchManager) getActivity().getSystemService(getActivity().SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
         final SearchView search_view = (SearchView) menu.findItem(R.id.menu_search).getActionView();
         search_view.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         search_view.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
@@ -86,7 +94,7 @@ public class PhotoSearchFragment extends Fragment
                         search_view.clearFocus();
                         search_view.setQuery("", false);
                         search_view.setFocusable(false);
-//                        searchByTag(tag, FlickrDataPhotosSearch.OPEN_SEARCH);
+//                        searchByTag(tag, ImageRequest.OPEN_SEARCH);
                         searchByTag(tag);
                     }
                 }.run();
@@ -114,15 +122,16 @@ public class PhotoSearchFragment extends Fragment
         new GatherTaggedPhotos().execute(tag);
     }
 
-    private class GatherTaggedPhotos extends AsyncTask<String, Void, List<PhotoItem>>
+//    private class GatherTaggedPhotos extends AsyncTask<String, Void, List<PhotoItem>>
+    private class GatherTaggedPhotos extends AsyncTask<String, Void, PhotoContainer>
     {
-        // TODO redo
-        private FlickrDataPhotosSearch flickr_object;
+        private ImageRequest imageRequest;
         private ProgressDialog dialog;
 
         private GatherTaggedPhotos()
         {
-            flickr_object = new FlickrDataPhotosSearch(context, per_page, page);
+//            imageRequest = new ImageRequest(context, per_page, page);
+            imageRequest = new ImageRequest(per_page, page);
         }
 
         @Override
@@ -133,29 +142,35 @@ public class PhotoSearchFragment extends Fragment
             dialog.setTitle("Gathering photos");
             dialog.setMessage("Please wait, this depends on your internet connection");
             dialog.setCancelable(false);
-            dialog.show();
             dialog.getWindow().setGravity(Gravity.CENTER_VERTICAL);
+            dialog.show();
         }
 
         @Override
-        protected List<PhotoItem> doInBackground(String... str)
+//        protected List<PhotoItem> doInBackground(String... str)
+        protected PhotoContainer doInBackground(String... str)
         {
-            return flickr_object.searchFlickr(str[0]);
+            return imageRequest.searchForImages(str[0]);
         }
 
         @Override
-        protected void onPostExecute(List<PhotoItem> result)
+        protected void onPostExecute(PhotoContainer result)
         {
             super.onPostExecute(result);
-            Collections.shuffle(result);
 
-            if (result == null || (result.size() <= 0))
+            ArrayList<PhotoItem> images = (ArrayList<PhotoItem>) result.getPhotos().getPhoto();
+
+            // TODO NSFW check here
+
+
+            if (images == null || (images.size() <= 0))
             {
                 NoImagesToast("Unable to get images");
             }
             else
             {
-                adapter = new ImageAdapter(context, result);
+                Collections.shuffle(images);
+                adapter = new ImageAdapter(context, images);
                 recycle_view.setAdapter(adapter);
             }
 

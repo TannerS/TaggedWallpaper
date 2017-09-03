@@ -1,6 +1,7 @@
 package com.tanners.taggedwallpaper.mappings.vision.request;
 
 import com.google.gson.Gson;
+import com.tanners.taggedwallpaper.mappings.vision.request.v1.Image;
 
 import java.util.ArrayList;
 
