@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.tanners.taggedwallpaper.MainActivity"
+    tools:context="com.tanners.taggedwallpaper.io.tanners.taggedwallpaper.MainActivity"
     android:background="#000000">
 
    <RelativeLayout
