@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:286873334661:android:1fc68c3803f0c96d",
         "android_client_info": {
-          "package_name": "com.tanners.taggedwallpaper"
+          "package_name": "io.tanners.taggedwallpaper"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "286873334661-uv6h1tc4pbuqshtcd3v830c5j06e9eqg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.tanners.taggedwallpaper",
+            "package_name": "io.tanners.taggedwallpaper",
             "certificate_hash": "a1199f17eddaa776b2fc7a66d6e540892f13a911"
           }
         },
