@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--<android.support.v7.widget.CardView-->
+    <!--xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:id="@+id/card_view"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--card_view:cardCornerRadius="3dp"-->
+    <!--card_view:cardElevation="2dp"-->
+    <!--card_view:cardMaxElevation="2dp"-->
+    <!--card_view:cardPreventCornerOverlap="true">-->
+
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/grid_image_container">
+
+        <ImageView
+            android:id="@+id/grid_image_background"
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/grid_image_bar"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:foregroundGravity="center"
+            android:layout_height="75dp"
+            android:background="@color/transparentAlpha">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/grid_item_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Category blah blah">
+        </TextView>
+
+    </FrameLayout>
+
+<!--</android.support.v7.widget.CardView>-->
