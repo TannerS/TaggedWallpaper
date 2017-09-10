@@ -1,4 +1,4 @@
-package io.tanners.taggedwallpaper.network.images.support;
+package io.tanners.taggedwallpaper.network;
 
 import org.apache.commons.io.IOUtils;
 
@@ -50,7 +50,7 @@ public class ConnectionRequest {
     private final String LINE_BREAK = "\r\n";
 
 
-    public ConnectionRequest() {
+    public ConnectionRequest(String mUrl) {
         mEntries = new HashMap<String, String>();
         mConnectionTimeOut = 10000;
         mReadTimeOut = 5000;
@@ -58,6 +58,7 @@ public class ConnectionRequest {
         mIsGood = false;
         mRequestype = TYPES.GET.toString();
         mCharset = (StandardCharsets.UTF_8.name().toLowerCase(Locale.getDefault()));
+        this.mUrl = mUrl;
     }
 
     public void setRequestType(TYPES type) {
@@ -208,28 +209,28 @@ public class ConnectionRequest {
         return mIsGood;
     }
 
-    public String getResponse() throws IOException
-    {
-        StringBuilder mBuilder = new StringBuilder();
-
-        int status = connection.getResponseCode();
-
-        if (status == HttpURLConnection.HTTP_OK)
-        {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String line = null;
-
-            while ((line = reader.readLine()) != null) {
-                mBuilder.append(line);
-            }
-
-            reader.close();
-
-            connection.disconnect();
-        } else {
-            throw new IOException("ERROR: " + status);
-        }
-
-        return mBuilder.toString();
-    }
+//    public String getResponse() throws IOException
+//    {
+//        StringBuilder mBuilder = new StringBuilder();
+//
+//        int status = connection.getResponseCode();
+//
+//        if (status == HttpURLConnection.HTTP_OK)
+//        {
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//            String line = null;
+//
+//            while ((line = reader.readLine()) != null) {
+//                mBuilder.append(line);
+//            }
+//
+//            reader.close();
+//
+//            connection.disconnect();
+//        } else {
+//            throw new IOException("ERROR: " + status);
+//        }
+//
+//        return mBuilder.toString();
+//    }
 }
