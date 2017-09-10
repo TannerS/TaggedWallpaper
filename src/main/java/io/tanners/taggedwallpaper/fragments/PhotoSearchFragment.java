@@ -22,7 +22,7 @@
 //import android.widget.Toast;
 //import io.tanners.taggedwallpaper.R;
 //import io.tanners.taggedwallpaper.mappings.photodata.PhotoContainer;
-//import io.tanners.taggedwallpaper.network.images.ImageRequest;
+//import io.tanners.taggedwallpaper.network.images.TagImageRequest;
 //import io.tanners.taggedwallpaper.adapters.ImageAdapter;
 //import io.tanners.taggedwallpaper.mappings.photodata.PhotoItem;
 //
@@ -93,7 +93,7 @@
 //                        search_view.clearFocus();
 //                        search_view.setQuery("", false);
 //                        search_view.setFocusable(false);
-////                        searchByTag(tag, ImageRequest.OPEN_SEARCH);
+////                        searchByTag(tag, TagImageRequest.OPEN_SEARCH);
 //                        searchByTag(tag);
 //                    }
 //                }.run();
@@ -124,13 +124,13 @@
 ////    private class GatherTaggedPhotos extends AsyncTask<String, Void, List<PhotoItem>>
 //    private class GatherTaggedPhotos extends AsyncTask<String, Void, PhotoContainer>
 //    {
-//        private ImageRequest imageRequest;
+//        private TagImageRequest imageRequest;
 //        private ProgressDialog dialog;
 //
 //        private GatherTaggedPhotos()
 //        {
-////            imageRequest = new ImageRequest(context, per_page, page);
-//            imageRequest = new ImageRequest(per_page, page);
+////            imageRequest = new TagImageRequest(context, per_page, page);
+//            imageRequest = new TagImageRequest(per_page, page);
 //        }
 //
 //        @Override

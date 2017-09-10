@@ -1,5 +1,7 @@
 package io.tanners.taggedwallpaper.network;
 
+import android.util.Log;
+
 import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
@@ -82,10 +84,16 @@ public class ConnectionRequest {
 
     public void addRequestHeader(HashMap<String, String> entries)
     {
+        Log.i("REQUEST" ,"DEBUG 1");
+
         if(entries != null) {
+            Log.i("REQUEST" ,"DEBUG 2");
+
             for (Map.Entry<String, String> entry : entries.entrySet()) {
                 String key = (entry.getKey()).trim();
                 String value = (entry.getValue()).trim();
+                Log.i("REQUEST" ,"DEBUG 3: " + key + " " + value);
+
                 this.mEntries.put(key, value);
             }
         }
@@ -105,10 +113,17 @@ public class ConnectionRequest {
 
     private void setHeaders()
     {
+        Log.i("REQUEST" ,"DEBUG 4");
+
         if(mEntries != null) {
+            Log.i("REQUEST" ,"DEBUG 5");
+
             for (Map.Entry<String, String> entry : mEntries.entrySet()) {
                 String key = (entry.getKey()).trim();
                 String value = (entry.getValue()).trim();
+                Log.i("REQUEST" ," HEADER-> " + key + ": " + value);
+                Log.i("REQUEST" ,"DEBUG 6");
+
                 connection.setRequestProperty(key, value);
             }
         }
@@ -123,6 +138,9 @@ public class ConnectionRequest {
         if(mBody == null || mBody.length() <= 0)
             connection.setFixedLengthStreamingMode(0);
         else {
+
+            Log.i("REQUEST", "DEBUG 1");
+
             connection.setFixedLengthStreamingMode(mBody.length());
 
             try {
@@ -149,6 +167,9 @@ public class ConnectionRequest {
     {
         if(mBody != null)
             connection.setDoOutput(true);
+        else
+            connection.setDoOutput(false);
+
         connection.setInstanceFollowRedirects(false);
         connection.setConnectTimeout(mConnectionTimeOut);
         connection.setReadTimeout(mReadTimeOut);
@@ -158,26 +179,37 @@ public class ConnectionRequest {
         } catch (ProtocolException e) {
             e.printStackTrace();
         }
+        connection.setRequestProperty("charset", mCharset);
     }
 
     public boolean connect()
     {
         try
         {
+            Log.i("REQUEST", "URL: " + mUrl);
+
+//            setDefaults();
+//            setHeaders();
+//            setBody();
+
             connection = (HttpURLConnection) (new URL(mUrl)).openConnection();
 
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK)
-            {
+            Log.i("REQUEST", "URL: " + mUrl);
+
+
+//            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK)
+//            {
                 mIsGood = true;
                 setDefaults();
                 setHeaders();
                 setBody();
-            }
-            else
-            {
-                mIsGood = false;
-                throw new IOException();
-            }
+//            }
+//            else
+//            {
+//                Log.i("REQUEST", "ERROR: " + connection.getResponseCode());
+//                mIsGood = false;
+//                throw new IOException();
+//            }
         }
         catch (IOException e)
         {

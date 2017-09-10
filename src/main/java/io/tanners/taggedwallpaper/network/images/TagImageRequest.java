@@ -1,5 +1,7 @@
 package io.tanners.taggedwallpaper.network.images;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,12 +28,18 @@ public class TagImageRequest extends Request
 
         mConnectionRequest.addRequestHeader(new HashMap<String, String>() {{
             // TODO PKI for token
-            put("Authorization", "Client-ID 5");
-            put("Accept-Language", "en-US,en;q=0.5");
-            put("Connection", "keep-alive");
-            put("Accept", "text/html,application/xhtml+xm…plication/xml;q=0.9,*/*;q=0.8");
+            put("Authorization", "Client-ID 53bec55730b75b73e5f615222f83e498e7645300c2b10949e6f8e25442a2fccc");
+//            put("Accept-Language", "en-US,en;q=0.5");
+//            put("Connection", "keep-alive");
+//            put("Accept", "text/html,application/xhtml+xm…plication/xml;q=0.9,*/*;q=0.8");
 //            put("content-type", "text/html; charset=utf-8");
         }});
+        // myURLConnection.setRequestProperty("Content-Language", "en-US");
+//        myURLConnection.setRequestProperty("Content-Length", "" + postData.getBytes().length);
+//        myURLConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+
+        Log.i("REQUEST", ConnectionRequest.TYPES.GET.toString());
 
         mConnectionRequest.setRequestType(ConnectionRequest.TYPES.GET);
 
@@ -55,9 +63,11 @@ public class TagImageRequest extends Request
 //                if(mConnectionRequest.getConnection().getResponseCode() == HttpURLConnection.HTTP_OK)
 //                {
                     String response = IOUtils.toString(mConnectionRequest.getConnection().getInputStream());
-                    ObjectMapper objectMapper = new ObjectMapper();
+                Log.i("REQUEST", "RESPONSE: " + response);
+
+                ObjectMapper objectMapper = new ObjectMapper();
                     // photos = objectMapper.readValue(response, Photo.class);
-                    photos = objectMapper.readValue(response, ArrayList.class);
+//                    photos = objectMapper.readValue(response, ArrayList.class);
 //                }
 
             }

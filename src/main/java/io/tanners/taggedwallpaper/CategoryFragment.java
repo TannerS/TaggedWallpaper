@@ -33,10 +33,6 @@ public class CategoryFragment extends Fragment {
     private View view;
     private static final String CATEGORIES = "Categories";
 
-    public CategoryFragment() {
-        // Required empty public constructor
-    }
-
     public static CategoryFragment newInstance() {
         return new CategoryFragment();
     }

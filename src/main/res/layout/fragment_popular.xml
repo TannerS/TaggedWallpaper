@@ -4,10 +4,11 @@
     android:layout_height="match_parent"
     tools:context="io.tanners.taggedwallpaper.PopularFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ProgressBar
+        android:id="@+id/popular_progress_bar"
+        style="?android:attr/progressBarStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:visibility="gone"/>
 
 </FrameLayout>

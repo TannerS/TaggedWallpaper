@@ -12,8 +12,8 @@ public class SearchFragment extends Fragment {
     private View view;
     public static final String SEARCH = "Search Images";
 
-    public static SimilarImagesFragment newInstance() {
-        return new SimilarImagesFragment();
+    public static SearchFragment newInstance() {
+        return new SearchFragment();
     }
 
     @Override

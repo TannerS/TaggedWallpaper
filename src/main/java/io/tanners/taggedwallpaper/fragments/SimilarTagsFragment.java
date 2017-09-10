@@ -431,7 +431,7 @@
 //                            if (f.getClass().equals(PhotoSearchFragment.class))
 //                            {
 //                                PhotoSearchFragment temp = (PhotoSearchFragment) fragments.get(count);
-//                                temp.searchByTag(tag, ImageRequest.OPEN_SEARCH);
+//                                temp.searchByTag(tag, TagImageRequest.OPEN_SEARCH);
 //                                ((MainActivity)getActivity()).getViewPager().setCurrentItem(1);
 //                            }
 //                            count++;
