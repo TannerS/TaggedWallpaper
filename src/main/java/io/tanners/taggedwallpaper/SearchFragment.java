@@ -97,7 +97,6 @@ public class SearchFragment extends Fragment {
         mSearchBarMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 //
 
-
         search_view.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         search_view.setQueryHint("HINT HERE");
         search_view.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
