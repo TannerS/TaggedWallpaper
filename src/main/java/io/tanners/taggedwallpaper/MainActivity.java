@@ -1,6 +1,8 @@
 
 package io.tanners.taggedwallpaper;
 
+import android.app.SearchManager;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -24,11 +26,54 @@ public class MainActivity extends AppCompatActivity implements IFindFragment{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        // set up fragment tabs
         setUpTabs();
+        // set up fragments into adapter
         setUpFragmentAdapters();
+        // handle search queries
+        handleSearch(getIntent());
+
     }
 
+    /**
+     *  https://developer.android.com/training/search/setup.html
+     * @param intent
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        // handle search queries
+        handleSearch(intent);
+    }
+
+    /**
+     * Used to handle search intents
+     * @param intent
+     */
+    private void handleSearch(Intent intent) {
+
+
+        Log.i("SEARCH", "DEBUG 6");
+
+
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+
+            Log.i("SEARCH", "DEBUG 7");
+
+
+            // get search query
+
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            // find reference to search fragment
+            SearchFragment frag = (SearchFragment) findFragmentByTitle(SearchFragment.SEARCH);
+            // pass query into fragment
+            frag.searchByTag(query.trim());
+        }
+    }
+
+    /**
+     * Set up the different tabs that relate to the different fragments
+     */
     private void setUpTabs()
     {
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -40,6 +85,10 @@ public class MainActivity extends AppCompatActivity implements IFindFragment{
         tab_layout.setupWithViewPager(mViewPager);
     }
 
+    /**
+     * Load the different fragments into the adapter.
+     * This one will eventually be loaded into a viewpager and tabs
+     */
     private void setUpFragmentAdapters()
     {
         Log.i("LOAD", "LOADING FRAGMENTS");

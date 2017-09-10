@@ -78,7 +78,6 @@
 //        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 //        final SearchView search_view = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 //        search_view.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-//        search_view.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
 //        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 //
 //            @Override

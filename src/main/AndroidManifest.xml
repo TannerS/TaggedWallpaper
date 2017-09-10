@@ -25,11 +25,27 @@
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
+
+
+
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.SEARCH" />-->
+            <!--</intent-filter>-->
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+                <action android:name="android.intent.action.SEARCH" />
+
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
+
         </activity>
     </application>
 
