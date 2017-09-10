@@ -6,7 +6,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,7 +35,21 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search, container, false);
+
+        setHasOptionsMenu(true);
+
+        setUpToolBar(view);
+
+
         return view;
+    }
+
+    private void setUpToolBar(View view)
+    {
+        Toolbar mToolbar = view.findViewById(R.id.main_toolbar);
+//        .setSupportActionBar(mToolbar);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
     }
 
     @Override
@@ -45,48 +61,50 @@ public class SearchFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+//
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.menu, menu);
+//    }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // handle item selection
+//        switch (item.getItemId()) {
+//            case R.id.action_search:
+//
+//                //       onCall();   //your logic
+//
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
-
         Log.i("SEARCH", "DEBUG 1");
-        inflater = getActivity().getMenuInflater();
+//        inflater = getActivity().getMenuInflater();
         inflater.inflate(R.menu.search_bar, menu);
-
+//        SearchView searchView = new SearchView(((MainActivity) mContext).getSupportActionBar().getThemedContext());
         final MenuItem mSearchBarMenuItem = menu.findItem(R.id.photo_search);
-        mSearchBarMenuItem.setIcon(R.drawable.ic_action_search_white);
-        mSearchBarMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        SearchView search_view = null;
-
-
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-        {
-            Log.i("SEARCH", "DEBUG 2");
-
-//            searchView=(SearchView)menuItem.getActionView();
-                search_view = (SearchView) mSearchBarMenuItem.getActionView();
-        }
-        else
-        {
-            Log.i("SEARCH", "DEBUG 3");
-
-//            searchView=(SearchView) MenuItemCompat.getActionView(menuItem);
-            search_view = (SearchView) MenuItemCompat.getActionView(mSearchBarMenuItem);
-        }
 
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        search_view.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        SearchView search_view = (SearchView) mSearchBarMenuItem.getActionView();
 
+
+        mSearchBarMenuItem.setIcon(R.drawable.ic_action_search_white);
+        mSearchBarMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//
+
+
+        search_view.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         search_view.setQueryHint("HINT HERE");
         search_view.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
-
         Log.i("SEARCH", "DEBUG 4");
 
 
-
-
+//        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
 //        int id = search_view.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
 //        TextView textView = (TextView) search_view.findViewById(id);
@@ -95,24 +113,25 @@ public class SearchFragment extends Fragment {
 //        textView.setTextColor(getResources().getColor(R.color.colorAccent));
 
 
+//        final SearchView finalSearch_view = search_view;
 //        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 //
 //            @Override
 //            public boolean onQueryTextSubmit(String query) {
-//                final String tag = search_view.getQuery().toString();
+//                final String tag = finalSearch_view.getQuery().toString();
 //                // TODO async
-////                new Runnable() {
-////                    @Override
-////                    public void run() {
+//                new Runnable() {
+//                    @Override
+//                    public void run() {
 ////                        MenuItemCompat.collapseActionView(search_bar);
 ////                        search_bar.collapseActionView();
 ////                        search_view.clearFocus();
 ////                        search_view.setQuery("", false);
 ////                        search_view.setFocusable(false);
-//////                        searchByTag(tag, TagImageRequest.OPEN_SEARCH);
-////                        searchByTag(tag);
-////                    }
-////                }.run();
+////                        searchByTag(tag, TagImageRequest.OPEN_SEARCH);
+//                        searchByTag(tag);
+//                    }
+//                }.run();
 //
 //                return false;
 //            }
@@ -122,6 +141,11 @@ public class SearchFragment extends Fragment {
 //                return false;
 //            }
 //        });
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        return true;
     }
 
     public void searchByTag(String tag)

@@ -55,43 +55,50 @@
 </LinearLayout>
 
 
-    <!--<GridView xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:id="@+id/gridview"-->
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+    <!--&lt;!&ndash;<android.support.constraint.ConstraintLayout &ndash;&gt;-->
+
+<!--<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+<!--tools:context="io.tanners.taggedwallpaper.MainActivity"-->
+<!--android:background="@color/black">-->
+
+<!--&lt;!&ndash;<android.support.design.widget.AppBarLayout&ndash;&gt;-->
+<!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;android:theme="@style/AppTheme.AppBarOverlay">&ndash;&gt;-->
+
+<!--&lt;!&ndash;<android.support.v7.widget.Toolbar&ndash;&gt;-->
+<!--&lt;!&ndash;android:id="@+id/main_toolbar"&ndash;&gt;-->
+<!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;android:layout_height="50dp"&ndash;&gt;-->
+<!--&lt;!&ndash;android:paddingTop="1dp"&ndash;&gt;-->
+<!--&lt;!&ndash;android:background="?attr/colorPrimary"&ndash;&gt;-->
+<!--&lt;!&ndash;app:title="Toolbar Test"&ndash;&gt;-->
+<!--&lt;!&ndash;app:layout_scrollFlags="scroll|enterAlways|snap"&ndash;&gt;-->
+<!--&lt;!&ndash;android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"&ndash;&gt;-->
+<!--&lt;!&ndash;app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />&ndash;&gt;-->
+
+<!--<android.support.design.widget.TabLayout-->
+    <!--android:id="@+id/main_tab_layout"-->
     <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:columnWidth="150dp"-->
-    <!--android:numColumns="auto_fit"-->
-    <!--android:verticalSpacing="dp"-->
-    <!--android:horizontalSpacing="10dp"-->
-    <!--android:stretchMode="columnWidth"-->
-    <!--android:gravity="center" />-->
+    <!--android:layout_height="wrap_content"-->
+    <!--app:tabMode="fixed"-->
+    <!--app:tabGravity="fill"-->
+    <!--android:background="#020241" />-->
 
+<!--&lt;!&ndash;</android.support.design.widget.AppBarLayout>&ndash;&gt;-->
 
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<android.support.v4.widget.DrawerLayout-->
+<!--<android.support.v4.view.ViewPager-->
     <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:id="@+id/drawer_layout"-->
+    <!--android:id="@+id/view_pager"-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="match_parent"-->
-    <!--android:fitsSystemWindows="true"-->
-    <!--tools:openDrawer="start"-->
-    <!--android:background="#ffffff">-->
+    <!--android:gravity="center_vertical|center_horizontal"-->
+    <!--android:background="#020241" />-->
 
-    <!--<include layout="@layout/activity_main_toolbar"/>-->
+<!--</android.support.design.widget.CoordinatorLayout>-->
 
-    <!--<android.support.design.widget.NavigationView-->
-        <!--android:id="@+id/nav_view"-->
-        <!--android:layout_width="150dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_weight="1"-->
-        <!--android:layout_gravity="start"-->
-        <!--android:fitsSystemWindows="false"-->
-        <!--android:padding="5dp"-->
-        <!--android:background="#000000">-->
-
-        <!--<include layout="@layout/activity_main_nav_bar_content" />-->
-
-    <!--</android.support.design.widget.NavigationView>-->
-
-<!--</android.support.v4.widget.DrawerLayout>-->
