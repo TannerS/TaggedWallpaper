@@ -1,16 +1,9 @@
 package io.tanners.taggedwallpaper.network.images;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.apache.commons.io.IOUtils;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
-import io.tanners.taggedwallpaper.mappings.results.photo.Photo;
+import io.tanners.taggedwallpaper.data.results.photo.Photo;
 import io.tanners.taggedwallpaper.network.ConnectionRequest;
 
 
@@ -26,7 +19,7 @@ public abstract class Request
     }
 
 
-    public abstract ArrayList<Photo> getPhotos();
+    public abstract List<Photo> getPhotos();
 }
 
 

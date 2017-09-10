@@ -1,6 +1,6 @@
-//package io.tanners.taggedwallpaper.mappings.vision.request.base.v1;
+//package io.tanners.taggedwallpaper.data.vision.request.base.v1;
 //
-//import io.tanners.taggedwallpaper.mappings.vision.request.base.BaseImage;
+//import io.tanners.taggedwallpaper.data.vision.request.base.BaseImage;
 //
 //public class Image extends BaseImage
 //{

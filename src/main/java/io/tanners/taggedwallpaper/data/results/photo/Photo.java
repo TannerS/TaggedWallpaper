@@ -1,4 +1,4 @@
-package io.tanners.taggedwallpaper.mappings.results.photo;
+package io.tanners.taggedwallpaper.data.results.photo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -8,6 +8,10 @@ public class Photo
     private String id;
 //    private int width;
 //    private int height;
+
+    public Photo() {
+
+    }
 
     public Photo(String id, Urls urls) {
         this.id = id;

@@ -1,4 +1,4 @@
-//package io.tanners.taggedwallpaper.mappings.vision.request.base.v1;
+//package io.tanners.taggedwallpaper.data.vision.request.base.v1;
 //
 //public class Source
 //{

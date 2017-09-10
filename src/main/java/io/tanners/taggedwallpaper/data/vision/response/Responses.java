@@ -1,4 +1,4 @@
-//package io.tanners.taggedwallpaper.mappings.vision.response;
+//package io.tanners.taggedwallpaper.data.vision.response;
 //
 //import java.util.ArrayList;
 //

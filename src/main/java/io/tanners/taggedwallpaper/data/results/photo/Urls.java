@@ -1,10 +1,13 @@
-package io.tanners.taggedwallpaper.mappings.results.photo;
+package io.tanners.taggedwallpaper.data.results.photo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Urls {
 //    private String raw;
 //    private String full;
+
+    public Urls() {
+    }
 
     public Urls(String small, String thumb) {
         this.small = small;
