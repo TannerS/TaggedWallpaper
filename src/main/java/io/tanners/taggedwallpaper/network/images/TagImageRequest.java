@@ -25,6 +25,9 @@ public class TagImageRequest extends Request
     public TagImageRequest(String mUrl, final String body)
     {
         super(mUrl);
+
+        Log.i("REQUEST", "GET TAGS: " + mUrl);
+
         // ?utm_source=TaggedWallpaper&utm_medium=referral&utm_campaign=api-credit
 //        mConnectionRequest = new ConnectionRequest(mUrl);
 

@@ -2,15 +2,13 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:appcompat="http://schemas.android.com/apk/res-auto"
-
     xmlns:app="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/photo_search"
-        android:title="Search for images"
+        android:title="Search"
         appcompat:showAsAction="always"
     appcompat:actionViewClass="android.support.v7.widget.SearchView"
-
     android:icon="@drawable/ic_action_search_white"
         android:actionViewClass="android.widget.SearchView"
         />

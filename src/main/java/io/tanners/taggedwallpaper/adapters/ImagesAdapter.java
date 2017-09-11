@@ -34,6 +34,31 @@ public class ImagesAdapter extends BaseAdapter {
         this.mRowId = mRowId;
     }
 
+    public ImagesAdapter(Context mContext) {
+        this.mContext = mContext;
+        this.mItems = null;
+        this.mLayoutId = -1;
+        this.mRowId = -1;
+    }
+
+    public void updateAdapter(ArrayList<Photo> mItems, int mLayoutId, int mRowId)
+    {
+        clearAdapter();
+
+        this.mItems = mItems;
+        this.mLayoutId = mLayoutId;
+        this.mRowId = mRowId;
+
+        notifyDataSetChanged();
+
+    }
+
+    public void clearAdapter()
+    {
+        mItems.clear();
+    }
+
+
     public int getCount() {
         return mItems == null ? 0 : mItems.size();
 

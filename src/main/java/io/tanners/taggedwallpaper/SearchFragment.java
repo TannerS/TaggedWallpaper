@@ -1,7 +1,9 @@
 package io.tanners.taggedwallpaper;
 
 import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,11 +18,27 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
+import io.tanners.taggedwallpaper.network.ImageRequester;
 
 
 public class SearchFragment extends Fragment {
     private View view;
     public static final String SEARCH = "Search Images";
+    private ImagesAdapter mAdapter;
+    private GridView mSearchGridview;
+    private String query = "";
+//    private final String mUrl = "https://api.unsplash.com/search/photos?query=mountains, nature, landscape&per_page=50&page=1&order_by=popular";
+//    private final String mUrl = "https://api.unsplash.com/search/photos?query=" + query + "&per_page=50&page=1&order_by=popular";
+    private final String mUrlBase = "https://api.unsplash.com/search/photos?query=";
+    private final String mUrlFeatures = "&per_page=50&page=1&order_by=popular";
+    private LinearLayout mSearchContainer;
+
+
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
@@ -40,16 +58,27 @@ public class SearchFragment extends Fragment {
 
         setUpToolBar(view);
 
+        loadResources(view);
 
         return view;
+    }
+
+    private void loadResources(View view)
+    {
+        mSearchGridview = view.findViewById(R.id.universal_grideview);
+        mSearchContainer = view.findViewById(R.id.search_description_container);
+
     }
 
     private void setUpToolBar(View view)
     {
         Toolbar mToolbar = view.findViewById(R.id.main_toolbar);
+        mToolbar.setTitle("Search Here!");
 //        .setSupportActionBar(mToolbar);
 //        getSupportActionBar().setDisplayShowTitleEnabled(false);
         ((AppCompatActivity)getActivity()).setSupportActionBar(mToolbar);
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+
     }
 
     @Override
@@ -96,11 +125,29 @@ public class SearchFragment extends Fragment {
         mSearchBarMenuItem.setIcon(R.drawable.ic_action_search_white);
         mSearchBarMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 //
+        mSearchBarMenuItem.setTitle("TITLE");
 
-        search_view.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-        search_view.setQueryHint("HINT HERE");
-        search_view.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
-        Log.i("SEARCH", "DEBUG 4");
+
+        ComponentName cn = new ComponentName(getContext(), MainActivity.class);
+        search_view.setSearchableInfo(searchManager.getSearchableInfo(cn));
+
+//        search_view.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+//        search_view.setQueryHint("HINT HERE");
+        search_view.setIconifiedByDefault(true);
+        search_view.setQueryHint("Type something...");
+//        search_view.setQuery("", false);
+//        int searchTextId = search_view.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+
+//        TextView searchText = (TextView) search_view.findViewById(searchTextId);
+
+//        if (searchText!=null) {
+//            searchText.setTextColor(Color.WHITE);
+//            searchText.setHintTextColor(Color.WHITE);
+//        }
+
+//        my_search_view.setIconified(false);
+//        my_search_view.setIconifiedByDefault(false);
+
 
 
 //        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -111,35 +158,33 @@ public class SearchFragment extends Fragment {
 //        textView.setHintTextColor(getResources().getColor(R.color.cardview_dark_background));
 //        textView.setTextColor(getResources().getColor(R.color.colorAccent));
 
+        final SearchView finalSearch_view = search_view;
+        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-//        final SearchView finalSearch_view = search_view;
-//        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                final String tag = finalSearch_view.getQuery().toString();
-//                // TODO async
-//                new Runnable() {
-//                    @Override
-//                    public void run() {
-////                        MenuItemCompat.collapseActionView(search_bar);
-////                        search_bar.collapseActionView();
-////                        search_view.clearFocus();
-////                        search_view.setQuery("", false);
-////                        search_view.setFocusable(false);
-////                        searchByTag(tag, TagImageRequest.OPEN_SEARCH);
-//                        searchByTag(tag);
-//                    }
-//                }.run();
-//
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return false;
-//            }
-//        });
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                final String tag = finalSearch_view.getQuery().toString();
+                new Runnable() {
+                    @Override
+                    public void run() {
+//                        MenuItemCompat.collapseActionView(search_bar);
+//                        search_bar.collapseActionView();
+//                        search_view.clearFocus();
+//                        search_view.setQuery("", false);
+//                        search_view.setFocusable(false);
+//                        searchByTag(tag, TagImageRequest.OPEN_SEARCH);
+                        searchByTag(tag);
+                    }
+                }.run();
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -150,9 +195,18 @@ public class SearchFragment extends Fragment {
     public void searchByTag(String tag)
     {
         Log.i("SEARCH", "QUERY: " + tag);
-//        if(adapter != null)
-//            adapter.clear();
-//        new PhotoSearchFragment.GatherTaggedPhotos().execute(tag);
+
+        String mNewUrl = mUrlBase + tag + mUrlFeatures;
+
+        Log.i("SEARCH", "QUERY: " + mNewUrl);
+
+        mSearchContainer.setVisibility(View.GONE);
+        mSearchGridview.setVisibility(View.VISIBLE);
+
+        if(mAdapter != null)
+            mAdapter.clearAdapter();
+
+        new ImageRequester(getContext(), mAdapter, mSearchGridview, R.layout.grid_item, R.id.grid_image_background).execute(mNewUrl);
     }
 //
 //

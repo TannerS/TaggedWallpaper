@@ -66,8 +66,10 @@ public class MainActivity extends AppCompatActivity implements IFindFragment{
             String query = intent.getStringExtra(SearchManager.QUERY);
             // find reference to search fragment
             SearchFragment frag = (SearchFragment) findFragmentByTitle(SearchFragment.SEARCH);
-            // pass query into fragment
-            frag.searchByTag(query.trim());
+
+            if(frag != null)
+                // pass query into fragment
+                frag.searchByTag(query.trim());
         }
     }
 
@@ -118,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements IFindFragment{
     }
 
     @Override
-    public Fragment findFragmentByTitle(String title) {
+    public void searchFragmentByTitle(String title) {
 
         int pos = 0;
 
@@ -128,6 +130,18 @@ public class MainActivity extends AppCompatActivity implements IFindFragment{
                 mViewPager.setCurrentItem(pos);
             else
                 pos++;
+        }
+    }
+
+    @Override
+    public Fragment findFragmentByTitle(String title) {
+
+        int pos = 0;
+
+        for(FragmentAdapter.FragmentInfo fragInfo : this.frags)
+        {
+            if(fragInfo.getTitle().equals(title))
+                return fragInfo.getFrag();
         }
 
         return null;

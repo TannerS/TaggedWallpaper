@@ -15,6 +15,7 @@ import java.util.List;
 
 import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
 import io.tanners.taggedwallpaper.data.results.photo.Photo;
+import io.tanners.taggedwallpaper.network.ImageRequester;
 import io.tanners.taggedwallpaper.network.images.TagImageRequest;
 
 
@@ -24,6 +25,7 @@ public class PopularFragment extends Fragment {
     private final String mUrl = "https://api.unsplash.com/photos?per_page=50&page=1&order_by=popular";
     private TagImageRequest mImageRequest;
     private GridView mPopularGridview;
+    private ImagesAdapter mAdapter;
 
 
     public static PopularFragment newInstance() {
@@ -41,14 +43,16 @@ public class PopularFragment extends Fragment {
 
         loadResources(view);
 
-        new ImageRequester().execute();
+//        public ImageRequester(Context mContext, GridView mGridView, int mGridLayoutId,int mGridImageViewId)
+//        new ImageRequester(getContext(), mPopularGridview, R.layout.grid_item, R.id.grid_image_background).execute(mUrl);
+        new ImageRequester(getContext(), mAdapter, mPopularGridview, R.layout.grid_item, R.id.grid_image_background).execute(mUrl);
 
         return view;
     }
 
     private void loadResources(View view)
     {
-        mPopularGridview = (GridView) view.findViewById(R.id.popular_grideview);
+        mPopularGridview = (GridView) view.findViewById(R.id.universal_grideview);
     }
 
     @Override
@@ -61,48 +65,48 @@ public class PopularFragment extends Fragment {
         super.onDetach();
     }
 
-    private class ImageRequester extends AsyncTask<Void, Void, List<Photo>> {
-//        private ProgressBar mProgressBar = null;
-
-        // TODO do better, maybe pass URL int oclass in here and main in earlier functions?
-        @Override
-        protected List<Photo> doInBackground(Void... params) {
-
-            mImageRequest = new TagImageRequest(mUrl, null);
-
-            List<Photo> photos = mImageRequest.getPhotos();
-
-            Log.i("REQUEST", "SIZE: " + photos.size());
-//            Log.i("REQUEST", "SIZE: " + photos.get(0).getId());
-//            Log.i("REQUEST", "SIZE: " + photos.get(1).getId());
-//            Log.i("REQUEST", "SIZE: " + photos.get(2).getId());
-
-            return photos;
-        }
-
-
-        @Override
-        protected void onPostExecute(List<Photo> photos) {
-            // execution of result of Long time consuming operation
-//            mProgressBar.setVisibility(View.GONE);
-//            finalResult.setText(result);
-
-            mPopularGridview.setAdapter(new ImagesAdapter(getContext(), new ArrayList<Photo>(photos), R.layout.grid_item, R.id.grid_image_background));
-
-
-        }
-
-
-        @Override
-        protected void onPreExecute() {
-//            mProgressBar = (ProgressBar) view.findViewById(R.id.popular_progress_bar);
-//            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
+//    private class ImageRequester extends AsyncTask<Void, Void, List<Photo>> {
+////        private ProgressBar mProgressBar = null;
+//
+//        // TODO do better, maybe pass URL int oclass in here and main in earlier functions?
 //        @Override
-//        protected void onProgressUpdate(String... text) {
-//            finalResult.setText(text[0]);
+//        protected List<Photo> doInBackground(Void... params) {
+//
+//            mImageRequest = new TagImageRequest(mUrl, null);
+//
+//            List<Photo> photos = mImageRequest.getPhotos();
+//
+//            Log.i("REQUEST", "SIZE: " + photos.size());
+////            Log.i("REQUEST", "SIZE: " + photos.get(0).getId());
+////            Log.i("REQUEST", "SIZE: " + photos.get(1).getId());
+////            Log.i("REQUEST", "SIZE: " + photos.get(2).getId());
+//
+//            return photos;
+//        }
+//
+//
+//        @Override
+//        protected void onPostExecute(List<Photo> photos) {
+//            // execution of result of Long time consuming operation
+////            mProgressBar.setVisibility(View.GONE);
+////            finalResult.setText(result);
+//
+//            mPopularGridview.setAdapter(new ImagesAdapter(getContext(), new ArrayList<Photo>(photos), R.layout.grid_item, R.id.grid_image_background));
+//
 //
 //        }
-    }
+//
+//
+//        @Override
+//        protected void onPreExecute() {
+////            mProgressBar = (ProgressBar) view.findViewById(R.id.popular_progress_bar);
+////            mProgressBar.setVisibility(View.VISIBLE);
+//        }
+//
+////        @Override
+////        protected void onProgressUpdate(String... text) {
+////            finalResult.setText(text[0]);
+////
+////        }
+//    }
 }
