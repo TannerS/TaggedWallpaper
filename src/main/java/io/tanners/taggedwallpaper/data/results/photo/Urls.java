@@ -3,8 +3,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Urls {
-//    private String raw;
-//    private String full;
 
     public Urls() {
     }

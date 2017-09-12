@@ -1,29 +1,24 @@
 package io.tanners.taggedwallpaper;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
-import io.tanners.taggedwallpaper.data.results.photo.Photo;
 import io.tanners.taggedwallpaper.network.ImageRequester;
-import io.tanners.taggedwallpaper.network.images.TagImageRequest;
+import io.tanners.taggedwallpaper.network.images.ImageRequest;
+import io.tanners.taggedwallpaper.network.images.Request;
 
 
 public class PopularFragment extends Fragment {
     private View view;
-    public static final String POPULAR = "Popular Images";
+    public static final String POPULAR = "POPULAR Images";
     private final String mUrl = "https://api.unsplash.com/photos?per_page=50&page=1&order_by=popular";
-    private TagImageRequest mImageRequest;
+    private ImageRequest mImageRequest;
     private GridView mPopularGridview;
     private ImagesAdapter mAdapter;
 
@@ -45,7 +40,7 @@ public class PopularFragment extends Fragment {
 
 //        public ImageRequester(Context mContext, GridView mGridView, int mGridLayoutId,int mGridImageViewId)
 //        new ImageRequester(getContext(), mPopularGridview, R.layout.grid_item, R.id.grid_image_background).execute(mUrl);
-        new ImageRequester(getContext(), mAdapter, mPopularGridview, R.layout.grid_item, R.id.grid_image_background).execute(mUrl);
+        new ImageRequester(getContext(), mAdapter, mPopularGridview, Request.Requested.POPULAR, R.layout.grid_item, R.id.grid_image_background).execute(mUrl);
 
         return view;
     }
@@ -72,7 +67,7 @@ public class PopularFragment extends Fragment {
 //        @Override
 //        protected List<Photo> doInBackground(Void... params) {
 //
-//            mImageRequest = new TagImageRequest(mUrl, null);
+//            mImageRequest = new ImageRequest(mUrl, null);
 //
 //            List<Photo> photos = mImageRequest.getPhotos();
 //

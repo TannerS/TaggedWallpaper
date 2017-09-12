@@ -17,7 +17,6 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
-import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.data.results.photo.Photo;
 
 

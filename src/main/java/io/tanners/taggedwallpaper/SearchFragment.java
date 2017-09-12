@@ -3,11 +3,8 @@ package io.tanners.taggedwallpaper;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -20,10 +17,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
 import io.tanners.taggedwallpaper.network.ImageRequester;
+import io.tanners.taggedwallpaper.network.images.Request;
 
 
 public class SearchFragment extends Fragment {
@@ -66,7 +63,7 @@ public class SearchFragment extends Fragment {
     private void loadResources(View view)
     {
         mSearchGridview = view.findViewById(R.id.universal_grideview);
-        mSearchContainer = view.findViewById(R.id.search_description_container);
+//        mSearchContainer = view.findViewById(R.id.search_description_container);
 
     }
 
@@ -172,7 +169,7 @@ public class SearchFragment extends Fragment {
 //                        search_view.clearFocus();
 //                        search_view.setQuery("", false);
 //                        search_view.setFocusable(false);
-//                        searchByTag(tag, TagImageRequest.OPEN_SEARCH);
+//                        searchByTag(tag, ImageRequest.OPEN_SEARCH);
                         searchByTag(tag);
                     }
                 }.run();
@@ -200,13 +197,19 @@ public class SearchFragment extends Fragment {
 
         Log.i("SEARCH", "QUERY: " + mNewUrl);
 
-        mSearchContainer.setVisibility(View.GONE);
-        mSearchGridview.setVisibility(View.VISIBLE);
+
+
+
+
+
 
         if(mAdapter != null)
             mAdapter.clearAdapter();
 
-        new ImageRequester(getContext(), mAdapter, mSearchGridview, R.layout.grid_item, R.id.grid_image_background).execute(mNewUrl);
+        new ImageRequester(getContext(), mAdapter, mSearchGridview, Request.Requested.SEARCH, R.layout.grid_item, R.id.grid_image_background).execute(mNewUrl);
+
+//        mSearchContainer.setVisibility(View.GONE);
+//        mSearchGridview.setVisibility(View.VISIBLE);
     }
 //
 //
@@ -219,13 +222,13 @@ public class SearchFragment extends Fragment {
 //
 //    private class GatherTaggedPhotos extends AsyncTask<String, Void, PhotoContainer>
 //    {
-//        private TagImageRequest imageRequest;
+//        private ImageRequest imageRequest;
 //        private ProgressDialog dialog;
 //
 //        private GatherTaggedPhotos()
 //        {
-////            imageRequest = new TagImageRequest(context, per_page, page);
-//            imageRequest = new TagImageRequest(per_page, page);
+////            imageRequest = new ImageRequest(context, per_page, page);
+//            imageRequest = new ImageRequest(per_page, page);
 //        }
 //
 //        @Override
