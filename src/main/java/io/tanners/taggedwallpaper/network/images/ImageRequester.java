@@ -1,4 +1,4 @@
-package io.tanners.taggedwallpaper.network;
+package io.tanners.taggedwallpaper.network.images;
 
 import android.content.Context;
 import android.os.AsyncTask;

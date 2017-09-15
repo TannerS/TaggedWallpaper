@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 
 import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
-import io.tanners.taggedwallpaper.network.ImageRequester;
+import io.tanners.taggedwallpaper.network.images.ImageRequester;
 import io.tanners.taggedwallpaper.network.images.ImageRequest;
 import io.tanners.taggedwallpaper.network.images.Request;
 

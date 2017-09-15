@@ -65,11 +65,11 @@ public class MainActivity extends AppCompatActivity implements IFindFragment{
 
             String query = intent.getStringExtra(SearchManager.QUERY);
             // find reference to search fragment
-            SearchFragment frag = (SearchFragment) findFragmentByTitle(SearchFragment.SEARCH);
+            //SearchFragment frag = (SearchFragment) findFragmentByTitle(SearchFragment.SEARCH);
 
-            if(frag != null)
+            //if(frag != null)
                 // pass query into fragment
-                frag.searchByTag(query.trim());
+                //frag.searchByTag(query.trim());
         }
     }
 
@@ -96,8 +96,8 @@ public class MainActivity extends AppCompatActivity implements IFindFragment{
         Log.i("LOAD", "LOADING FRAGMENTS");
         frags = new ArrayList<FragmentAdapter.FragmentInfo>() {{
             add(new FragmentAdapter.FragmentInfo(CategoryFragment.newInstance(), CategoryFragment.CATEGORY_DATABASE_NAME));
-            add(new FragmentAdapter.FragmentInfo(PopularFragment.newInstance(), PopularFragment.POPULAR));
-            add(new FragmentAdapter.FragmentInfo(SearchFragment.newInstance(), SearchFragment.SEARCH));
+            //add(new FragmentAdapter.FragmentInfo(PopularFragment.newInstance(), PopularFragment.POPULAR));
+            //add(new FragmentAdapter.FragmentInfo(SearchFragment.newInstance(), SearchFragment.SEARCH));
             add(new FragmentAdapter.FragmentInfo(SimilarImagesFragment.newInstance(), SimilarImagesFragment.SIMILAR));
         }};
 
