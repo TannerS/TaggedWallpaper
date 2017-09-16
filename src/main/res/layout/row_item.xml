@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/row_image_container"
+    android:padding="2dp"
+    android:layout_margin="5dp">
+
+    <ImageView
+        android:id="@+id/row_image_background"
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
+    </ImageView>
+
+    <ImageView
+        android:id="@+id/row_image_bar"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:foregroundGravity="center"
+        android:layout_height="75dp"
+        android:background="@color/transparentAlpha">
+    </ImageView>
+    <!--<ImageView-->
+        <!--android:id="@+id/row_image_bar_secondary"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:foregroundGravity="center"-->
+        <!--android:layout_height="75dp"-->
+        <!--android:background="@color/transparentBeta">-->
+    <!--</ImageView>-->
+
+    <TextView
+        android:id="@+id/row_item_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:gravity="center">
+    </TextView>
+
+</FrameLayout>
+
