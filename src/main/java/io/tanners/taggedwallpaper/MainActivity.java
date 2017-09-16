@@ -5,21 +5,20 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
@@ -32,7 +31,9 @@ import io.tanners.taggedwallpaper.interfaces.IFindFragment;
 public class MainActivity extends AppCompatActivity implements IFindFragment, NavigationView.OnNavigationItemSelectedListener {
     private List<FragmentAdapter.FragmentInfo> frags;
     private ViewPager mViewPager;
-    private final int FRAG_AMOUNT =2;
+    private final int FRAG_AMOUNT = 3;
+    private Toolbar mToolbar;
+    private ActionBarDrawerToggle mToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements IFindFragment, Na
 //        setHasOptionsMenu(true);
 
         setUpToolBar();
+        setUpDrawer();
         setUpNav();
         loadResources();
         // set up fragment tabs
@@ -67,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements IFindFragment, Na
         setUpSearchBar(menu);
         return true;
     }
+
+
 
     private void setUpSearchBar(Menu menu)
     {
@@ -141,30 +145,51 @@ public class MainActivity extends AppCompatActivity implements IFindFragment, Na
 
     private void setUpToolBar()
     {
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        mToolbar.setTitle("Tagged Wallpaper");
+        mToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+
+       // setSupportActionBar(toolbar);
+       // mToolbar.setTitle("");
 //        .setSupportActionBar(mToolbar);
 //        getSupportActionBar().setDisplayShowTitleEnabled(false);
         setSupportActionBar(mToolbar);
 //        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        setUpDrawer(mToolbar);
+        //setUpDrawer(mToolbar);
     }
 
-    private void setUpDrawer(Toolbar toolbar) {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+    // https://stackoverflow.com/questions/26754940/appcompatv7-v21-navigation-drawer-not-showing-hamburger-icon
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mToggle.syncState();
+    }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mToggle.onConfigurationChanged(newConfig);
+        mToggle.syncState();
+    }
+
+    private void setUpDrawer() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        mToggle = new ActionBarDrawerToggle(
+                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
         // This method was deprecated in API level 23.2.0. Use addDrawerListener(DrawerListener)
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            drawer.addDrawerListener(toggle);
-
+            drawer.addDrawerListener(mToggle);
         else
-            drawer.setDrawerListener(toggle);
+            drawer.setDrawerListener(mToggle);
 
-        toggle.syncState();
+        // just in case
+        mToggle.syncState();
+
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     private void setUpNav()
@@ -193,14 +218,23 @@ public class MainActivity extends AppCompatActivity implements IFindFragment, Na
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        return true;
+
+        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void loadResources()
     {
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        setSupportActionBar(myToolbar);
+       // Toolbar myToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        //setSupportActionBar(myToolbar);
     }
 
     /**
