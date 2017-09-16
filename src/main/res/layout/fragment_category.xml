@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="io.tanners.taggedwallpaper.CategoryFragment">
+    tools:context="io.tanners.taggedwallpaper.fragments.CategoryFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/category_recycler_view"

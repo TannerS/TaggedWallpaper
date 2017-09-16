@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.tanners.taggedwallpaper.MainActivity">
+    tools:context="io.tanners.taggedwallpaper.activities.MainActivity">
 
     <!--https://stackoverflow.com/questions/31328695/what-is-the-difference-between-appbarlayout-vs-toolbar/-->
     <android.support.design.widget.AppBarLayout

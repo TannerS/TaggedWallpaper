@@ -1,7 +1,6 @@
-package io.tanners.taggedwallpaper;
+package io.tanners.taggedwallpaper.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.adapters.CategoryAdapter;
 import io.tanners.taggedwallpaper.data.CategoryItem;
 

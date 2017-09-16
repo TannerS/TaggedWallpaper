@@ -1,5 +1,5 @@
 
-package io.tanners.taggedwallpaper;
+package io.tanners.taggedwallpaper.activities;
 
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -24,6 +24,9 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.tanners.taggedwallpaper.fragments.CategoryFragment;
+import io.tanners.taggedwallpaper.R;
+import io.tanners.taggedwallpaper.fragments.SimilarImagesFragment;
 import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
 import io.tanners.taggedwallpaper.animations.ZoomOutPageTransformer;
 import io.tanners.taggedwallpaper.interfaces.IFindFragment;
