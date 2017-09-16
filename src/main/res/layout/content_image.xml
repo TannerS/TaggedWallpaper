@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="io.tanners.taggedwallpaper.activities.ImageActivity"
+    tools:context="io.tanners.taggedwallpaper.ImageActivity"
     tools:showIn="@layout/activity_image">
 
 </android.support.constraint.ConstraintLayout>

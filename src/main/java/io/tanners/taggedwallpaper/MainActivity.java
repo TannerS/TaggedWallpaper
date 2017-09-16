@@ -1,5 +1,5 @@
 
-package io.tanners.taggedwallpaper.activities;
+package io.tanners.taggedwallpaper;
 
 import android.app.SearchManager;
 import android.content.ComponentName;
@@ -14,10 +14,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -25,13 +27,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.tanners.taggedwallpaper.fragments.CategoryFragment;
-import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.fragments.SimilarImagesFragment;
 import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
 import io.tanners.taggedwallpaper.animations.ZoomOutPageTransformer;
 import io.tanners.taggedwallpaper.interfaces.IFindFragment;
 
-public class MainActivity extends AppCompatActivity implements IFindFragment, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements IFindFragment, NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
     private List<FragmentAdapter.FragmentInfo> frags;
     private ViewPager mViewPager;
     private final int FRAG_AMOUNT = 3;
@@ -80,70 +81,67 @@ public class MainActivity extends AppCompatActivity implements IFindFragment, Na
         final MenuItem mSearchBarMenuItem = menu.findItem(R.id.photo_search);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView search_view = (SearchView) mSearchBarMenuItem.getActionView();
+        final SearchView mSearchView = (SearchView) mSearchBarMenuItem.getActionView();
 
-        mSearchBarMenuItem.setIcon(R.drawable.ic_action_search_white);
-        mSearchBarMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+//        mSearchBarMenuItem.setIcon(R.drawable.ic_action_search_white);
+//        mSearchBarMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+//        mSearchBarMenuItem.setTitle("TITLE");
+
+        ComponentName mComponentName = new ComponentName(this, MainActivity.class);
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(mComponentName));
+//        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, MainActivity.class)));
+
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnCloseListener(this);
+
+//        mSearchView.setIconifiedByDefault(true);
+
+        // https://stackoverflow.com/questions/18737464/how-to-make-the-action-bar-searchview-fill-entire-action-bar
+        mSearchView.setIconifiedByDefault(false);
+        ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
+        mSearchView.setLayoutParams(params);
+//        mSearchBarMenuItem.expandActionView();
+
+//        mSearchView.
+
+
+
+
+
+
+       // mSearchView.setIconifiedByDefault(true);
+        //mSearchView.setQueryHint("Search...");
+
+//        final SearchView finalSearch_view = mSearchView;
+//        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 //
-        //mSearchBarMenuItem.setTitle("TITLE");
-
-        ComponentName mComponentName = new ComponentName(getApplicationContext(), MainActivity.class);
-        search_view.setSearchableInfo(searchManager.getSearchableInfo(mComponentName));
-
-//        search_view.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-//        search_view.setQueryHint("HINT HERE");
-        search_view.setIconifiedByDefault(true);
-        search_view.setQueryHint("Search Images");
-//        search_view.setQuery("", false);
-//        int searchTextId = search_view.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
-
-//        TextView searchText = (TextView) search_view.findViewById(searchTextId);
-
-//        if (searchText!=null) {
-//            searchText.setTextColor(Color.WHITE);
-//            searchText.setHintTextColor(Color.WHITE);
-//        }
-
-//        my_search_view.setIconified(false);
-//        my_search_view.setIconifiedByDefault(false);
-
-
-
-//        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-//        int id = search_view.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
-//        TextView textView = (TextView) search_view.findViewById(id);
-//        textView.setHint("Search location...");
-//        textView.setHintTextColor(getResources().getColor(R.color.cardview_dark_background));
-//        textView.setTextColor(getResources().getColor(R.color.colorAccent));
-
-        final SearchView finalSearch_view = search_view;
-        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                final String tag = finalSearch_view.getQuery().toString();
-                new Runnable() {
-                    @Override
-                    public void run() {
-//                        MenuItemCompat.collapseActionView(search_bar);
-//                        search_bar.collapseActionView();
-//                        search_view.clearFocus();
-//                        search_view.setQuery("", false);
-//                        search_view.setFocusable(false);
-//                        searchByTag(tag, ImageRequest.OPEN_SEARCH);
-//                        searchByTag(tag);
-                    }
-                }.run();
-
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                final String tag = mSearchView.getQuery().toString();
+//                new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Log.i("SEARCH", "DEBUG 222: " + tag);
+//
+////                        MenuItemCompat.collapseActionView(search_bar);
+////                        search_bar.collapseActionView();
+////                        mSearchView.clearFocus();
+////                        mSearchView.setQuery("", false);
+////                        mSearchView.setFocusable(false);
+////                        searchByTag(tag, ImageRequest.OPEN_SEARCH);
+//                        //searchByTag(tag);
+//                    }
+//                }.run();
+//
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                return false;
+//            }
+//        });
     }
 
     private void setUpToolBar()
@@ -165,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements IFindFragment, Na
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mToggle.syncState();
+
+
     }
 
     @Override
@@ -201,23 +201,6 @@ public class MainActivity extends AppCompatActivity implements IFindFragment, Na
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -246,6 +229,10 @@ public class MainActivity extends AppCompatActivity implements IFindFragment, Na
      */
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        Log.i("SEARCH", "DEBUG !!!!!!!: " );
+        setIntent(intent);
         // handle search queries
         handleSearch(intent);
     }
@@ -255,11 +242,14 @@ public class MainActivity extends AppCompatActivity implements IFindFragment, Na
      * @param intent
      */
     private void handleSearch(Intent intent) {
-
+        Log.i("SEARCH", "DEBUG 000: " );
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+
 
             // get search query
             String query = intent.getStringExtra(SearchManager.QUERY);
+            Log.i("SEARCH", "DEBUG 111: " + query);
+
             // find reference to search fragment
             //SearchFragment frag = (SearchFragment) findFragmentByTitle(SearchFragment.SEARCH);
             //if(frag != null)
@@ -381,5 +371,24 @@ public class MainActivity extends AppCompatActivity implements IFindFragment, Na
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onClose() {
+        Log.i("SEARCH", "DEBUG 123: " );
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Log.i("SEARCH", "DEBUG 456: " );
+        return false;
+
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        Log.i("SEARCH", "DEBUG 789: " );
+        return false;
     }
 }
