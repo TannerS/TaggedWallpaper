@@ -5,9 +5,14 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
@@ -24,7 +29,7 @@ import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
 import io.tanners.taggedwallpaper.animations.ZoomOutPageTransformer;
 import io.tanners.taggedwallpaper.interfaces.IFindFragment;
 
-public class MainActivity extends AppCompatActivity implements IFindFragment{
+public class MainActivity extends AppCompatActivity implements IFindFragment, NavigationView.OnNavigationItemSelectedListener {
     private List<FragmentAdapter.FragmentInfo> frags;
     private ViewPager mViewPager;
     private final int FRAG_AMOUNT =2;
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements IFindFragment{
 //        setHasOptionsMenu(true);
 
         setUpToolBar();
+        setUpNav();
         loadResources();
         // set up fragment tabs
         setUpTabs();
@@ -46,6 +52,13 @@ public class MainActivity extends AppCompatActivity implements IFindFragment{
         handleSearch(getIntent());
 
     }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,26 +147,47 @@ public class MainActivity extends AppCompatActivity implements IFindFragment{
 //        getSupportActionBar().setDisplayShowTitleEnabled(false);
         setSupportActionBar(mToolbar);
 //        ((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-
+        setUpDrawer(mToolbar);
     }
 
-    //    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.menu, menu);
-//    }
+    private void setUpDrawer(Toolbar toolbar) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+
+        // This method was deprecated in API level 23.2.0. Use addDrawerListener(DrawerListener)
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            drawer.addDrawerListener(toggle);
+
+        else
+            drawer.setDrawerListener(toggle);
+
+        toggle.syncState();
+    }
+
+    private void setUpNav()
+    {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
 
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
-//        // handle item selection
-//        switch (item.getItemId()) {
-//            case R.id.action_search:
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
 //
-//                //       onCall();   //your logic
-//
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
 //        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
+
 
 
 
@@ -227,12 +261,30 @@ public class MainActivity extends AppCompatActivity implements IFindFragment{
         mViewPager.setAdapter(adapter);
     }
 
+
+
     @Override
     public void onBackPressed() {
+
+
+
         if (mViewPager.getCurrentItem() == 0) {
+
+
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
+
+
+
             // If the user is currently looking at the first step, allow the system to handle the
             // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed();
+            //super.onBackPressed();
+
 
         } else {
             // Otherwise, select the previous step.
@@ -266,5 +318,31 @@ public class MainActivity extends AppCompatActivity implements IFindFragment{
         }
 
         return null;
+    }
+
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
