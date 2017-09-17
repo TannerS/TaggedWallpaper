@@ -1,19 +1,14 @@
 package io.tanners.taggedwallpaper.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -22,16 +17,16 @@ import java.util.ArrayList;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.data.CategoryItem;
 
-//public class CategoryAdapter extends BaseAdapter {
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
+//public class RowImageAdapter extends BaseAdapter {
+public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.CategoryViewHolder> {
     private Context mContext;
     private ArrayList<CategoryItem> mItems;
     private int mLayoutId;
 //    private int mBackBarLayoutId;
 
-//    public CategoryAdapter(Context mContext, ArrayList<CategoryItem> mItems, int mLayoutId, int mBackBarLayoutId) {
-//    public CategoryAdapter(Context mContext, ArrayList<CategoryItem> mItems, int mLayoutId, int mBackBarLayoutId) {
-    public CategoryAdapter(Context mContext, ArrayList<CategoryItem> mItems, int mLayoutId) {
+//    public RowImageAdapter(Context mContext, ArrayList<CategoryItem> mItems, int mLayoutId, int mBackBarLayoutId) {
+//    public RowImageAdapter(Context mContext, ArrayList<CategoryItem> mItems, int mLayoutId, int mBackBarLayoutId) {
+    public RowImageAdapter(Context mContext, ArrayList<CategoryItem> mItems, int mLayoutId) {
         this.mContext = mContext;
         this.mItems = mItems;
         this.mLayoutId = mLayoutId;

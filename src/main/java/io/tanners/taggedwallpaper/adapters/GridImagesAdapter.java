@@ -20,20 +20,20 @@ import com.bumptech.glide.request.RequestOptions;
 import io.tanners.taggedwallpaper.data.results.photo.Photo;
 
 
-public class ImagesAdapter extends BaseAdapter {
+public class GridImagesAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<Photo> mItems;
     private int mLayoutId;
     private int mRowId;
 
-    public ImagesAdapter(Context mContext, ArrayList<Photo> mItems, int mLayoutId, int mRowId) {
+    public GridImagesAdapter(Context mContext, ArrayList<Photo> mItems, int mLayoutId, int mRowId) {
         this.mContext = mContext;
         this.mItems = mItems;
         this.mLayoutId = mLayoutId;
         this.mRowId = mRowId;
     }
 
-    public ImagesAdapter(Context mContext) {
+    public GridImagesAdapter(Context mContext) {
         this.mContext = mContext;
         this.mItems = null;
         this.mLayoutId = -1;

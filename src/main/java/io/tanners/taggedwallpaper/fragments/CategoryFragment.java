@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import io.tanners.taggedwallpaper.R;
-import io.tanners.taggedwallpaper.adapters.CategoryAdapter;
+import io.tanners.taggedwallpaper.adapters.RowImageAdapter;
 import io.tanners.taggedwallpaper.data.CategoryItem;
 
 
@@ -102,7 +102,7 @@ public class CategoryFragment extends Fragment {
                     categories.add(new CategoryItem(entry.getKey(), entry.getValue()));
                 }
 
-                mCategoryList.setAdapter(new CategoryAdapter(getActivity(), categories, R.layout.row_item));
+                mCategoryList.setAdapter(new RowImageAdapter(getActivity(), categories, R.layout.row_item));
 
                 //        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 //            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {

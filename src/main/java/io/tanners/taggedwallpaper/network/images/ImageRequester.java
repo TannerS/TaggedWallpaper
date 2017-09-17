@@ -9,11 +9,10 @@ import android.widget.GridView;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
+import io.tanners.taggedwallpaper.adapters.GridImagesAdapter;
 import io.tanners.taggedwallpaper.data.results.photo.Photo;
 //import io.tanners.taggedwallpaper.interfaces.IImageRequestCallBack;
-import io.tanners.taggedwallpaper.network.images.ImageRequest;
-import io.tanners.taggedwallpaper.network.images.Request;
+
 
 //public class ImageRequester extends AsyncTask<String, Void, List<Photo>> implements IImageRequestCallBack {
 public class ImageRequester extends AsyncTask<String, Void, List<Photo>> {
@@ -23,12 +22,12 @@ public class ImageRequester extends AsyncTask<String, Void, List<Photo>> {
     private Context mContext;
     private int mGridRowLayoutId;
     private int mGridImageViewId;
-    private ImagesAdapter mAdapter;
+    private GridImagesAdapter mAdapter;
     private Request.Requested mRequestType;
 //    private BaseAdapter mAdapter;
 
 //    public ImageRequester(GridView mGridView, IImageRequestCallBack mCallback, int mGridRowLayoutId,int mGridImageViewId)
-    public ImageRequester(Context mContext, ImagesAdapter mAdapter, GridView mGridView, Request.Requested mRequestType, int mGridRowLayoutId, int mGridImageViewId)
+    public ImageRequester(Context mContext, GridImagesAdapter mAdapter, GridView mGridView, Request.Requested mRequestType, int mGridRowLayoutId, int mGridImageViewId)
     {
         this.mContext = mContext;
         this.mGridView = mGridView;
@@ -69,11 +68,11 @@ public class ImageRequester extends AsyncTask<String, Void, List<Photo>> {
 
 //        GridView mPopularGridview =
 
-//        mPopularGridview.setAdapter(new ImagesAdapter(getContext(), new ArrayList<Photo>(photos), R.layout.grid_item, R.id.grid_image_background));
-//        mGridView.setAdapter(new ImagesAdapter(mContext, new ArrayList<Photo>(photos), R.layout.grid_item, R.id.grid_image_background));
+//        mPopularGridview.setAdapter(new GridImagesAdapter(getContext(), new ArrayList<Photo>(photos), R.layout.grid_item, R.id.grid_image_background));
+//        mGridView.setAdapter(new GridImagesAdapter(mContext, new ArrayList<Photo>(photos), R.layout.grid_item, R.id.grid_image_background));
 
         if(photos != null) {
-            mAdapter = new ImagesAdapter(mContext, new ArrayList<Photo>(photos), mGridRowLayoutId, mGridImageViewId);
+            mAdapter = new GridImagesAdapter(mContext, new ArrayList<Photo>(photos), mGridRowLayoutId, mGridImageViewId);
 
 
             Log.i("REQUEST", "DEBUG 222222");
@@ -81,7 +80,7 @@ public class ImageRequester extends AsyncTask<String, Void, List<Photo>> {
 
             mGridView.setVisibility(View.VISIBLE);
 //        mGridView.setAdapter(mCallback(photos));
-//        mGridView.setAdapter(new ImagesAdapter(mContext, new ArrayList<Photo>(photos), R.layout.grid_item, R.id.grid_image_background));
+//        mGridView.setAdapter(new GridImagesAdapter(mContext, new ArrayList<Photo>(photos), R.layout.grid_item, R.id.grid_image_background));
         }
 
     }

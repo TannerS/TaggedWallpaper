@@ -8,7 +8,7 @@
 //import android.view.ViewGroup;
 //import android.widget.GridView;
 //
-//import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
+//import io.tanners.taggedwallpaper.adapters.GridImagesAdapter;
 //import io.tanners.taggedwallpaper.network.images.ImageRequester;
 //import io.tanners.taggedwallpaper.network.images.ImageRequest;
 //import io.tanners.taggedwallpaper.network.images.Request;
@@ -20,7 +20,7 @@
 //    private final String mUrl = "https://api.unsplash.com/photos?per_page=50&page=1&order_by=popular";
 //    private ImageRequest mImageRequest;
 //    private GridView mPopularGridview;
-//    private ImagesAdapter mAdapter;
+//    private GridImagesAdapter mAdapter;
 //
 //
 //    public static PopularFragment newInstance() {
@@ -86,7 +86,7 @@
 //////            mProgressBar.setVisibility(View.GONE);
 //////            finalResult.setText(result);
 ////
-////            mPopularGridview.setAdapter(new ImagesAdapter(getContext(), new ArrayList<Photo>(photos), R.layout.grid_item, R.id.grid_image_background));
+////            mPopularGridview.setAdapter(new GridImagesAdapter(getContext(), new ArrayList<Photo>(photos), R.layout.grid_item, R.id.grid_image_background));
 ////
 ////
 ////        }
