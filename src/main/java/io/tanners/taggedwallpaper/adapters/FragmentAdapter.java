@@ -22,7 +22,8 @@ public class FragmentAdapter extends FragmentStatePagerAdapter
      */
     @Override
     public int getCount() {
-        return this.frags != null ? 0 : frags.size();
+        return this.frags != null ? frags.size() : 0;
+//        return this.frags != null ? 0 : frags.size();
     }
 
     /**
@@ -44,7 +45,7 @@ public class FragmentAdapter extends FragmentStatePagerAdapter
     @Override
     public CharSequence getPageTitle(int position)
     {
-        return frags.get(position).getTitle();
+        return this.frags != null ? frags.get(position).getTitle() : null;
     }
 
     /**

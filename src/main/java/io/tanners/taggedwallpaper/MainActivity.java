@@ -33,20 +33,26 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mFragAmount = 3;
+//        mFragAmount = 3;
         setUpToolBar(R.id.main_toolbar);
+//        Log.i("LOAD", "DEBUG 1");
         setUpDrawer();
+//        Log.i("LOAD", "DEBUG 2");
         setUpNav();
+//        Log.i("LOAD", "DEBUG 3");
         // set up fragment tabs
-        setUpTabs(R.id.main_view_pager, R.id.main_tab_layout);
+        setUpTabs(R.id.main_view_pager, R.id.main_tab_layout, 3);
+//        Log.i("LOAD", "DEBUG 4");
         // set up fragments into adapter
         setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentInfo>() {{
             add(new FragmentAdapter.FragmentInfo(CategoryFragment.newInstance(), CategoryFragment.CATEGORY));
             add(new FragmentAdapter.FragmentInfo(SimilarImagesFragment.newInstance(), SimilarImagesFragment.SIMILAR));
         }});
 
+//        Log.i("LOAD", "DEBUG 5");
         // handle search queries
         handleSearch(getIntent());
+//        Log.i("LOAD", "DEBUG 6");
     }
 
     @Override
@@ -186,7 +192,7 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
 
 
 
-    @SuppressWarnings("StatementWithEmptyBody")
+//    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.

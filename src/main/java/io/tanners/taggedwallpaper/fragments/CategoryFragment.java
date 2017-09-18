@@ -29,6 +29,7 @@ public class CategoryFragment extends Fragment {
     private ArrayList<CategoryItem> categories;
     private RecyclerView mCategoryList;
     public static final String CATEGORY = "Category";
+    private final String FIREBASE_ID = "categories";
     private View view;
 
     public static CategoryFragment newInstance() {
@@ -47,6 +48,11 @@ public class CategoryFragment extends Fragment {
         loadResources();
         LoadCategories();
         loadCategoryList();
+
+
+        Log.d("LOAD", "DEBUG 1");
+
+
         return view;
     }
 
@@ -77,7 +83,7 @@ public class CategoryFragment extends Fragment {
     private void initCategoryListener(ValueEventListener listener)
     {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference(CATEGORY);
+        DatabaseReference myRef = database.getReference(FIREBASE_ID);
         myRef.addValueEventListener(listener);
     }
 
@@ -94,13 +100,32 @@ public class CategoryFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot)
             {
                 TreeMap<String, String> categoryItems = new TreeMap<String, String>();
-                categoryItems.putAll(((HashMap<String, String>) dataSnapshot.getValue()));
 
-                for (Map.Entry<String, String> entry : categoryItems.entrySet()) {
-                    categories.add(new CategoryItem(entry.getKey(), entry.getValue()));
+
+                // TODO error handling here if no categories
+                HashMap<String, String> categoryItemsRaw = (HashMap<String, String>) dataSnapshot.getValue();
+
+                if(categoryItemsRaw == null)
+                {
+                    // todo handle error
+                    Log.d("LOAD", "ERROR ON FIREBASE");
+                }
+                else {
+
+
+                    categoryItems.putAll(categoryItemsRaw);
+
+                    for (Map.Entry<String, String> entry : categoryItems.entrySet()) {
+                        categories.add(new CategoryItem(entry.getKey(), entry.getValue()));
+                        Log.d("FIREBASE", entry.getKey() + " " + entry.getValue());
+
+                    }
+
+                    mCategoryList.setAdapter(new RowImageAdapter(getActivity(), categories, R.layout.row_item));
+
                 }
 
-                mCategoryList.setAdapter(new RowImageAdapter(getActivity(), categories, R.layout.row_item));
+                // TODO onclick here
 
                 //        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 //            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {

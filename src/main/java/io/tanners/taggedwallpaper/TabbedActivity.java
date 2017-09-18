@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +20,14 @@ import io.tanners.taggedwallpaper.interfaces.IFindFragment;
 public class TabbedActivity extends AppCompatActivity implements IFindFragment {
     protected List<FragmentAdapter.FragmentInfo> frags;
     protected ViewPager mViewPager;
-    protected int mFragAmount;
+//    protected int mFragAmount;
     protected Toolbar mToolbar;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_tabbed);
-    }
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+////        setContentView(R.layout.activity_tabbed);
+//    }
 
     protected void setUpToolBar(int id)
     {
@@ -37,8 +38,9 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
     /**
      * Set up the different tabs that relate to the different fragments
      */
-    protected void setUpTabs(int mPageViewerId, int mTabLayoutId)
+    protected void setUpTabs(int mPageViewerId, int mTabLayoutId, int mFragAmount)
     {
+        Log.d("LOADS", "DEBUG 3");
         mViewPager = (ViewPager) findViewById(mPageViewerId);
         mViewPager.setOffscreenPageLimit(mFragAmount);
         mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
@@ -49,6 +51,8 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
     protected void setUpFragmentAdapters(ArrayList<FragmentAdapter.FragmentInfo> frags)
     {
         this.frags = frags;
+
+        Log.d("LOADS", "DEBUG 4: " + this.frags.size());
 //        frags = new ArrayList<FragmentAdapter.FragmentInfo>() {{
 //            add(new FragmentAdapter.FragmentInfo(CategoryFragment.newInstance(), CategoryFragment.CATEGORY));
 //            //add(new FragmentAdapter.FragmentInfo(PopularImagesFragment.newInstance(), PopularImagesFragment.POPULAR));
@@ -58,6 +62,7 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
 
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(), this.frags);
 
+        Log.d("LOAD", "DEBUG 2: " + frags.size());
         mViewPager.setAdapter(adapter);
     }
 

@@ -104,11 +104,13 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
         public void onClick(View view) {
             int id = view.getId();
 
-//            Log.i("ONCLICK", "DEBUG: " + id + " " + getPosition());
+            Log.i("ONCLICK", "DEBUG: " + id + " " + getPosition());
 
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                 Log.i("ONCLICK", "POS 1: " + getLayoutPosition());
+                Log.i("ONCLICK", "POS 1.1: " + title.getText());
                 Log.i("ONCLICK", "POS 2: " + getAdapterPosition());
+                Log.i("ONCLICK", "POS 2.2: " + title.getText());
 
 
                 //getLayoutPosition() or getAdapterPosition()

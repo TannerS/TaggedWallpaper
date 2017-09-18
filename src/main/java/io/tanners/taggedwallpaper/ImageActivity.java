@@ -22,10 +22,10 @@ public class ImageActivity extends TabbedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
-        mFragAmount = 2;
+//        mFragAmount = 2;
         setUpToolBar(R.id.image_toolbar);
         // set up fragment tabs
-        setUpTabs(R.id.image_view_pager, R.id.image_tab_layout);
+        setUpTabs(R.id.image_view_pager, R.id.image_tab_layout, 2);
         setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentInfo>() {{
             add(new FragmentAdapter.FragmentInfo(NewestImagesFragment.newInstance(), NewestImagesFragment.NEWEST));
             add(new FragmentAdapter.FragmentInfo(PopularImagesFragment.newInstance(), PopularImagesFragment.POPULAR));
