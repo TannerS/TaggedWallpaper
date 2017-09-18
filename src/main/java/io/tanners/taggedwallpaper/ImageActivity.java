@@ -2,36 +2,50 @@ package io.tanners.taggedwallpaper;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
-import android.view.View;
 
-import io.tanners.taggedwallpaper.R;
+import java.util.ArrayList;
+
+import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
+import io.tanners.taggedwallpaper.fragments.CategoryFragment;
+import io.tanners.taggedwallpaper.fragments.NewestImagesFragment;
+import io.tanners.taggedwallpaper.fragments.PopularImagesFragment;
+import io.tanners.taggedwallpaper.fragments.SimilarImagesFragment;
 
 // https://developer.android.com/training/implementing-navigation/ancestral.html
-public class ImageActivity extends AppCompatActivity {
-    private  Toolbar toolbar;
+public class ImageActivity extends TabbedActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
-
-        setUpToolBar();
-
+        mFragAmount = 2;
+        setUpToolBar(R.id.image_toolbar);
+        // set up fragment tabs
+        setUpTabs(R.id.image_view_pager, R.id.image_tab_layout);
+        setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentInfo>() {{
+            add(new FragmentAdapter.FragmentInfo(NewestImagesFragment.newInstance(), NewestImagesFragment.NEWEST));
+            add(new FragmentAdapter.FragmentInfo(PopularImagesFragment.newInstance(), PopularImagesFragment.POPULAR));
+        }});
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void setUpToolBar()
-    {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    @Override
+    public void onBackPressed() {
+        if (mViewPager.getCurrentItem() == 0) {
+            super.onBackPressed();
+
+        } else {
+            // Otherwise, select the previous step.
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+        }
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

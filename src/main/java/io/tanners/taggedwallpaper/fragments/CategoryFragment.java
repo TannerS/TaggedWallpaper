@@ -23,15 +23,13 @@ import java.util.TreeMap;
 
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.adapters.RowImageAdapter;
-import io.tanners.taggedwallpaper.data.CategoryItem;
 
 
 public class CategoryFragment extends Fragment {
     private ArrayList<CategoryItem> categories;
     private RecyclerView mCategoryList;
-    public static final String CATEGORY_DATABASE_NAME = "categories";
+    public static final String CATEGORY = "Category";
     private View view;
-    private static final String CATEGORIES = "Categories";
 
     public static CategoryFragment newInstance() {
         return new CategoryFragment();
@@ -79,7 +77,7 @@ public class CategoryFragment extends Fragment {
     private void initCategoryListener(ValueEventListener listener)
     {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference(CATEGORY_DATABASE_NAME);
+        DatabaseReference myRef = database.getReference(CATEGORY);
         myRef.addValueEventListener(listener);
     }
 
@@ -111,6 +109,35 @@ public class CategoryFragment extends Fragment {
                 //        });
             }
         });
+    }
+
+    // TODO where sohuld this belong?
+    public static class CategoryItem
+    {
+        public String getmUrl() {
+            return mUrl;
+        }
+
+        public void setmUrl(String mUrl) {
+            this.mUrl = mUrl;
+        }
+
+        public String getmTitle() {
+            return mTitle;
+        }
+
+        public void setmTitle(String mTitle) {
+            this.mTitle = mTitle;
+        }
+
+        public CategoryItem(String mTitle, String mUrl) {
+            this.mUrl = mUrl;
+            this.mTitle = mTitle;
+        }
+
+        private String mUrl;
+        private String mTitle;
+
     }
 
 }

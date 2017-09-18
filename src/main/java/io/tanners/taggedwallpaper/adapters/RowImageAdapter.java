@@ -1,7 +1,9 @@
 package io.tanners.taggedwallpaper.adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 import io.tanners.taggedwallpaper.R;
+import io.tanners.taggedwallpaper.fragments.CategoryFragment;
 //import io.tanners.taggedwallpaper.data.CategoryItem;
 
 /**
@@ -20,10 +23,10 @@ import io.tanners.taggedwallpaper.R;
  */
 public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.CategoryViewHolder> {
     private Context mContext;
-    private ArrayList<CategoryItem> mItems;
+    private ArrayList<CategoryFragment.CategoryItem> mItems;
     private int mLayoutId;
 
-    public RowImageAdapter(Context mContext, ArrayList<CategoryItem> mItems, int mLayoutId) {
+    public RowImageAdapter(Context mContext, ArrayList<CategoryFragment.CategoryItem> mItems, int mLayoutId) {
         this.mContext = mContext;
         this.mItems = mItems;
         this.mLayoutId = mLayoutId;
@@ -68,7 +71,7 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
     @Override
     public void onBindViewHolder(CategoryViewHolder holder, int position) {
         // get category item
-        CategoryItem mItem = mItems.get(position);
+        CategoryFragment.CategoryItem mItem = mItems.get(position);
         // set current item's title
         holder.title.setText(mItem.getmTitle());
         // set up image at url with reference to where the image will be loaded into
@@ -99,36 +102,52 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
 
         @Override
         public void onClick(View view) {
-            // TODO make categiry clikc do something, does this affect image or text or both?
+            int id = view.getId();
+
+//            Log.i("ONCLICK", "DEBUG: " + id + " " + getPosition());
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                Log.i("ONCLICK", "POS 1: " + getLayoutPosition());
+                Log.i("ONCLICK", "POS 2: " + getAdapterPosition());
+
+
+                //getLayoutPosition() or getAdapterPosition()
+
+            }
+            else
+            {
+                Log.i("ONCLICK", "DEBUG: " + id + " " + getPosition());
+            }
+
         }
     }
 
-    public class CategoryItem
-    {
-        public String getmUrl() {
-            return mUrl;
-        }
-
-        public void setmUrl(String mUrl) {
-            this.mUrl = mUrl;
-        }
-
-        public String getmTitle() {
-            return mTitle;
-        }
-
-        public void setmTitle(String mTitle) {
-            this.mTitle = mTitle;
-        }
-
-        public CategoryItem(String mTitle, String mUrl) {
-            this.mUrl = mUrl;
-            this.mTitle = mTitle;
-        }
-
-        private String mUrl;
-        private String mTitle;
-
-    }
+//    public class CategoryItem
+//    {
+//        public String getmUrl() {
+//            return mUrl;
+//        }
+//
+//        public void setmUrl(String mUrl) {
+//            this.mUrl = mUrl;
+//        }
+//
+//        public String getmTitle() {
+//            return mTitle;
+//        }
+//
+//        public void setmTitle(String mTitle) {
+//            this.mTitle = mTitle;
+//        }
+//
+//        public CategoryItem(String mTitle, String mUrl) {
+//            this.mUrl = mUrl;
+//            this.mTitle = mTitle;
+//        }
+//
+//        private String mUrl;
+//        private String mTitle;
+//
+//    }
 
 }

@@ -51,7 +51,6 @@ public class ConnectionRequest {
     private String mCharset;
     private final String LINE_BREAK = "\r\n";
 
-
     public ConnectionRequest(String mUrl) {
         mEntries = new HashMap<String, String>();
         mConnectionTimeOut = 10000;
@@ -84,16 +83,11 @@ public class ConnectionRequest {
 
     public void addRequestHeader(HashMap<String, String> entries)
     {
-        Log.i("REQUEST" ,"DEBUG 1");
-
         if(entries != null) {
-            Log.i("REQUEST" ,"DEBUG 2");
 
             for (Map.Entry<String, String> entry : entries.entrySet()) {
                 String key = (entry.getKey()).trim();
                 String value = (entry.getValue()).trim();
-                Log.i("REQUEST" ,"DEBUG 3: " + key + " " + value);
-
                 this.mEntries.put(key, value);
             }
         }
@@ -113,24 +107,14 @@ public class ConnectionRequest {
 
     private void setHeaders()
     {
-        Log.i("REQUEST" ,"DEBUG 4");
-
         if(mEntries != null) {
-            Log.i("REQUEST" ,"DEBUG 5");
 
             for (Map.Entry<String, String> entry : mEntries.entrySet()) {
                 String key = (entry.getKey()).trim();
                 String value = (entry.getValue()).trim();
-                Log.i("REQUEST" ," HEADER-> " + key + ": " + value);
-                Log.i("REQUEST" ,"DEBUG 6");
-
                 connection.setRequestProperty(key, value);
             }
         }
-
-        //connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-        //connection.setRequestProperty("Content-Type", "text/html");
-        //connection.setRequestProperty("charset", charset);
     }
 
     private void setBody()
@@ -138,8 +122,6 @@ public class ConnectionRequest {
         if(mBody == null || mBody.length() <= 0)
             connection.setFixedLengthStreamingMode(0);
         else {
-
-            Log.i("REQUEST", "DEBUG 1");
 
             connection.setFixedLengthStreamingMode(mBody.length());
 
@@ -152,7 +134,6 @@ public class ConnectionRequest {
                 writer.append(mBody).append(LINE_BREAK);
                 writer.flush();
                 writer.close();
-
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -186,30 +167,12 @@ public class ConnectionRequest {
     {
         try
         {
-            Log.i("REQUEST", "URL: " + mUrl);
-
-//            setDefaults();
-//            setHeaders();
-//            setBody();
-
             connection = (HttpURLConnection) (new URL(mUrl)).openConnection();
 
-            Log.i("REQUEST", "URL: " + mUrl);
-
-
-//            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK)
-//            {
-                mIsGood = true;
-                setDefaults();
-                setHeaders();
-                setBody();
-//            }
-//            else
-//            {
-//                Log.i("REQUEST", "ERROR: " + connection.getResponseCode());
-//                mIsGood = false;
-//                throw new IOException();
-//            }
+            mIsGood = true;
+            setDefaults();
+            setHeaders();
+            setBody();
         }
         catch (IOException e)
         {
@@ -240,29 +203,4 @@ public class ConnectionRequest {
     {
         return mIsGood;
     }
-
-//    public String getResponse() throws IOException
-//    {
-//        StringBuilder mBuilder = new StringBuilder();
-//
-//        int status = connection.getResponseCode();
-//
-//        if (status == HttpURLConnection.HTTP_OK)
-//        {
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//            String line = null;
-//
-//            while ((line = reader.readLine()) != null) {
-//                mBuilder.append(line);
-//            }
-//
-//            reader.close();
-//
-//            connection.disconnect();
-//        } else {
-//            throw new IOException("ERROR: " + status);
-//        }
-//
-//        return mBuilder.toString();
-//    }
 }

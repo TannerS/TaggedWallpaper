@@ -10,7 +10,7 @@ import io.tanners.taggedwallpaper.network.images.ImageRequester;
 import io.tanners.taggedwallpaper.network.images.Request;
 
 public class PopularImagesFragment extends ImageFragment {
-    public static final String POPULAR = "POPULAR Images";
+    public static final String POPULAR = "Popular";
     private final String mUrl = "https://api.unsplash.com/photos?per_page=" + PERPAGE + "&page=" + PAGE + "&order_by=popular";
 
     public static PopularImagesFragment newInstance() {

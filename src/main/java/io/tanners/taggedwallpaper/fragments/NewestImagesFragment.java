@@ -11,7 +11,8 @@ import io.tanners.taggedwallpaper.network.images.ImageRequester;
 import io.tanners.taggedwallpaper.network.images.Request;
 
 public class NewestImagesFragment extends ImageFragment {
-    public static final String NEWEST = "NEWEST Images";
+
+    public static final String NEWEST = "Newest";
     private final String mUrl = "https://api.unsplash.com/photos?per_page=" + PERPAGE + "&page=" + PAGE + "&order_by=newest";
 
     public static NewestImagesFragment newInstance() {
