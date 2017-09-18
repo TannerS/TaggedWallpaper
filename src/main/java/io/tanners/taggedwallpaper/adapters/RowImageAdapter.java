@@ -90,38 +90,64 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
     /**
      * recycled views to handle images and text for the images category
      */
-    public static class CategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+//    public static class CategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class CategoryViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
         public ImageView image;
 
         public CategoryViewHolder(View view) {
             super(view);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                        Log.i("ONCLICK", "POS 1: " + getLayoutPosition());
+                        Log.i("ONCLICK", "POS 1.1: " + title.getText());
+                        Log.i("ONCLICK", "POS 2: " + getAdapterPosition());
+                        Log.i("ONCLICK", "POS 2.2: " + title.getText());
+                    }
+                    else
+                    {
+                        Log.i("ONCLICK", "DEBUG: " + " " + getPosition());
+                    }
+                }
+
+            });
+
             this.title = (TextView) view.findViewById(R.id.row_item_text);
             this.image = (ImageView) view.findViewById(R.id.row_image_background);
         }
 
-        @Override
-        public void onClick(View view) {
-            int id = view.getId();
+//        @Override
+//        public void onClick(final View view) {
+//            int itemPosition = .getChildLayoutPosition(view);
+//            String item = mList.get(itemPosition);
+//            Toast.makeText(mContext, item, Toast.LENGTH_LONG).show();
+//        }
 
-            Log.i("ONCLICK", "DEBUG: " + id + " " + getPosition());
-
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                Log.i("ONCLICK", "POS 1: " + getLayoutPosition());
-                Log.i("ONCLICK", "POS 1.1: " + title.getText());
-                Log.i("ONCLICK", "POS 2: " + getAdapterPosition());
-                Log.i("ONCLICK", "POS 2.2: " + title.getText());
-
-
-                //getLayoutPosition() or getAdapterPosition()
-
-            }
-            else
-            {
-                Log.i("ONCLICK", "DEBUG: " + id + " " + getPosition());
-            }
-
-        }
+//        @Override
+//        public void onClick(View view) {
+//            int id = view.getId();
+//
+//            Log.i("ONCLICK", "DEBUG: " + id + " " + getPosition());
+//
+////            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+//                Log.i("ONCLICK", "POS 1: " + getLayoutPosition());
+//                Log.i("ONCLICK", "POS 1.1: " + title.getText());
+//                Log.i("ONCLICK", "POS 2: " + getAdapterPosition());
+//                Log.i("ONCLICK", "POS 2.2: " + title.getText());
+//
+//
+//                //getLayoutPosition() or getAdapterPosition()
+//
+////            }
+////            else
+////            {
+//                Log.i("ONCLICK", "DEBUG: " + id + " " + getPosition());
+////            }
+//
+//        }
     }
 
 //    public class CategoryItem
