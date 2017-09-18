@@ -13,8 +13,10 @@ import io.tanners.taggedwallpaper.network.ConnectionRequest;
 public abstract class Request
 {
     public static enum Requested {
-        SEARCH("Search"),
-        POPULAR("POPULAR");
+//        SEARCH("Search"),
+        SEARCH("Search");
+        // TODO popular may no longer be used
+//        POPULAR("POPULAR");
 
         private String mapping;
 
