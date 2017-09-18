@@ -2,12 +2,13 @@ package io.tanners.taggedwallpaper.data.results.photo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * hold data provided by results on photo data
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Photo
 {
     private String id;
-//    private int width;
-//    private int height;
 
     public Photo() {
 
@@ -35,6 +36,5 @@ public class Photo
         this.urls = urls;
     }
 
-    //    private String Description;
     private Urls urls;
 }

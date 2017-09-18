@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
 
+/**
+ * hold data provided by results on photo search data
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchWrapper {
     private int total;

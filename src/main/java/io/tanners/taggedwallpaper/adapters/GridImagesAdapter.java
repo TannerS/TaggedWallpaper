@@ -14,12 +14,16 @@ import java.util.ArrayList;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
+import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.data.results.photo.Photo;
 
-
+/**
+ * Class is used to hold gride view of images as a result from the image api
+ */
 public class GridImagesAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<Photo> mItems;
@@ -33,13 +37,12 @@ public class GridImagesAdapter extends BaseAdapter {
         this.mRowId = mRowId;
     }
 
-    public GridImagesAdapter(Context mContext) {
-        this.mContext = mContext;
-        this.mItems = null;
-        this.mLayoutId = -1;
-        this.mRowId = -1;
-    }
-
+    /**
+     * used to update the adapter to a new dataset
+     * @param mItems
+     * @param mLayoutId
+     * @param mRowId
+     */
     public void updateAdapter(ArrayList<Photo> mItems, int mLayoutId, int mRowId)
     {
         clearAdapter();
@@ -52,28 +55,49 @@ public class GridImagesAdapter extends BaseAdapter {
 
     }
 
+    /**
+     * clear and erase adapter
+     */
     public void clearAdapter()
     {
         mItems.clear();
     }
 
 
+    /**
+     * get count of items in data set
+     * @return
+     */
     public int getCount() {
         return mItems == null ? 0 : mItems.size();
 
     }
 
+    /**
+     * get current item
+     * @param position
+     * @return
+     */
     public Object getItem(int position) {
         Log.i("POSITION", "GETITEM: " + String.valueOf(position));
 
         return null;
     }
 
+    /**
+     * get current item id
+     * @param position
+     * @return
+     */
     public long getItemId(int position) {
         Log.i("POSITION", "GETITEMID: " + String.valueOf(position));
         return 0;
     }
 
+    /**
+     * auto fill (not used)
+     * @return
+     */
     @Override
     public CharSequence[] getAutofillOptions() {
         Log.i("POSITION", "getAutofillOptions: ");
@@ -81,64 +105,88 @@ public class GridImagesAdapter extends BaseAdapter {
         return new CharSequence[0];
     }
 
-    // create a new ImageView for each item referenced by the Adapter
+    /**
+     *  create a new ImageView for each item referenced by the Adapter
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     public View getView(int position, View convertView, ViewGroup parent) {
         View mItem = convertView;
         PhotoCategoryContainerView mItemContainerView = null;
 
+        // if item is new
         if (mItem == null) {
+            // inflate layout
             LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
             mItem = inflater.inflate(mLayoutId, parent, false);
-
+            // create object to hold view
             mItemContainerView = new PhotoCategoryContainerView();
             mItemContainerView.image = mItem.findViewById(mRowId);
-
+            // set item that holds view
             mItem.setTag(mItemContainerView);
         }
+        // view is being recycled
         else
         {
+            // get view hold item
             mItemContainerView = (PhotoCategoryContainerView) mItem.getTag();
         }
 
+        // get photo data at location position
         Photo mCurrentItem = (Photo) mItems.get(position);
-
-//        mItemContainerView.image.setBackgroundResource(mCurrentItem.getmResourceId());
-
+        // set image to be loaded into current view
         setUpImage(mCurrentItem.getUrls().getSmall(), mItemContainerView.image);
 
         return mItem;
     }
 
+    /**
+     * set image to be loaded into current view
+     * @param mElement
+     * @param view
+     */
     private void setUpImage(int mElement, ImageView view)
     {
+        // load image view using glide
         loadImage(Glide.with(mContext)
                 .load(mElement), view);
     }
 
+    /**
+     * set image to be loaded into current view
+     * @param mUrl
+     * @param view
+     */
     private void setUpImage(String mUrl, ImageView view)
     {
+        // load image view using glide
+
         loadImage(Glide.with(mContext)
                 .load(mUrl), view);
     }
 
+    /**
+     * attach features to image view using glide
+     * @param mRequest
+     * @param view
+     */
     private void loadImage(RequestBuilder<Drawable> mRequest, ImageView view)
     {
+        // set up transition
         DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
-        RequestOptions cropOptions = new RequestOptions().centerCrop();
-
+        // set up request iptions
+        RequestOptions cropOptions = new RequestOptions().centerCrop().placeholder(R.drawable.ic_menu_camera).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+        // apply features
         mRequest.apply(cropOptions)
-                //                .thumbnail()
-//                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-//                .asBitmap()
-                //                .placeholder(R.drawable.)
-//                .error()
-//                .fallback(new ColorDrawable(Color.GREY))
-
                 .transition(transitionOptions)
-
                 .into(view);
     }
 
+    /**
+     * contains views that will be recycled
+     */
     static class PhotoCategoryContainerView
     {
         public ImageView image;

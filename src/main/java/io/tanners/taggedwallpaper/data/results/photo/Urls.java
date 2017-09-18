@@ -1,6 +1,9 @@
 package io.tanners.taggedwallpaper.data.results.photo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * hold url data provided by results on photo / search api
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Urls {
 
@@ -11,8 +14,6 @@ public class Urls {
         this.small = small;
         this.thumb = thumb;
     }
-
-//    private String regular;
 
     public String getSmall() {
         return small;

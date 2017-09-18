@@ -16,39 +16,40 @@ public class FragmentAdapter extends FragmentStatePagerAdapter
         this.frags = frags;
     }
 
+    /**
+     * Get count of items
+     * @return
+     */
     @Override
-    public int getCount()
-    {
-        return this.frags.size() > 0 ? frags.size() : 0;
+    public int getCount() {
+        return this.frags != null ? 0 : frags.size();
     }
 
+    /**
+     * Get page row fagment based on position
+     * @param position
+     * @return
+     */
     @Override
     public Fragment getItem(int position)
     {
-//        manager.beginTransaction().
-
-//        switch (position) {
-//            case 0:
-//                return ListProductsFragment.newInstance();
-//            case 1:
-//                return ListActiveSubstancesFragment.newInstance();
-//            case 2:
-//                return ListProductFunctionsFragment.newInstance();
-//            case 3:
-//                return ListCropsFragment.newInstance();
-//            default:
-//                return null;
-//        }
-
         return this.frags != null ? this.frags.get(position).getFrag() : null;
     }
 
+    /**
+     * Get page row tite based on position
+     * @param position
+     * @return
+     */
     @Override
     public CharSequence getPageTitle(int position)
     {
         return frags.get(position).getTitle();
     }
 
+    /**
+     * wrapper class to hold fragments and their tiles
+     */
     public static class FragmentInfo
     {
         private String title;
@@ -63,10 +64,6 @@ public class FragmentAdapter extends FragmentStatePagerAdapter
         public String getTitle() {
             return title;
         }
-
-//        public void setTitle(String title) {
-//            this.title = title;
-//        }
 
         public Fragment getFrag() {
             return frag;
