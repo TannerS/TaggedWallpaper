@@ -17,11 +17,17 @@ import io.tanners.taggedwallpaper.fragments.SimilarImagesFragment;
 
 // https://developer.android.com/training/implementing-navigation/ancestral.html
 public class ImageActivity extends TabbedActivity {
+    public final static String TAG = "TAG";
+    private String tag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
+        tag = getIntent().getStringExtra(TAG);
+
+
+
 //        mFragAmount = 2;
         setUpToolBar(R.id.image_toolbar);
         // set up fragment tabs
