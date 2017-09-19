@@ -90,7 +90,8 @@ public class ImageRequester extends AsyncTask<Void, Void, List<Photo>> {
     @Override
     protected void onPostExecute(List<Photo> photos) {
         if(photos != null) {
-            mAdapter.updateAdapter(new ArrayList<Photo>(photos),  mGridRowLayoutId, mGridImageViewId);
+//            mAdapter.updateAdapter(new ArrayList<Photo>(photos),  mGridRowLayoutId, mGridImageViewId);
+            mAdapter = new ImagesAdapter(mContext, new ArrayList<Photo>(photos),  mGridRowLayoutId, mGridImageViewId);
             mGridView.setAdapter(mAdapter);
             mGridView.setVisibility(View.VISIBLE);
         }

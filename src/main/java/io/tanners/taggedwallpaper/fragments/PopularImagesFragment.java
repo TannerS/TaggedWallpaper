@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.ApiBuilder;
+import io.tanners.taggedwallpaper.interfaces.IGetTag;
 import io.tanners.taggedwallpaper.network.images.ImageRequest;
 import io.tanners.taggedwallpaper.network.images.ImageRequester;
 import io.tanners.taggedwallpaper.network.images.Request;
@@ -31,7 +32,7 @@ public class PopularImagesFragment extends ImageFragment {
 
         loadResources(view);
 
-        loadRequest(new ApiBuilder(50, 1, ApiBuilder.OrderBy.POPULAR));
+        loadRequest(new ApiBuilder(this.tag, 50, 1, ApiBuilder.OrderBy.POPULAR));
 
         return view;
     }

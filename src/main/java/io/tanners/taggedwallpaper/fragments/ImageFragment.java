@@ -7,6 +7,7 @@ import android.widget.GridView;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.ApiBuilder;
 import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
+import io.tanners.taggedwallpaper.interfaces.IGetTag;
 import io.tanners.taggedwallpaper.network.images.ImageRequest;
 import io.tanners.taggedwallpaper.network.images.ImageRequester;
 
@@ -14,11 +15,13 @@ public class ImageFragment extends Fragment {
     protected View view;
     protected GridView mPopularGridview;
     protected ImagesAdapter mAdapter;
-    protected String query;
+    protected String tag;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.tag = ((IGetTag)getActivity()).getTag();
     }
 
     protected void loadResources(View view)

@@ -26,14 +26,16 @@ public class ApiBuilder {
     private String mApiRules = "&utm_source=TaggedWallpaper&utm_medium=referral&utm_campaign=api-credit";
     private final String APIKEY = "Client-ID 53bec55730b75b73e5f615222f83e498e7645300c2b10949e6f8e25442a2fccc";
     private String mOrderBy;
+    private String tag;
 
     public String buildRestfulUrl()
     {
-        return mBase + "?" + "per_page=" + mPerPage + "&page=" + mPage + mApiRules + "&order_by=" + mOrderBy;
+        return mBase + "?query=" + tag + "&per_page=" + mPerPage + "&page=" + mPage + mApiRules + "&order_by=" + mOrderBy;
     }
 
-    public ApiBuilder(int mPerPage, int mPage, OrderBy order)
+    public ApiBuilder(String tag, int mPerPage, int mPage, OrderBy order)
     {
+        this.tag = tag;
         this.mPerPage = mPerPage;
         this.mPage = mPage;
         this.mOrderBy = order.name();

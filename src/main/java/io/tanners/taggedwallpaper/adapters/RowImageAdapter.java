@@ -14,6 +14,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
+
+import io.tanners.taggedwallpaper.ImageActivity;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.fragments.CategoryFragment;
 //import io.tanners.taggedwallpaper.data.CategoryItem;
@@ -60,7 +62,7 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
-        return new CategoryViewHolder(view);
+        return new CategoryViewHolder(mContext, view);
     }
 
     /**
@@ -95,7 +97,7 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
         public TextView title;
         public ImageView image;
 
-        public CategoryViewHolder(View view) {
+        public CategoryViewHolder(final Context mContext, View view) {
             super(view);
 
             view.setOnClickListener(new View.OnClickListener() {
@@ -106,10 +108,15 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
                         Log.i("ONCLICK", "POS 1.1: " + title.getText());
                         Log.i("ONCLICK", "POS 2: " + getAdapterPosition());
                         Log.i("ONCLICK", "POS 2.2: " + title.getText());
+
+                        // TODO combine
+                        ImageActivity.openIntentForQuery(mContext, title.getText().toString());
+
                     }
                     else
                     {
                         Log.i("ONCLICK", "DEBUG: " + " " + getPosition());
+                        ImageActivity.openIntentForQuery(mContext, title.getText().toString());
                     }
                 }
 

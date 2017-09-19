@@ -15,9 +15,10 @@ import io.tanners.taggedwallpaper.fragments.CategoryFragment;
 import io.tanners.taggedwallpaper.fragments.NewestImagesFragment;
 import io.tanners.taggedwallpaper.fragments.PopularImagesFragment;
 import io.tanners.taggedwallpaper.fragments.SimilarImagesFragment;
+import io.tanners.taggedwallpaper.interfaces.IGetTag;
 
 // https://developer.android.com/training/implementing-navigation/ancestral.html
-public class ImageActivity extends TabbedActivity {
+public class ImageActivity extends TabbedActivity implements IGetTag {
     public final static String TAG = "TAG";
     private String tag;
 
@@ -87,11 +88,15 @@ public class ImageActivity extends TabbedActivity {
      * @param context
      * @param query
      */
-    public static void displayPhotoByTag(Context context, String query)
+    public static void openIntentForQuery(Context context, String query)
     {
         Intent intent = new Intent(context, ImageActivity.class);
         intent.putExtra(ImageActivity.TAG, query);
         context.startActivity(intent);
     }
 
+    @Override
+    public String getTag() {
+        return this.tag;
+    }
 }

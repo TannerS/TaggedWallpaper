@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.ApiBuilder;
+import io.tanners.taggedwallpaper.interfaces.IGetTag;
 import io.tanners.taggedwallpaper.network.images.ImageRequester;
 import io.tanners.taggedwallpaper.network.images.Request;
 
@@ -30,7 +31,7 @@ public class NewestImagesFragment extends ImageFragment {
 
         loadResources(view);
 
-        loadRequest(new ApiBuilder(50, 1, ApiBuilder.OrderBy.NEWEST));
+        loadRequest(new ApiBuilder(this.tag, 50, 1, ApiBuilder.OrderBy.NEWEST));
 
         return view;
     }

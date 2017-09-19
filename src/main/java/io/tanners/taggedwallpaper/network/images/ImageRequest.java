@@ -21,6 +21,8 @@ public class ImageRequest extends Request
 {
     public ImageRequest(HashMap<String, String> headers, String mUrl, String body) {
         super(headers, mUrl, body);
+
+
     }
 
     @Override

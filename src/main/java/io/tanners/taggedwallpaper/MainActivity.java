@@ -159,7 +159,8 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
             // get search query
             String query = intent.getStringExtra(SearchManager.QUERY);
 
-            // TODO call image act
+            ImageActivity.openIntentForQuery(this, query);
+
         }
     }
 
