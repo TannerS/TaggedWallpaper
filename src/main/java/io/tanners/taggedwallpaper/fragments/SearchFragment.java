@@ -18,7 +18,7 @@
 //import android.widget.GridView;
 //import android.widget.LinearLayout;
 //
-//import io.tanners.taggedwallpaper.adapters.GridImagesAdapter;
+//import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
 //import io.tanners.taggedwallpaper.network.images.ImageRequester;
 //import io.tanners.taggedwallpaper.network.images.Request;
 //
@@ -26,7 +26,7 @@
 //public class SearchFragment extends Fragment {
 //    private View view;
 //    public static final String SEARCH = "Search Images";
-//    private GridImagesAdapter mAdapter;
+//    private ImagesAdapter mAdapter;
 //    private GridView mSearchGridview;
 //    private String query = "";
 ////    private final String mUrl = "https://api.unsplash.com/search/photos?query=mountains, nature, landscape&per_page=50&page=1&order_by=popular";

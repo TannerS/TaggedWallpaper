@@ -1,5 +1,6 @@
 package io.tanners.taggedwallpaper;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -40,6 +41,9 @@ public class ImageActivity extends TabbedActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+
+
+
     @Override
     public void onBackPressed() {
         if (mViewPager.getCurrentItem() == 0) {
@@ -50,8 +54,6 @@ public class ImageActivity extends TabbedActivity {
             mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
         }
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -77,6 +79,19 @@ public class ImageActivity extends TabbedActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    /**
+     * Provides a way to provide the same functionality to pass and connect to this intent
+     * @param context
+     * @param query
+     */
+    public static void displayPhotoByTag(Context context, String query)
+    {
+        Intent intent = new Intent(context, ImageActivity.class);
+        intent.putExtra(ImageActivity.TAG, query);
+        context.startActivity(intent);
     }
 
 }

@@ -1,36 +1,41 @@
 package io.tanners.taggedwallpaper.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.GridView;
 import io.tanners.taggedwallpaper.R;
-import io.tanners.taggedwallpaper.adapters.GridImagesAdapter;
+import io.tanners.taggedwallpaper.Util.ApiBuilder;
+import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
+import io.tanners.taggedwallpaper.network.images.ImageRequest;
+import io.tanners.taggedwallpaper.network.images.ImageRequester;
 
 public class ImageFragment extends Fragment {
     protected View view;
-    protected final int PERPAGE = 50;//https://api.unsplash.com/photos?per_page=50&page=1&order_by=newest";
-    protected final int PAGE = 1;//https://api.unsplash.com/photos?per_page=50&page=1&order_by=newest";
     protected GridView mPopularGridview;
-    protected GridImagesAdapter mAdapter;
+    protected ImagesAdapter mAdapter;
+    protected String query;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
     protected void loadResources(View view)
     {
         mPopularGridview = (GridView) view.findViewById(R.id.universal_grideview);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    protected void loadRequest(ApiBuilder builder)
+    {
+        new ImageRequester(getContext())
+            .setAdapter(mAdapter)
+            .setGridLayoutId(R.layout.grid_item)
+            .setImageViewId(R.id.grid_image_background)
+            .setRequest(new ImageRequest(builder.getHeaders(), builder.buildRestfulUrl(), null))
+    //                .setRequestType(Request.Requested.SEARCH)
+            .setView(mPopularGridview).execute();
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
+
 }

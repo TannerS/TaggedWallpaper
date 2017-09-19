@@ -10,28 +10,40 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import io.tanners.taggedwallpaper.data.results.photo.Photo;
 import io.tanners.taggedwallpaper.data.results.photo.SearchWrapper;
+import io.tanners.taggedwallpaper.network.ConnectionRequest;
 
 public class ImageRequest extends Request
 {
-//    public ImageRequest(String mUrl) {
-//        super(mUrl);
-//    }
-
-    public ImageRequest(String mUrl, String body) {
-        super(mUrl, body);
+    public ImageRequest(HashMap<String, String> headers, String mUrl, String body) {
+        super(headers, mUrl, body);
     }
 
     @Override
-    public List<Photo> getPhotos(Requested mapping)
+//    public List<Photo> getPhotos(Requested mapping)
+    public List<Photo> getPhotos()
     {
         List<Photo> photos = null;
 
         try
         {
+            mConnectionRequest = new ConnectionRequest(mUrl);
+
+            if(mBody != null && mBody.length() > 0)
+                mHeaders.put("Content-Length", "" + mBody.getBytes().length);
+            mHeaders.put("Content-Language", "" + "en-US");
+
+            mConnectionRequest.addRequestHeader(mHeaders);
+
+            mConnectionRequest.setRequestType(ConnectionRequest.TYPES.GET);
+
+            mConnectionRequest.addBasicBody(mBody);
+
+
             mConnectionRequest.connect();
 
             if(mConnectionRequest.getConnection() != null)
@@ -42,15 +54,12 @@ public class ImageRequest extends Request
 
                 ObjectMapper objectMapper = new ObjectMapper();
 
-                switch(mapping)
-                {
-//                    case POPULAR:
-//                        photos = objectMapper.readValue(response, new TypeReference<List<Photo>>(){});
-//                        break;
-                    case SEARCH:
+//                switch(mapping)
+//                {
+//                    case SEARCH:
                         photos = (objectMapper.readValue(response, SearchWrapper.class)).getResults();
-                        break;
-                }
+//                        break;
+//                }
             }
         } catch (JsonMappingException | JsonParseException e) {
             e.printStackTrace();

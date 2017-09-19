@@ -1,17 +1,20 @@
 package io.tanners.taggedwallpaper.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.HashMap;
+
 import io.tanners.taggedwallpaper.R;
+import io.tanners.taggedwallpaper.Util.ApiBuilder;
+import io.tanners.taggedwallpaper.network.images.ImageRequest;
 import io.tanners.taggedwallpaper.network.images.ImageRequester;
 import io.tanners.taggedwallpaper.network.images.Request;
 
 public class PopularImagesFragment extends ImageFragment {
     public static final String POPULAR = "Popular";
-    private final String mUrl = "https://api.unsplash.com/photos?per_page=" + PERPAGE + "&page=" + PAGE + "&order_by=popular";
 
     public static PopularImagesFragment newInstance() {
         return new PopularImagesFragment();
@@ -24,22 +27,13 @@ public class PopularImagesFragment extends ImageFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_popular, container, false);
+        view = inflater.inflate(R.layout.fragment_images, container, false);
 
         loadResources(view);
 
-        new ImageRequester(getContext(), mAdapter, mPopularGridview, Request.Requested.SEARCH, R.layout.grid_item, R.id.grid_image_background).execute(mUrl);
+        loadRequest(new ApiBuilder(50, 1, ApiBuilder.OrderBy.POPULAR));
 
         return view;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
 }

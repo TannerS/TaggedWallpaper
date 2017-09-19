@@ -24,13 +24,13 @@ import io.tanners.taggedwallpaper.data.results.photo.Photo;
 /**
  * Class is used to hold gride view of images as a result from the image api
  */
-public class GridImagesAdapter extends BaseAdapter {
+public class ImagesAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<Photo> mItems;
     private int mLayoutId;
     private int mRowId;
 
-    public GridImagesAdapter(Context mContext, ArrayList<Photo> mItems, int mLayoutId, int mRowId) {
+    public ImagesAdapter(Context mContext, ArrayList<Photo> mItems, int mLayoutId, int mRowId) {
         this.mContext = mContext;
         this.mItems = mItems;
         this.mLayoutId = mLayoutId;
@@ -176,7 +176,7 @@ public class GridImagesAdapter extends BaseAdapter {
     {
         // set up transition
         DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
-        // set up request iptions
+        // set up request options
         RequestOptions cropOptions = new RequestOptions().centerCrop().placeholder(R.drawable.ic_menu_camera).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         // apply features
         mRequest.apply(cropOptions)
