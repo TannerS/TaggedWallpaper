@@ -32,7 +32,7 @@ public class PopularImagesFragment extends ImageFragment {
 
         loadResources(view);
 
-        loadRequest(new ApiBuilder(this.tag, 50, 1, ApiBuilder.OrderBy.POPULAR));
+        loadRequest(new ApiBuilder(this.tag, 250, 1, ApiBuilder.OrderBy.POPULAR));
 
         return view;
     }

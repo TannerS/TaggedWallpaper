@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +32,7 @@ public class CategoryFragment extends Fragment {
     public static final String CATEGORY = "Category";
     private final String FIREBASE_ID = "categories";
     private View view;
+    private ProgressBar mProgressBar;
 
     public static CategoryFragment newInstance() {
         return new CategoryFragment();
@@ -70,6 +72,8 @@ public class CategoryFragment extends Fragment {
     private void loadResources()
     {
         categories = new ArrayList<CategoryItem>();
+        mProgressBar = view.findViewById(R.id.category_progressbar);
+
     }
 
     private void loadCategoryList()
@@ -123,7 +127,12 @@ public class CategoryFragment extends Fragment {
 
                     mCategoryList.setAdapter(new RowImageAdapter(getActivity(), categories, R.layout.row_item));
 
+
+
                 }
+
+                mProgressBar.setVisibility(View.GONE);
+                mCategoryList.setVisibility(View.VISIBLE);
 
                 // TODO onclick here
 
@@ -136,7 +145,6 @@ public class CategoryFragment extends Fragment {
         });
     }
 
-    // TODO where sohuld this belong?
     public static class CategoryItem
     {
         public String getmUrl() {

@@ -44,7 +44,8 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
         // creat transition options
         DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
         // create request options
-        RequestOptions cropOptions = new RequestOptions().centerCrop().placeholder(R.drawable.ic_menu_camera).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+//        RequestOptions cropOptions = new RequestOptions().centerCrop().placeholder(R.drawable.ic_menu_camera).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+        RequestOptions cropOptions = new RequestOptions().centerCrop().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         // create settings through Glide
         Glide.with(mContext)
                 .load(mUrl)
@@ -112,9 +113,7 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
                         // TODO combine
                         ImageActivity.openIntentForQuery(mContext, title.getText().toString());
 
-                    }
-                    else
-                    {
+                    } else {
                         Log.i("ONCLICK", "DEBUG: " + " " + getPosition());
                         ImageActivity.openIntentForQuery(mContext, title.getText().toString());
                     }
@@ -125,64 +124,6 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
             this.title = (TextView) view.findViewById(R.id.row_item_text);
             this.image = (ImageView) view.findViewById(R.id.row_image_background);
         }
-
-//        @Override
-//        public void onClick(final View view) {
-//            int itemPosition = .getChildLayoutPosition(view);
-//            String item = mList.get(itemPosition);
-//            Toast.makeText(mContext, item, Toast.LENGTH_LONG).show();
-//        }
-
-//        @Override
-//        public void onClick(View view) {
-//            int id = view.getId();
-//
-//            Log.i("ONCLICK", "DEBUG: " + id + " " + getPosition());
-//
-////            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-//                Log.i("ONCLICK", "POS 1: " + getLayoutPosition());
-//                Log.i("ONCLICK", "POS 1.1: " + title.getText());
-//                Log.i("ONCLICK", "POS 2: " + getAdapterPosition());
-//                Log.i("ONCLICK", "POS 2.2: " + title.getText());
-//
-//
-//                //getLayoutPosition() or getAdapterPosition()
-//
-////            }
-////            else
-////            {
-//                Log.i("ONCLICK", "DEBUG: " + id + " " + getPosition());
-////            }
-//
-//        }
     }
-
-//    public class CategoryItem
-//    {
-//        public String getmUrl() {
-//            return mUrl;
-//        }
-//
-//        public void setmUrl(String mUrl) {
-//            this.mUrl = mUrl;
-//        }
-//
-//        public String getmTitle() {
-//            return mTitle;
-//        }
-//
-//        public void setmTitle(String mTitle) {
-//            this.mTitle = mTitle;
-//        }
-//
-//        public CategoryItem(String mTitle, String mUrl) {
-//            this.mUrl = mUrl;
-//            this.mTitle = mTitle;
-//        }
-//
-//        private String mUrl;
-//        private String mTitle;
-//
-//    }
 
 }

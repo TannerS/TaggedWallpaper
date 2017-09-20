@@ -6,7 +6,7 @@ public class ApiBuilder {
 
     public static enum OrderBy {
         POPULAR("popular"),
-        NEWEST("newest");
+        LATEST("latest");
 
         private String order;
 
@@ -66,6 +66,7 @@ public class ApiBuilder {
             put("content-type", "text/html; charset=utf-8");
             put("content-type", "application/x-www-form-urlencoded; charset=utf-8");
             put("Content-Language", "en-US");
+            put("Accept-Version", "v1");
         }};
     }
 

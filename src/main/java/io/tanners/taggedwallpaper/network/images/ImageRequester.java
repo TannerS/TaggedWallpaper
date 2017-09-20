@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ public class ImageRequester extends AsyncTask<Void, Void, List<Photo>> {
     private int mGridRowLayoutId;
     private int mGridImageViewId;
     private ImagesAdapter mAdapter;
+    private ProgressBar mProgressBar;
 //    private Request.Requested mRequestType;
 //    private ImageRequest(params[0], null)).getPhotos(mRequestType)
     private ImageRequest imageRequest;
@@ -32,6 +34,12 @@ public class ImageRequester extends AsyncTask<Void, Void, List<Photo>> {
 //        this.mRequestType = mRequestType;
 //        return this;
 //    }
+
+    public ImageRequester setProgressBar(ProgressBar mProgressBar)
+    {
+        this.mProgressBar = mProgressBar;
+        return this;
+    }
 
     public ImageRequester setRequest(ImageRequest imageRequest)
     {
@@ -93,11 +101,14 @@ public class ImageRequester extends AsyncTask<Void, Void, List<Photo>> {
 //            mAdapter.updateAdapter(new ArrayList<Photo>(photos),  mGridRowLayoutId, mGridImageViewId);
             mAdapter = new ImagesAdapter(mContext, new ArrayList<Photo>(photos),  mGridRowLayoutId, mGridImageViewId);
             mGridView.setAdapter(mAdapter);
+            mProgressBar.setVisibility(View.GONE);
             mGridView.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     protected void onPreExecute() {
+        mGridView.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 }

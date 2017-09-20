@@ -4,17 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
 
 import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
-import io.tanners.taggedwallpaper.fragments.CategoryFragment;
-import io.tanners.taggedwallpaper.fragments.NewestImagesFragment;
+import io.tanners.taggedwallpaper.fragments.LatestImagesFragment;
 import io.tanners.taggedwallpaper.fragments.PopularImagesFragment;
-import io.tanners.taggedwallpaper.fragments.SimilarImagesFragment;
 import io.tanners.taggedwallpaper.interfaces.IGetTag;
 
 // https://developer.android.com/training/implementing-navigation/ancestral.html
@@ -35,7 +31,7 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
         // set up fragment tabs
         setUpTabs(R.id.image_view_pager, R.id.image_tab_layout, 2);
         setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentInfo>() {{
-            add(new FragmentAdapter.FragmentInfo(NewestImagesFragment.newInstance(), NewestImagesFragment.NEWEST));
+            add(new FragmentAdapter.FragmentInfo(LatestImagesFragment.newInstance(), LatestImagesFragment.NEWEST));
             add(new FragmentAdapter.FragmentInfo(PopularImagesFragment.newInstance(), PopularImagesFragment.POPULAR));
         }});
 

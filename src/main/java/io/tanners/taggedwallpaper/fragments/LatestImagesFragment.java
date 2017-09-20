@@ -7,17 +7,14 @@ import android.view.ViewGroup;
 
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.ApiBuilder;
-import io.tanners.taggedwallpaper.interfaces.IGetTag;
-import io.tanners.taggedwallpaper.network.images.ImageRequester;
-import io.tanners.taggedwallpaper.network.images.Request;
 
-public class NewestImagesFragment extends ImageFragment {
+public class LatestImagesFragment extends ImageFragment {
 
     public static final String NEWEST = "Newest";
 //    private final String mUrl = "https://api.unsplash.com/photos?per_page=" + PERPAGE + "&page=" + PAGE + "&order_by=newest";
 
-    public static NewestImagesFragment newInstance() {
-        return new NewestImagesFragment();
+    public static LatestImagesFragment newInstance() {
+        return new LatestImagesFragment();
     }
 
     @Override
@@ -31,7 +28,7 @@ public class NewestImagesFragment extends ImageFragment {
 
         loadResources(view);
 
-        loadRequest(new ApiBuilder(this.tag, 50, 1, ApiBuilder.OrderBy.NEWEST));
+        loadRequest(new ApiBuilder(this.tag, 250, 1, ApiBuilder.OrderBy.LATEST));
 
         return view;
     }

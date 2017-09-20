@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.ProgressBar;
+
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.ApiBuilder;
 import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
@@ -16,17 +18,19 @@ public class ImageFragment extends Fragment {
     protected GridView mPopularGridview;
     protected ImagesAdapter mAdapter;
     protected String tag;
+    protected ProgressBar mProgressBar;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         this.tag = ((IGetTag)getActivity()).getTag();
     }
 
     protected void loadResources(View view)
     {
         mPopularGridview = (GridView) view.findViewById(R.id.universal_grideview);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.image_progressbar);
     }
 
     protected void loadRequest(ApiBuilder builder)
@@ -37,7 +41,8 @@ public class ImageFragment extends Fragment {
             .setImageViewId(R.id.grid_image_background)
             .setRequest(new ImageRequest(builder.getHeaders(), builder.buildRestfulUrl(), null))
     //                .setRequestType(Request.Requested.SEARCH)
-            .setView(mPopularGridview).execute();
+            .setView(mPopularGridview)
+            .setProgressBar(mProgressBar).execute();
     }
 
 
