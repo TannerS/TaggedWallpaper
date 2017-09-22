@@ -167,29 +167,31 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
     @Override
     public void onBackPressed() {
 
-        if (mViewPager.getCurrentItem() == 0) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
 
-
-
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            if (drawer.isDrawerOpen(GravityCompat.START)) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else {
-                super.onBackPressed();
-            }
-
-
-
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
-            //super.onBackPressed();
-
-
-        } else {
-            // Otherwise, select the previous step.
-            mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
         }
+        else
+        {
+            if (mViewPager.getCurrentItem() == 0) {
+
+                // If the user is currently looking at the first step, allow the system to handle the
+                // Back button. This calls finish() on this activity and pops the back stack.
+                super.onBackPressed();
+
+
+            } else {
+                // Otherwise, select the previous step.
+                mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+            }
+        }
+
+
+
+
     }
+
 
 
 
