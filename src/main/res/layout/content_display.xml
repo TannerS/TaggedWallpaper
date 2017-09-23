@@ -1,42 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/container"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+tools:context="io.tanners.taggedwallpaper.DisplayActivity"
+tools:showIn="@layout/activity_display">
+
+<FrameLayout
+    android:id="@+id/display_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="io.tanners.taggedwallpaper.DisplayActivity"
-    tools:showIn="@layout/activity_display">
+    android:layout_height="0dp"
+    android:layout_weight="1">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/container"
+    <ImageView
+        android:id="@+id/main_image_id"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:orientation="vertical"
-        tools:context="io.tanners.taggedwallpaper.temp">
+        android:background="@color/transparentAlpha"
+        android:layout_gravity="bottom"
+        android:gravity="bottom">
 
-        <FrameLayout
-            android:id="@+id/content"
+        <TextView
+            android:id="@+id/artist_text_id"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-
-        </FrameLayout>
-
-        <android.support.design.widget.BottomNavigationView
-            android:id="@+id/display_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="?android:attr/windowBackground"
-            app:menu="@menu/navigation" />
+            android:layout_height="match_parent"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="Photo by: DEBUG"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textColor="@color/white"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"/>
 
     </LinearLayout>
 
+</FrameLayout>
 
+<android.support.design.widget.BottomNavigationView
+    android:id="@+id/display_navigation"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="?android:attr/windowBackground"
+    app:menu="@menu/navigation" />
 
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

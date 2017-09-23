@@ -6,17 +6,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public class PhotoResult
 {
-    private String largeImageUrl;
-    private String fullHDURL;
+    private String largeImageURL;
+//    private String fullHDURL;
 
-    public PhotoResult(String largeImageUrl, String fullHDURL, String webformatURL, String imageURL, String previewURL, String user) {
-        this.largeImageUrl = largeImageUrl;
-        this.fullHDURL = fullHDURL;
-        this.webformatURL = webformatURL;
-        this.imageURL = imageURL;
-        this.previewURL = previewURL;
-        this.user = user;
-    }
 
     private String webformatURL;
 
@@ -29,21 +21,21 @@ public class PhotoResult
 //    private String id_hash;
 //    private String userImageURL;
 
-    public String getLargeImageUrl() {
-        return largeImageUrl;
+    public String getLargeImageURL() {
+        return largeImageURL;
     }
 
-    public void setLargeImageUrl(String largeImageUrl) {
-        this.largeImageUrl = largeImageUrl;
+    public void setLargeImageURL(String largeImageURL) {
+        this.largeImageURL = largeImageURL;
     }
 
-    public String getFullHDURL() {
-        return fullHDURL;
-    }
+//    public String getFullHDURL() {
+//        return fullHDURL;
+//    }
 
-    public void setFullHDURL(String fullHDURL) {
-        this.fullHDURL = fullHDURL;
-    }
+//    public void setFullHDURL(String fullHDURL) {
+//        this.fullHDURL = fullHDURL;
+//    }
 
     public String getImageURL() {
         return imageURL;

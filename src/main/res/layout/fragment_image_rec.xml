@@ -22,14 +22,14 @@ tools:context="io.tanners.taggedwallpaper.fragments.SimilarImagesFragment">
         />
 
     <ImageView
+        android:padding="150dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:adjustViewBounds="true"
         android:id="@+id/image_rec_image_preview"
         android:background="#020241"
         android:layout_weight="0.25"
-        android:src="@drawable/ic_photo_camera_black_48dp"
-        android:contentDescription="User " />
+        android:src="@drawable/ic_photo_camera_black_48dp" />
 
     <!--<android.support.v7.widget.RecyclerView-->
         <!--android:id="@+id/image_rec_tag_recycler_view"-->

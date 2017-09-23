@@ -158,7 +158,8 @@ public class ImagesAdapter extends BaseAdapter {
                 Intent intent = new Intent(mContext, DisplayActivity.class);
                 intent.putExtra(DisplayActivity.ARTIST, mCurrentItem.getUser());
                 intent.putExtra(DisplayActivity.FULLIMAGE, mCurrentItem.getImageURL());
-                intent.putExtra(DisplayActivity.PREVIEW, mCurrentItem.getLargeImageUrl());
+                intent.putExtra(DisplayActivity.PREVIEW, mCurrentItem.getLargeImageURL());
+                Log.i("DISPLAY", "DEBUG: " +  mCurrentItem.getLargeImageURL());
                 mContext.startActivity(intent);
             }
         };
@@ -199,7 +200,11 @@ public class ImagesAdapter extends BaseAdapter {
         // set up transition
         DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
         // set up request options
-        RequestOptions cropOptions = new RequestOptions().centerCrop().placeholder(R.drawable.ic_menu_camera).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+        RequestOptions cropOptions = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.ic_photo_camera_black_48dp)
+                .error(R.drawable.ic_error_black_48dp)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         // apply features
         mRequest.apply(cropOptions)
                 .transition(transitionOptions)
