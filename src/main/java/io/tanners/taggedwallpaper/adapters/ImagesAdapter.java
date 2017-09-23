@@ -158,7 +158,8 @@ public class ImagesAdapter extends BaseAdapter {
                 Intent intent = new Intent(mContext, DisplayActivity.class);
                 intent.putExtra(DisplayActivity.ARTIST, mCurrentItem.getUser());
                 intent.putExtra(DisplayActivity.FULLIMAGE, mCurrentItem.getImageURL());
-                intent.putExtra(DisplayActivity.PREVIEW, mCurrentItem.getLargeImageUrl());
+                intent.putExtra(DisplayActivity.PREVIEW, mCurrentItem.getLargeImageURL());
+                Log.i("DISPLAY", "DEBUG: " +  mCurrentItem.getLargeImageURL());
                 mContext.startActivity(intent);
             }
         };
