@@ -2,6 +2,7 @@ package io.tanners.taggedwallpaper.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import java.util.TreeMap;
 
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.adapters.RowImageAdapter;
+import io.tanners.taggedwallpaper.data.categories.CategoryItem;
 
 
 public class CategoryFragment extends Fragment {
@@ -34,15 +36,28 @@ public class CategoryFragment extends Fragment {
     private View view;
     private ProgressBar mProgressBar;
 
+    /**
+     * Create new Instance of class
+     * @return
+     */
     public static CategoryFragment newInstance() {
         return new CategoryFragment();
     }
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -50,25 +65,29 @@ public class CategoryFragment extends Fragment {
         loadResources();
         LoadCategories();
         loadCategoryList();
-
-
-        Log.d("LOAD", "DEBUG 1");
-
-
         return view;
     }
 
+    /**
+     * @param context
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
     }
 
+    /**
+     *
+     */
     @Override
     public void onDetach() {
         super.onDetach();
     }
 
 
+    /**
+     * load needed objects/views
+     */
     private void loadResources()
     {
         categories = new ArrayList<CategoryItem>();
@@ -76,14 +95,19 @@ public class CategoryFragment extends Fragment {
 
     }
 
+    /**
+     * load category items
+     */
     private void loadCategoryList()
     {
         mCategoryList = (RecyclerView) view.findViewById(R.id.category_recycler_view);
         mCategoryList.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        mAdapter = new MyAdapter(myDataset);
-//        mRecyclerView.setAdapter(mAdapter);
     }
 
+    /**
+     * init firebase database connection to load categories
+     * @param listener
+     */
     private void initCategoryListener(ValueEventListener listener)
     {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -91,6 +115,9 @@ public class CategoryFragment extends Fragment {
         myRef.addValueEventListener(listener);
     }
 
+    /**
+     * load categories into recyclerview
+     */
     private void LoadCategories()
     {
         initCategoryListener(new ValueEventListener() {
@@ -100,39 +127,34 @@ public class CategoryFragment extends Fragment {
                 Log.w("FIREBASE", "Failed to read value.", databaseError.toException());
             }
 
+            // if data changes or is present at start
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
+                // uses treemap to make it sorted
                 TreeMap<String, String> categoryItems = new TreeMap<String, String>();
 
-
-                // TODO error handling here if no categories
                 HashMap<String, String> categoryItemsRaw = (HashMap<String, String>) dataSnapshot.getValue();
 
-                if(categoryItemsRaw == null)
+                if(categoryItemsRaw == null || categoryItemsRaw.size() <= 0)
                 {
-                    // todo handle error
-                    Log.d("LOAD", "ERROR ON FIREBASE");
+                    loadImageError();
+                    mProgressBar.setVisibility(View.GONE);
+                    mCategoryList.setVisibility(View.GONE);
                 }
                 else {
-
-
                     categoryItems.putAll(categoryItemsRaw);
 
                     for (Map.Entry<String, String> entry : categoryItems.entrySet()) {
                         categories.add(new CategoryItem(entry.getKey(), entry.getValue()));
-                        Log.d("FIREBASE", entry.getKey() + " " + entry.getValue());
-
                     }
 
-                    mCategoryList.setAdapter(new RowImageAdapter(getActivity(), categories, R.layout.row_item));
-
-
-
+                    mCategoryList.setAdapter(new RowImageAdapter(getContext(), categories, R.layout.row_item));
+                    mProgressBar.setVisibility(View.GONE);
+                    mCategoryList.setVisibility(View.VISIBLE);
                 }
 
-                mProgressBar.setVisibility(View.GONE);
-                mCategoryList.setVisibility(View.VISIBLE);
+
 
                 // TODO onclick here
 
@@ -145,32 +167,53 @@ public class CategoryFragment extends Fragment {
         });
     }
 
-    public static class CategoryItem
+    /**
+     * if firebase error occurs, dispaly error
+     */
+    private void loadImageError()
     {
-        public String getmUrl() {
-            return mUrl;
-        }
+        final Snackbar mErrorSnackBar = Snackbar.make(view.findViewById(R.id.fragment_category_container_id), "Error loading categories", Snackbar.LENGTH_INDEFINITE);
 
-        public void setmUrl(String mUrl) {
-            this.mUrl = mUrl;
-        }
+        mErrorSnackBar.setAction("Close", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mErrorSnackBar.dismiss();
+            }
+        });
 
-        public String getmTitle() {
-            return mTitle;
-        }
-
-        public void setmTitle(String mTitle) {
-            this.mTitle = mTitle;
-        }
-
-        public CategoryItem(String mTitle, String mUrl) {
-            this.mUrl = mUrl;
-            this.mTitle = mTitle;
-        }
-
-        private String mUrl;
-        private String mTitle;
+        mErrorSnackBar.show();
 
     }
+
+//    /**
+//     * Hows
+//     */
+//    public static class CategoryItem
+//    {
+//        public String getmUrl() {
+//            return mUrl;
+//        }
+//
+//        public void setmUrl(String mUrl) {
+//            this.mUrl = mUrl;
+//        }
+//
+//        public String getmTitle() {
+//            return mTitle;
+//        }
+//
+//        public void setmTitle(String mTitle) {
+//            this.mTitle = mTitle;
+//        }
+//
+//        public CategoryItem(String mTitle, String mUrl) {
+//            this.mUrl = mUrl;
+//            this.mTitle = mTitle;
+//        }
+//
+//        private String mUrl;
+//        private String mTitle;
+//
+//    }
 
 }

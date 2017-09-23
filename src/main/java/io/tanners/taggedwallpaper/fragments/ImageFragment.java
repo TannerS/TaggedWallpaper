@@ -23,18 +23,30 @@ public class ImageFragment extends Fragment { //implements ErrorCallBack {
     protected ProgressBar mProgressBar;
 
 
+    /**
+     * we shall get the tag passed into the activity here
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.tag = ((IGetTag)getActivity()).getTag();
     }
 
+    /**
+     * @param view
+     */
     protected void loadResources(View view)
     {
         mPopularGridview = (GridView) view.findViewById(R.id.universal_grideview);
         mProgressBar = (ProgressBar) view.findViewById(R.id.image_progressbar);
     }
 
+    /**
+     * request images that will be loaded into fragment
+     * @param mCallback
+     * @param builder
+     */
     protected void loadRequest(ErrorCallBack mCallback, ApiBuilder builder)
     {
         new ImageRequester(getContext())

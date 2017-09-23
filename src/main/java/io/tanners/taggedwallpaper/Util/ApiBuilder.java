@@ -4,6 +4,9 @@ import java.util.HashMap;
 
 public class ApiBuilder {
 
+    /**
+     * used to determine which proper for which fragments of the same name
+     */
     public static enum OrderBy {
         POPULAR("popular"),
         LATEST("latest");
@@ -54,6 +57,9 @@ public class ApiBuilder {
         this.mPerPage = mPerPage;
     }
 
+    /**
+     * Eventually used for pagination
+     */
     public void increasePage()
     {
         this.mPage++;

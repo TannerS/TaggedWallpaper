@@ -15,6 +15,7 @@ import io.tanners.taggedwallpaper.interfaces.IGetTag;
 
 // https://developer.android.com/training/implementing-navigation/ancestral.html
 public class ImageActivity extends TabbedActivity implements IGetTag {
+    private final int MAXNUMOFFRAGS = 2;
     public final static String TAG = "TAG";
     private String tag;
 
@@ -22,32 +23,29 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
+        // other activies pass tag of category or search query using the intent and passed into class var
         tag = getIntent().getStringExtra(TAG);
-
-
-
-//        mFragAmount = 2;
         setUpToolBar(R.id.image_toolbar);
         // set up fragment tabs
-        setUpTabs(R.id.image_view_pager, R.id.image_tab_layout, 2);
+        setUpTabs(R.id.image_view_pager, R.id.image_tab_layout, MAXNUMOFFRAGS);
         setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentInfo>() {{
             add(new FragmentAdapter.FragmentInfo(LatestImagesFragment.newInstance(), LatestImagesFragment.NEWEST));
             add(new FragmentAdapter.FragmentInfo(PopularImagesFragment.newInstance(), PopularImagesFragment.POPULAR));
         }});
-
+        // set page to be a child of parent activity, this will show the back arrow to return to back activity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
-
-
+    /**
+     * before returning to previous activity, make sure to return to previous fragment
+     */
     @Override
     public void onBackPressed() {
         if (mViewPager.getCurrentItem() == 0) {
+            // return to prev activity
             super.onBackPressed();
-
         } else {
-            // Otherwise, select the previous step.
+            // otherwise, select the previous fragment
             mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
         }
     }
@@ -59,20 +57,7 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 Intent upIntent = NavUtils.getParentActivityIntent(this);
-
-//                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-//                    // This activity is NOT part of this app's task, so create a new task
-//                    // when navigating up, with a synthesized back stack.
-//                    TaskStackBuilder.create(this)
-//                            // Add all of this activity's parents to the back stack
-//                            .addNextIntentWithParentStack(upIntent)
-//                            // Navigate up to the closest parent
-//                            .startActivities();
-//                } else {
-                    // This activity is part of this app's task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, upIntent);
-//                }
+                NavUtils.navigateUpTo(this, upIntent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -80,7 +65,7 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
 
 
     /**
-     * Provides a way to provide the same functionality to pass and connect to this intent
+     * Provides a way to provide the same functionality to pass and connect to this intent and pass the tag
      * @param context
      * @param query
      */

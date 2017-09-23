@@ -7,7 +7,6 @@ import java.util.ArrayList;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PhotosResultsWrapper
 {
-
     private int totalHits;
 
     public int getTotalHits() {
@@ -28,7 +27,6 @@ public class PhotosResultsWrapper
 
     public PhotosResultsWrapper() {
     }
-
 
     public PhotosResultsWrapper(int totalHits, ArrayList<PhotoResult> hits) {
         this.totalHits = totalHits;

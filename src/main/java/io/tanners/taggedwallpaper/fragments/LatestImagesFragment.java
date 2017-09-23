@@ -11,10 +11,8 @@ import io.tanners.taggedwallpaper.Util.ApiBuilder;
 import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 
 public class LatestImagesFragment extends ImageFragment implements ErrorCallBack{
-
     public static final String NEWEST = "Newest";
-//    private final String mUrl = "https://api.unsplash.com/photos?per_page=" + PERPAGE + "&page=" + PAGE + "&order_by=newest";
-
+    // creates new instance
     public static LatestImagesFragment newInstance() {
         return new LatestImagesFragment();
     }
@@ -30,11 +28,15 @@ public class LatestImagesFragment extends ImageFragment implements ErrorCallBack
 
         loadResources(view);
 
+        // call base class
         loadRequest(this, new ApiBuilder(this.tag, 100, 1, ApiBuilder.OrderBy.LATEST));
 
         return view;
     }
 
+    /**
+     * callback for imagerequester
+     */
     @Override
     public void displayError() {
 //        throw new RuntimeException(this.toString() + " must implement in subclass");

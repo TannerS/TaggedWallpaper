@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import io.tanners.taggedwallpaper.ImageActivity;
 import io.tanners.taggedwallpaper.R;
+import io.tanners.taggedwallpaper.data.categories.CategoryItem;
 import io.tanners.taggedwallpaper.fragments.CategoryFragment;
 //import io.tanners.taggedwallpaper.data.CategoryItem;
 
@@ -25,14 +26,15 @@ import io.tanners.taggedwallpaper.fragments.CategoryFragment;
  */
 public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.CategoryViewHolder> {
     private Context mContext;
-    private ArrayList<CategoryFragment.CategoryItem> mItems;
+    private ArrayList<CategoryItem> mItems;
     private int mLayoutId;
 
-    public RowImageAdapter(Context mContext, ArrayList<CategoryFragment.CategoryItem> mItems, int mLayoutId) {
+    public RowImageAdapter(Context mContext, ArrayList<CategoryItem> mItems, int mLayoutId) {
         this.mContext = mContext;
         this.mItems = mItems;
         this.mLayoutId = mLayoutId;
     }
+
 
     /**
      *  Setup image based on url of image and object to present it in
@@ -74,7 +76,7 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
     @Override
     public void onBindViewHolder(CategoryViewHolder holder, int position) {
         // get category item
-        CategoryFragment.CategoryItem mItem = mItems.get(position);
+        CategoryItem mItem = mItems.get(position);
         // set current item's title
         holder.title.setText(mItem.getmTitle());
         // set up image at url with reference to where the image will be loaded into
@@ -105,16 +107,8 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
                 @Override
                 public void onClick(View view) {
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        Log.i("ONCLICK", "POS 1: " + getLayoutPosition());
-                        Log.i("ONCLICK", "POS 1.1: " + title.getText());
-                        Log.i("ONCLICK", "POS 2: " + getAdapterPosition());
-                        Log.i("ONCLICK", "POS 2.2: " + title.getText());
-
-                        // TODO combine
                         ImageActivity.openIntentForQuery(mContext, title.getText().toString());
-
                     } else {
-                        Log.i("ONCLICK", "DEBUG: " + " " + getPosition());
                         ImageActivity.openIntentForQuery(mContext, title.getText().toString());
                     }
                 }

@@ -20,8 +20,6 @@ public class PhotoResult
 
     private String webformatURL;
 
-
-
     public PhotoResult() {
     }
 
@@ -79,5 +77,4 @@ public class PhotoResult
         this.webformatURL = webformatURL;
     }
 //    private String userImageURL;
-
 }

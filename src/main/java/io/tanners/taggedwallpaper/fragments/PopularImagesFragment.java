@@ -18,27 +18,40 @@ import io.tanners.taggedwallpaper.network.images.Request;
 
 public class PopularImagesFragment extends ImageFragment implements ErrorCallBack  {
     public static final String POPULAR = "Popular";
-
+    // creates new instance
     public static PopularImagesFragment newInstance() {
         return new PopularImagesFragment();
     }
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_images, container, false);
 
         loadResources(view);
 
+        // call base class
         loadRequest(this, new ApiBuilder(this.tag, 100, 1, ApiBuilder.OrderBy.POPULAR));
 
         return view;
     }
 
+    /**
+     * callback for imagerequester
+     */
     @Override
     public void displayError() {
         final Snackbar mErrorSnackBar = Snackbar.make(view.findViewById(R.id.fragment_images_container_id), "Error loading images", Snackbar.LENGTH_INDEFINITE);
