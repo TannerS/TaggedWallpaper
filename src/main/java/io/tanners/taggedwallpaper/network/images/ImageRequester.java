@@ -1,28 +1,42 @@
 package io.tanners.taggedwallpaper.network.images;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
-import io.tanners.taggedwallpaper.data.results.photo.Photo;
+import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
+import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
+//import io.tanners.taggedwallpaper.data.results.photo.Photo;
 
 
-public class ImageRequester extends AsyncTask<Void, Void, List<Photo>> {
+public class ImageRequester extends AsyncTask<Void, Void, List<PhotoResult>> {
     private GridView mGridView;
     private Context mContext;
     private int mGridRowLayoutId;
     private int mGridImageViewId;
     private ImagesAdapter mAdapter;
     private ProgressBar mProgressBar;
+    private ErrorCallBack mCallback;
 //    private Request.Requested mRequestType;
 //    private ImageRequest(params[0], null)).getPhotos(mRequestType)
     private ImageRequest imageRequest;
+
+    public ImageRequester setCallBack(ErrorCallBack mCallback)
+    {
+        this.mCallback = mCallback;
+        return this;
+    }
 
     public ImageRequester(Context mContext)
     {
@@ -46,12 +60,6 @@ public class ImageRequester extends AsyncTask<Void, Void, List<Photo>> {
         this.imageRequest = imageRequest;
         return this;
     }
-
-//    public ImageRequester setContext(Context mContext)
-//    {
-//        this.mContext = mContext;
-//        return this;
-//    }
 
     public ImageRequester setAdapter(ImagesAdapter mAdapter)
     {
@@ -88,21 +96,44 @@ public class ImageRequester extends AsyncTask<Void, Void, List<Photo>> {
      * @return
      */
     @Override
-    protected List<Photo> doInBackground(Void... params) {
+    protected List<PhotoResult> doInBackground(Void... params) {
 //        List<Photo> photos = (new ImageRequest(params[0], null)).getPhotos(mRequestType);
 //        List<Photo> photos = imageRequest.getPhotos(mRequestType);
-        List<Photo> photos = imageRequest.getPhotos();
+        List<PhotoResult> photos = null;
+
+        try {
+            photos = imageRequest.getPhotos();
+            Log.i("REQUEST", "DEBU 3");
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+
+            Log.i("REQUEST", "DEBU 4");
+        }
+
+
         return photos;
     }
 
     @Override
-    protected void onPostExecute(List<Photo> photos) {
-        if(photos != null) {
+    protected void onPostExecute(List<PhotoResult> photos) {
+        if(photos != null)
+        {
+            Log.i("REQUEST", "DEBU 1");
 //            mAdapter.updateAdapter(new ArrayList<Photo>(photos),  mGridRowLayoutId, mGridImageViewId);
-            mAdapter = new ImagesAdapter(mContext, new ArrayList<Photo>(photos),  mGridRowLayoutId, mGridImageViewId);
+            mAdapter = new ImagesAdapter(mContext, new ArrayList<PhotoResult>(photos),  mGridRowLayoutId, mGridImageViewId);
             mGridView.setAdapter(mAdapter);
             mProgressBar.setVisibility(View.GONE);
             mGridView.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            Log.i("REQUEST", "DEBU 2");
+            mCallback.displayError();
+            mProgressBar.setVisibility(View.GONE);
+            mGridView.setVisibility(View.GONE);
         }
     }
 
@@ -111,4 +142,5 @@ public class ImageRequester extends AsyncTask<Void, Void, List<Photo>> {
         mGridView.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
     }
+
 }

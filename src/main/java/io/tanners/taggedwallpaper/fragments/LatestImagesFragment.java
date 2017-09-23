@@ -1,14 +1,16 @@
 package io.tanners.taggedwallpaper.fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.ApiBuilder;
+import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 
-public class LatestImagesFragment extends ImageFragment {
+public class LatestImagesFragment extends ImageFragment implements ErrorCallBack{
 
     public static final String NEWEST = "Newest";
 //    private final String mUrl = "https://api.unsplash.com/photos?per_page=" + PERPAGE + "&page=" + PAGE + "&order_by=newest";
@@ -28,8 +30,25 @@ public class LatestImagesFragment extends ImageFragment {
 
         loadResources(view);
 
-        loadRequest(new ApiBuilder(this.tag, 250, 1, ApiBuilder.OrderBy.LATEST));
+        loadRequest(this, new ApiBuilder(this.tag, 100, 1, ApiBuilder.OrderBy.LATEST));
 
         return view;
     }
+
+    @Override
+    public void displayError() {
+//        throw new RuntimeException(this.toString() + " must implement in subclass");
+//        Toast.makeText(mContext, "Error loading images on " + this., Toast.LENGTH_LONG).show();
+        final Snackbar mErrorSnackBar = Snackbar.make(view.findViewById(R.id.fragment_images_container_id), "Error loading images", Snackbar.LENGTH_INDEFINITE);
+
+        mErrorSnackBar.setAction("Close", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mErrorSnackBar.dismiss();
+            }
+        });
+
+        mErrorSnackBar.show();
+    }
+
 }

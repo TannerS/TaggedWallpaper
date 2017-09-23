@@ -13,8 +13,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import io.tanners.taggedwallpaper.data.results.photo.Photo;
-import io.tanners.taggedwallpaper.data.results.photo.SearchWrapper;
+//import io.tanners.taggedwallpaper.data.results.photo.Photo;
+//import io.tanners.taggedwallpaper.data.results.photo.SearchWrapper;
+import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
+import io.tanners.taggedwallpaper.data.results.photo.PhotosResultsWrapper;
 import io.tanners.taggedwallpaper.network.ConnectionRequest;
 
 public class ImageRequest extends Request
@@ -27,12 +29,11 @@ public class ImageRequest extends Request
 
     @Override
 //    public List<Photo> getPhotos(Requested mapping)
-    public List<Photo> getPhotos()
-    {
-        List<Photo> photos = null;
+    public List<PhotoResult> getPhotos() throws IOException {
+        List<PhotoResult> photos = null;
 
-        try
-        {
+        //try
+        //{
             mConnectionRequest = new ConnectionRequest(mUrl);
 
             if(mBody != null && mBody.length() > 0)
@@ -59,22 +60,27 @@ public class ImageRequest extends Request
 //                switch(mapping)
 //                {
 //                    case SEARCH:
-                        photos = (objectMapper.readValue(response, SearchWrapper.class)).getResults();
+//                        photos = (objectMapper.readValue(response, SearchWrapper.class)).getResults();
+                        photos = (objectMapper.readValue(response, PhotosResultsWrapper.class)).getHits();
 //                        break;
 //                }
+//
+//
+                mConnectionRequest.closeConnection();
             }
-        } catch (JsonMappingException | JsonParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-        finally {
-            mConnectionRequest.closeConnection();
-        }
+        //} catch (JsonMappingException | JsonParseException e) {
+
+           //// e.printStackTrace();
+            //return null;
+        //}
+       // catch (IOException e)
+       // {
+       //     e.printStackTrace();
+       //     return null;
+       // }
+       // finally {
+
+      //  }
 
         return photos;
     }

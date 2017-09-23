@@ -159,6 +159,7 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
             // get search query
             String query = intent.getStringExtra(SearchManager.QUERY);
 
+            Log.i("SEARCH", "SHOULD OPEN IMAGE INTENT");
             ImageActivity.openIntentForQuery(this, query);
 
         }
@@ -168,6 +169,7 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
     public void onBackPressed() {
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
 

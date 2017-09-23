@@ -9,13 +9,18 @@ public class PhotoResult
     private String largeImageUrl;
     private String fullHDURL;
 
-    public PhotoResult(String largeImageUrl, String fullHDURL, String imageURL, String previewURL, String user) {
+    public PhotoResult(String largeImageUrl, String fullHDURL, String webformatURL, String imageURL, String previewURL, String user) {
         this.largeImageUrl = largeImageUrl;
         this.fullHDURL = fullHDURL;
+        this.webformatURL = webformatURL;
         this.imageURL = imageURL;
         this.previewURL = previewURL;
         this.user = user;
     }
+
+    private String webformatURL;
+
+
 
     public PhotoResult() {
     }
@@ -64,6 +69,14 @@ public class PhotoResult
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public String getWebformatURL() {
+        return webformatURL;
+    }
+
+    public void setWebformatURL(String webformatURL) {
+        this.webformatURL = webformatURL;
     }
 //    private String userImageURL;
 

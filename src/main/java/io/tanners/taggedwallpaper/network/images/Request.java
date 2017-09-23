@@ -2,34 +2,18 @@ package io.tanners.taggedwallpaper.network.images;
 
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import io.tanners.taggedwallpaper.data.results.photo.Photo;
+//import io.tanners.taggedwallpaper.data.results.photo.Photo;
+import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
 import io.tanners.taggedwallpaper.network.ConnectionRequest;
 
 
 
 public abstract class Request
 {
-//    public static enum Requested {
-////        SEARCH("Search"),
-//        SEARCH("Search");
-//        // TODO popular may no longer be used
-////        POPULAR("POPULAR");
-//
-//        private String mapping;
-//
-//        Requested(String mapping) {
-//            this.mapping = mapping;
-//        }
-//
-//        public String mapping() {
-//            return mapping;
-//        }
-//
-//    }
-
     protected ConnectionRequest mConnectionRequest;
     protected String mUrl;
     protected String mBody;
@@ -80,7 +64,7 @@ public abstract class Request
 
 
 //    public abstract List<Photo> getPhotos(Requested mapping);
-    public abstract List<Photo> getPhotos();
+    public abstract List<PhotoResult> getPhotos() throws IOException;
 }
 
 

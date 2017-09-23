@@ -19,18 +19,19 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
 import io.tanners.taggedwallpaper.R;
-import io.tanners.taggedwallpaper.data.results.photo.Photo;
+import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
+//import io.tanners.taggedwallpaper.data.results.photo.Photo;
 
 /**
  * Class is used to hold gride view of images as a result from the image api
  */
 public class ImagesAdapter extends BaseAdapter {
     private Context mContext;
-    private ArrayList<Photo> mItems;
+    private ArrayList<PhotoResult> mItems;
     private int mLayoutId;
     private int mRowId;
 
-    public ImagesAdapter(Context mContext, ArrayList<Photo> mItems, int mLayoutId, int mRowId) {
+    public ImagesAdapter(Context mContext, ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId) {
         this.mContext = mContext;
         this.mItems = mItems;
         this.mLayoutId = mLayoutId;
@@ -43,7 +44,7 @@ public class ImagesAdapter extends BaseAdapter {
      * @param mLayoutId
      * @param mRowId
      */
-    public void updateAdapter(ArrayList<Photo> mItems, int mLayoutId, int mRowId)
+    public void updateAdapter(ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId)
     {
         clearAdapter();
 
@@ -135,9 +136,10 @@ public class ImagesAdapter extends BaseAdapter {
         }
 
         // get photo data at location position
-        Photo mCurrentItem = (Photo) mItems.get(position);
+        PhotoResult mCurrentItem = (PhotoResult) mItems.get(position);
         // set image to be loaded into current view
-        setUpImage(mCurrentItem.getUrls().getSmall(), mItemContainerView.image);
+//        setUpImage(mCurrentItem.getUrls().getSmall(), mItemContainerView.image);
+        setUpImage(mCurrentItem.getWebformatURL(), mItemContainerView.image);
 
         return mItem;
     }

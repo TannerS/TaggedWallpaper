@@ -10,6 +10,22 @@ public class PhotosResultsWrapper
 
     private int totalHits;
 
+    public int getTotalHits() {
+        return totalHits;
+    }
+
+    public void setTotalHits(int totalHits) {
+        this.totalHits = totalHits;
+    }
+
+    public ArrayList<PhotoResult> getHits() {
+        return hits;
+    }
+
+    public void setHits(ArrayList<PhotoResult> hits) {
+        this.hits = hits;
+    }
+
     public PhotosResultsWrapper() {
     }
 

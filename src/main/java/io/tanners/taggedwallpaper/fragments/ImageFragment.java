@@ -1,6 +1,7 @@
 package io.tanners.taggedwallpaper.fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.GridView;
@@ -9,11 +10,12 @@ import android.widget.ProgressBar;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.ApiBuilder;
 import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
+import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 import io.tanners.taggedwallpaper.interfaces.IGetTag;
 import io.tanners.taggedwallpaper.network.images.ImageRequest;
 import io.tanners.taggedwallpaper.network.images.ImageRequester;
 
-public class ImageFragment extends Fragment {
+public class ImageFragment extends Fragment { //implements ErrorCallBack {
     protected View view;
     protected GridView mPopularGridview;
     protected ImagesAdapter mAdapter;
@@ -33,7 +35,7 @@ public class ImageFragment extends Fragment {
         mProgressBar = (ProgressBar) view.findViewById(R.id.image_progressbar);
     }
 
-    protected void loadRequest(ApiBuilder builder)
+    protected void loadRequest(ErrorCallBack mCallback, ApiBuilder builder)
     {
         new ImageRequester(getContext())
             .setAdapter(mAdapter)
@@ -42,8 +44,7 @@ public class ImageFragment extends Fragment {
             .setRequest(new ImageRequest(builder.getHeaders(), builder.buildRestfulUrl(), null))
     //                .setRequestType(Request.Requested.SEARCH)
             .setView(mPopularGridview)
-            .setProgressBar(mProgressBar).execute();
+            .setProgressBar(mProgressBar)
+                .setCallBack(mCallback).execute();
     }
-
-
 }
