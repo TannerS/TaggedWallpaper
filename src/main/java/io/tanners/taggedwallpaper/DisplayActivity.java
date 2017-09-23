@@ -7,8 +7,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -17,7 +21,6 @@ public class DisplayActivity extends AppCompatActivity {
     public final static String ARTIST = "ARTIST";
     public final static String FULLIMAGE = "FULLIMAGE";
     public final static String PREVIEW = "PREVIEW";
-    private TextView mTextMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,21 +41,20 @@ public class DisplayActivity extends AppCompatActivity {
 
     private void loadBottomNavigation()
     {
-        mTextMessage = (TextView) findViewById(R.id.message);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.display_navigation);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.navigation_home:
-                        mTextMessage.setText(R.string.title_home);
+                    case R.id.navigation_download:
+                        Log.i("NAV", "DOWNLOAD");
                         return true;
-                    case R.id.navigation_dashboard:
-                        mTextMessage.setText(R.string.title_dashboard);
+                    case R.id.navigation_set:
+                        Log.i("NAV", "SET");
                         return true;
-                    case R.id.navigation_notifications:
-                        mTextMessage.setText(R.string.title_notifications);
+                    case R.id.navigation_share:
+                        Log.i("NAV", "SHARE");
                         return true;
                 }
                 return false;
@@ -61,16 +63,39 @@ public class DisplayActivity extends AppCompatActivity {
         });
     }
 
+//
+//    /**
+//     * @param item
+//     * @return
+//     */
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        super.onOptionsItemSelected(item);
+//
+//        int id = item.getItemId();
+//
+//        if (id == R.id.navigation_set) {
+//            // Handle the camera action
+//        } else if (id == R.id.navigation_download) {
+//
+//        } else if (id == R.id.navigation_share) {
+//
+//        }
+//
+//
+//        return true;
+//    }
 
-    /**
-     * Provides a way to provide the same functionality to pass and connect to this intent and pass the tag
-     * @param context
-     * @param query
-     */
-    public static void openIntentForQuery(Context context, String query)
-    {
-        Intent intent = new Intent(context, ImageActivity.class);
-        intent.putExtra(ImageActivity.TAG, query);
-        context.startActivity(intent);
-    }
+//    /**
+//     * @param menu
+//     * @return
+//     */
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.navigation, menu);
+//        return true;
+//    }
+
+
 }

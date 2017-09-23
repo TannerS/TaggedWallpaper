@@ -133,15 +133,15 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    /**
-     * @param item
-     * @return
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //int id = item.getItemId();
-        return super.onOptionsItemSelected(item);
-    }
+//    /**
+//     * @param item
+//     * @return
+//     */
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        //int id = item.getItemId();
+//        return super.onOptionsItemSelected(item);
+//    }
 
     /**
      *  https://developer.android.com/training/search/setup.html
