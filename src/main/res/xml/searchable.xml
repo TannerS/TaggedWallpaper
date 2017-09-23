@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--Also it seems that both the android:hint and android:label attributes MUST be -->
+<!--references to strings in strings.xml. Being lazy and hardcoding the string values -->
+<!--doesn't seem to work at all :)-->
+<!---->
+<!--https://stackoverflow.com/questions/11699206/cannot-get-searchview-in-actionbar-to-work/11704661#11704661-->
+
 <searchable
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:label="Search"
-    android:hint="Please make a search">
+    android:label="@string/search_label"
+    android:hint="@string/search_hint">
 </searchable>
 

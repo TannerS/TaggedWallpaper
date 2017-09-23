@@ -26,7 +26,7 @@ import io.tanners.taggedwallpaper.fragments.SimilarImagesFragment;
 import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
 import io.tanners.taggedwallpaper.interfaces.IFindFragment;
 
-public class MainActivity extends TabbedActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
+public class MainActivity extends TabbedActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ActionBarDrawerToggle mToggle;
     private final int MAXNUMOFFRAGS = 3;
 
@@ -50,6 +50,8 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
 
         // handle search queries
         // used for start, may not be needed
+        Log.i("SEARCH", "DEBUG 3");
+
         handleSearch(getIntent());
     }
 
@@ -77,10 +79,6 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
         // sets main activity as the searchable activity, check manifest for android:name="android.app.default_searchable"
         ComponentName mComponentName = new ComponentName(this, MainActivity.class);
         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(mComponentName));
-        // set on click listeners
-        mSearchView.setOnQueryTextListener(this);
-        mSearchView.setOnCloseListener(this);
-
         // https://stackoverflow.com/questions/18737464/how-to-make-the-action-bar-searchview-fill-entire-action-bar
         mSearchView.setIconifiedByDefault(false);
         ActionBar.LayoutParams params = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
@@ -152,7 +150,11 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        Log.i("SEARCH", "DEBUG 4");
+
         setIntent(intent);
+        Log.i("SEARCH", "DEBUG 5");
+
         // handle search queries
         handleSearch(intent);
     }
@@ -162,8 +164,12 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
      * @param intent
      */
     private void handleSearch(Intent intent) {
+
+        Log.i("SEARCH", "DEBUG 1: " + intent.getAction());
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             // get search query
+            Log.i("SEARCH", "DEBUG 2");
+
             String query = intent.getStringExtra(SearchManager.QUERY);
             ImageActivity.openIntentForQuery(this, query);
         }
@@ -224,30 +230,4 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
         return true;
     }
 
-    /**
-     *
-     * @return
-     */
-    @Override
-    public boolean onClose() {
-        return false;
-    }
-
-    /**
-     * @param query
-     * @return
-     */
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    /**
-     * @param newText
-     * @return
-     */
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
 }

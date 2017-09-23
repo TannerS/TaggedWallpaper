@@ -1,7 +1,9 @@
 package io.tanners.taggedwallpaper.adapters;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +20,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
+import io.tanners.taggedwallpaper.DisplayActivity;
+import io.tanners.taggedwallpaper.ImageActivity;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
 //import io.tanners.taggedwallpaper.data.results.photo.Photo;
@@ -135,6 +139,8 @@ public class ImagesAdapter extends BaseAdapter {
             mItemContainerView = (PhotoCategoryContainerView) mItem.getTag();
         }
 
+        mItem.setOnClickListener(loadOnClickListener(mItems.get(position)));
+
         // get photo data at location position
         PhotoResult mCurrentItem = (PhotoResult) mItems.get(position);
         // set image to be loaded into current view
@@ -142,6 +148,20 @@ public class ImagesAdapter extends BaseAdapter {
         setUpImage(mCurrentItem.getWebformatURL(), mItemContainerView.image);
 
         return mItem;
+    }
+
+    private View.OnClickListener loadOnClickListener(final PhotoResult mCurrentItem)
+    {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, DisplayActivity.class);
+                intent.putExtra(DisplayActivity.ARTIST, mCurrentItem.getUser());
+                intent.putExtra(DisplayActivity.FULLIMAGE, mCurrentItem.getImageURL());
+                intent.putExtra(DisplayActivity.PREVIEW, mCurrentItem.getLargeImageUrl());
+                mContext.startActivity(intent);
+            }
+        };
     }
 
     /**
