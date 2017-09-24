@@ -6,10 +6,12 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +30,7 @@ import java.net.URL;
 
 import io.tanners.taggedwallpaper.Util.ExternalFileStorageUtil;
 import io.tanners.taggedwallpaper.Util.PermissionRequester;
+import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.network.images.ImageDownloader;
 
 // https://developer.android.com/reference/android/support/v4/app/ActivityCompat.OnRequestPermissionsResultCallback.html
@@ -148,10 +151,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                     // do download task
                     onGrantedDownloadPermissions();
                 break;
-
-
-
-
         }
 
     }
@@ -175,15 +174,32 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         // check if external storage is writable
         if(mStorageUtil.isExternalStorageWritable())
         {
+            final Snackbar mGoodSnackbar = displaySuccessDownloadSnackBar();
+            final Snackbar mBadSnackbar = displayFailedDownloadSnackBar();
+
+            mGoodSnackbar.setAction("Close", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mGoodSnackbar.dismiss();
+                }
+            });
+
+            mBadSnackbar.setAction("Close", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mBadSnackbar.dismiss();
+                }
+            });
+
             // create file in external storage
             File mImageFile = mStorageUtil.getAlbumStorageDir(MALBUMNAME);
-            new ImageDownloader(mImageFile).execute(getIntent().getStringExtra(FULLIMAGE));
+            new ImageDownloader(mImageFile, mGoodSnackbar, mBadSnackbar).execute(getIntent().getStringExtra(FULLIMAGE));
         }
         // cant read, connected to pc, ejected, etc
         else
         {
-            // TODO snackbar or toast here?
-            // TODO testing
+            // display error as snackbar
+            displayStorageErrorSnackBar();
         }
     }
 
@@ -197,6 +213,27 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
             }
         }
+    }
+
+    private Snackbar displaySuccessDownloadSnackBar()
+    {
+        return SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
+                "Image Downloaded",
+                Snackbar.LENGTH_SHORT);
+    }
+
+    private Snackbar displayFailedDownloadSnackBar()
+    {
+        return SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
+                "ERROR: Image Cannot Be Downloaded",
+                Snackbar.LENGTH_SHORT);
+    }
+
+    private void displayStorageErrorSnackBar() {
+        SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.display_activity_main_id),
+                "ERROR: Cannot Access External Storage",
+                Snackbar.LENGTH_INDEFINITE,
+                "Close");
     }
 
 

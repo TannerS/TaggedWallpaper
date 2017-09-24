@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.tanners.taggedwallpaper.DisplayActivity">
+    tools:context="io.tanners.taggedwallpaper.DisplayActivity"
+    android:id="@+id/display_activity_main_id">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

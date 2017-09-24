@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.ApiBuilder;
+import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 
 public class LatestImagesFragment extends ImageFragment implements ErrorCallBack{
@@ -39,18 +40,24 @@ public class LatestImagesFragment extends ImageFragment implements ErrorCallBack
      */
     @Override
     public void displayError() {
+        SimpleSnackBarBuilder.createAndDisplaySnackBar(view.findViewById(R.id.fragment_images_container_id),
+                "Error loading images",
+                Snackbar.LENGTH_INDEFINITE,
+                "Close");
+    }
+
+
+
+//        public static void createAndDisplaySnackBar(View view, String message, int length, String mDismissMessage,  View.OnClickListener mCallback)
+
+
 //        throw new RuntimeException(this.toString() + " must implement in subclass");
 //        Toast.makeText(mContext, "Error loading images on " + this., Toast.LENGTH_LONG).show();
-        final Snackbar mErrorSnackBar = Snackbar.make(view.findViewById(R.id.fragment_images_container_id), "Error loading images", Snackbar.LENGTH_INDEFINITE);
-
-        mErrorSnackBar.setAction("Close", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mErrorSnackBar.dismiss();
-            }
-        });
-
-        mErrorSnackBar.show();
-    }
+//        final Snackbar mErrorSnackBar = Snackbar.make(, , );
+//
+//        mErrorSnackBar.setAction("Close",
+//
+//        mErrorSnackBar.show();
+//    }
 
 }
