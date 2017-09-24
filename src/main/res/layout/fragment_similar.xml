@@ -43,7 +43,7 @@ tools:context="io.tanners.taggedwallpaper.fragments.SimilarImagesFragment">
         <!--android:textAlignment="center" />-->
 
     <Button
-        android:id="@+id/image_rec_select_button"
+        android:id="@+id/image_similar_select_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.05"
