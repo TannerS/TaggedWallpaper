@@ -13,45 +13,46 @@ tools:context="io.tanners.taggedwallpaper.fragments.SimilarImagesFragment">
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="Choose a photo to find similar images"
+        android:text="Choose or take an image to find tags based off that image. No images will be stored."
         android:padding="10sp"
         android:textColor="@android:color/white"
         />
 
-    <ImageView
-        android:padding="150dp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:adjustViewBounds="true"
-        android:id="@+id/image_rec_image_preview"
-        android:background="#020241"
-        android:layout_weight="0.25"
-        android:src="@drawable/ic_photo_camera_black_48dp" />
-
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/image_rec_tag_recycler_view"-->
+    <!--<ImageView-->
         <!--android:layout_width="match_parent"-->
-        <!--android:layout_weight="0.1"-->
         <!--android:layout_height="0dp"-->
-        <!--android:padding="5dp"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:id="@+id/image_rec_image_preview"-->
         <!--android:background="#020241"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:textAlignment="center" />-->
+        <!--android:layout_weight="0.25"-->
+        <!--android:src="@drawable/ic_photo_camera_black_48dp" />-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/image_rec_tag_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_weight="5"
+        android:layout_height="0dp"
+        android:padding="5dp"
+        android:background="#020241"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center" />
 
     <Button
         android:id="@+id/image_similar_select_button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.05"
+        android:layout_weight="1"
         android:text="Upload and search"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:textColor="@color/white"
-        android:background="#020241" />
+        android:background="#020241"
+        android:clickable="true"/>
 </LinearLayout>

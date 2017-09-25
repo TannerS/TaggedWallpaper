@@ -63,6 +63,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         loadImage(getIntent().getStringExtra(PREVIEW));
     }
 
+    // TODO this is used few places, combine? also used in similarimages
     private void loadImage(String mImageUrl)
     {
         // Load image into imageview with options
