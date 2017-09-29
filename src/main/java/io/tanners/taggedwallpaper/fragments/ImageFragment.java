@@ -30,7 +30,20 @@ public class ImageFragment extends Fragment { //implements ErrorCallBack {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.tag = ((IGetTag)getActivity()).getTag();
+        // check if current activity loading has the igettag interface implemented
+        // this is due in part that main activity can load the popular and latest fragments
+        // but do not need tags so no need ot implment it, but imageactivity needs it since
+        // it does take in tags so it does implement it
+        if (getActivity() instanceof IGetTag) {
+            // get tag from activity
+            this.tag = ((IGetTag)getActivity()).getTag();
+        } else {
+           // throw new RuntimeException(getActivity().toString() + " must implement OnFragmentInteractionListener");
+            // nothing to do
+        }
+
+
+//        this.tag = ((IGetTag)getActivity()).getTag();
     }
 
     /**

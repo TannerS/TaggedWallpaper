@@ -29,14 +29,18 @@ public class ApiBuilder {
     private String mBase = "https://pixabay.com/api/";
 //    private String mApiRules = "&utm_source=TaggedWallpaper&utm_medium=referral&utm_campaign=api-credit";
 //    private final String APIKEY = "Client-ID 53bec55730b75b73e5f615222f83e498e7645300c2b10949e6f8e25442a2fccc";
-    private final String mAPIKEY = "6349282-51eccae4204c7aaa690cba84c";
+    private final String mAPIKEY = "";
     private final String mEXTRAS = "&image_type=photo&safesearch=true&response_group=high_resolution";
     private String mOrder = "popular";
     private String mTag ="";
 
     public String buildRestfulUrl()
     {
-        return mBase + "?key=" + mAPIKEY + "&q=" + mTag + "&per_page=" + mPerPage + "&page=" + mPage +  "&order=" + mOrder + mEXTRAS;
+        // TAKES INTO ACCOUNT NO QUERY FOR GENERAL IMAGE CATEGORIES SUCH AS POPULAR AND LATEST
+        if(mTag == null || mTag.length() == 0)
+            return mBase + "?key=" + mAPIKEY + "&per_page=" + mPerPage + "&page=" + mPage +  "&order=" + mOrder + mEXTRAS;
+        else
+            return mBase + "?key=" + mAPIKEY + "&q=" + mTag + "&per_page=" + mPerPage + "&page=" + mPage +  "&order=" + mOrder + mEXTRAS;
     }
 
     public ApiBuilder(String tag, int mPerPage, int mPage, OrderBy order)

@@ -22,6 +22,8 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 
 import io.tanners.taggedwallpaper.fragments.CategoryFragment;
+import io.tanners.taggedwallpaper.fragments.LatestImagesFragment;
+import io.tanners.taggedwallpaper.fragments.PopularImagesFragment;
 import io.tanners.taggedwallpaper.fragments.SimilarImagesFragment;
 import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
 import io.tanners.taggedwallpaper.interfaces.IFindFragment;
@@ -45,6 +47,8 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
         // set up fragments into adapter
         setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentInfo>() {{
             add(new FragmentAdapter.FragmentInfo(CategoryFragment.newInstance(), CategoryFragment.CATEGORY));
+            add(new FragmentAdapter.FragmentInfo(LatestImagesFragment.newInstance(), LatestImagesFragment.NEWEST));
+            add(new FragmentAdapter.FragmentInfo(PopularImagesFragment.newInstance(), PopularImagesFragment.POPULAR));
             add(new FragmentAdapter.FragmentInfo(SimilarImagesFragment.newInstance(), SimilarImagesFragment.SIMILAR));
         }});
 

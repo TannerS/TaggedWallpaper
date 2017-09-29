@@ -83,7 +83,7 @@ public class SimilarImagesFragment extends Fragment {
             }
         });
 
-        mMainImage = view.findViewById(R.id.image_rec_image_preview);
+        //mMainImage = view.findViewById(R.id.image_rec_image_preview);
     }
 
     /**
@@ -288,36 +288,36 @@ public class SimilarImagesFragment extends Fragment {
     private void loadImage(Bitmap mImage)
     {
         // Load image into imageview with options
-        BitmapTransitionOptions transitionOptions = new BitmapTransitionOptions().crossFade();
-        RequestOptions cropOptions = new RequestOptions()
-                .centerCrop()
-                .error(R.drawable.ic_error_black_48dp)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        mImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
-
-        Glide.with(this)
-                .load(stream.toByteArray())
-                    .apply(cropOptions)
-//                .transition(transitionOptions)
-                .into(mMainImage);
+//        BitmapTransitionOptions transitionOptions = new BitmapTransitionOptions().crossFade();
+//        RequestOptions cropOptions = new RequestOptions()
+//                .centerCrop()
+//                .error(R.drawable.ic_error_black_48dp)
+//                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+//
+//        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//        mImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+//
+//        Glide.with(this)
+//                .load(stream.toByteArray())
+//                    .apply(cropOptions)
+////                .transition(transitionOptions)
+//                .into(mMainImage);
     }
 
     private void loadImage(Uri mImage)
     {
         // Load image into imageview with options
-        DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
-        RequestOptions cropOptions = new RequestOptions()
-                .centerCrop()
-                .error(R.drawable.ic_error_black_48dp)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-
-        Glide.with(this)
-                .load(mImage)
-                .apply(cropOptions)
-                .transition(transitionOptions)
-                .into(mMainImage);
+//        DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
+//        RequestOptions cropOptions = new RequestOptions()
+//                .centerCrop()
+//                .error(R.drawable.ic_error_black_48dp)
+//                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+//
+//        Glide.with(this)
+//                .load(mImage)
+//                .apply(cropOptions)
+//                .transition(transitionOptions)
+//                .into(mMainImage);
     }
 
 
