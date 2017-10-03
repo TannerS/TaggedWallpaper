@@ -84,7 +84,6 @@ public class ImagesAdapter extends BaseAdapter {
      * @return
      */
     public Object getItem(int position) {
-        Log.i("POSITION", "GETITEM: " + String.valueOf(position));
 
         return null;
     }
@@ -95,7 +94,6 @@ public class ImagesAdapter extends BaseAdapter {
      * @return
      */
     public long getItemId(int position) {
-        Log.i("POSITION", "GETITEMID: " + String.valueOf(position));
         return 0;
     }
 
@@ -105,7 +103,6 @@ public class ImagesAdapter extends BaseAdapter {
      */
     @Override
     public CharSequence[] getAutofillOptions() {
-        Log.i("POSITION", "getAutofillOptions: ");
 
         return new CharSequence[0];
     }
@@ -159,7 +156,6 @@ public class ImagesAdapter extends BaseAdapter {
                 intent.putExtra(DisplayActivity.ARTIST, mCurrentItem.getUser());
                 intent.putExtra(DisplayActivity.FULLIMAGE, mCurrentItem.getImageURL());
                 intent.putExtra(DisplayActivity.PREVIEW, mCurrentItem.getLargeImageURL());
-                Log.i("DISPLAY", "DEBUG: " +  mCurrentItem.getLargeImageURL());
                 mContext.startActivity(intent);
             }
         };

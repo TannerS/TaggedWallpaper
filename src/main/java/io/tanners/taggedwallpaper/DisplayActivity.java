@@ -120,10 +120,19 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     {
         // request image downloading permissions
         // result will be in onRequestPermissionsResult
-        PermissionRequester.newInstance(this).requestNeededPermissions(new String[]{
+        if(PermissionRequester.newInstance(this).requestNeededPermissions(new String[]{
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE},
-                STORAGE_PERMISSIONS);
+                STORAGE_PERMISSIONS))
+        {
+            savePhoto();
+            Log.i("PHOTO", "DOWNLOAD 1");
+
+
+        }
+        else
+            Log.i("PHOTO", "DOWNLOAD 2");
+
     }
 
 
@@ -171,6 +180,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
     private void onGrantedDownloadPermissions()
     {
+        savePhoto();
+    }
+
+    public void savePhoto(){
         ExternalFileStorageUtil mStorageUtil = new ExternalFileStorageUtil();
         // check if external storage is writable
         if(mStorageUtil.isExternalStorageWritable())
@@ -193,8 +206,21 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             });
 
             // create file in external storage
-            File mImageFile = mStorageUtil.getAlbumStorageDir(MALBUMNAME);
-            new ImageDownloader(mImageFile, mGoodSnackbar, mBadSnackbar).execute(getIntent().getStringExtra(FULLIMAGE));
+
+
+            Log.i("PHOTO", getIntent().getStringExtra(FULLIMAGE));
+
+
+            String[] mImageUrlSplit = getIntent().getStringExtra(FULLIMAGE).split("/");
+            String mImageUrlFileName = mImageUrlSplit[mImageUrlSplit.length-1];
+
+            File mImageDir = mStorageUtil.getAlbumStorageDir(MALBUMNAME);
+
+            File mImageFile = new File(mImageDir, mImageUrlFileName);
+
+            new ImageDownloader(this, mImageFile, mGoodSnackbar, mBadSnackbar).execute(getIntent().getStringExtra(FULLIMAGE));
+//            new ImageDownloader(mImageFile, mGoodSnackbar, mBadSnackbar).execute();
+
         }
         // cant read, connected to pc, ejected, etc
         else
@@ -202,6 +228,8 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             // display error as snackbar
             displayStorageErrorSnackBar();
         }
+
+
     }
 
     @Override
@@ -220,14 +248,14 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     {
         return SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
                 "Image Downloaded",
-                Snackbar.LENGTH_SHORT);
+                Snackbar.LENGTH_LONG);
     }
 
     private Snackbar displayFailedDownloadSnackBar()
     {
         return SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
                 "ERROR: Image Cannot Be Downloaded",
-                Snackbar.LENGTH_SHORT);
+                Snackbar.LENGTH_INDEFINITE);
     }
 
     private void displayStorageErrorSnackBar() {
