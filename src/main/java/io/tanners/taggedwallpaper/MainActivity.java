@@ -28,7 +28,7 @@ import io.tanners.taggedwallpaper.fragments.SimilarImagesFragment;
 import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
 import io.tanners.taggedwallpaper.interfaces.IFindFragment;
 
-public class MainActivity extends TabbedActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends TabbedActivity { //implements NavigationView.OnNavigationItemSelectedListener {
     private ActionBarDrawerToggle mToggle;
     private final int MAXNUMOFFRAGS = 3;
 
@@ -40,8 +40,8 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpToolBar(R.id.main_toolbar);
-        setUpDrawer();
-        setUpNav();
+//        setUpDrawer();
+//        setUpNav();
         // set up fragment tabs
         setUpTabs(R.id.main_view_pager, R.id.main_tab_layout, MAXNUMOFFRAGS);
         // set up fragments into adapter
@@ -49,12 +49,11 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
             add(new FragmentAdapter.FragmentInfo(CategoryFragment.newInstance(), CategoryFragment.CATEGORY));
             add(new FragmentAdapter.FragmentInfo(LatestImagesFragment.newInstance(), LatestImagesFragment.NEWEST));
             add(new FragmentAdapter.FragmentInfo(PopularImagesFragment.newInstance(), PopularImagesFragment.POPULAR));
-            add(new FragmentAdapter.FragmentInfo(SimilarImagesFragment.newInstance(), SimilarImagesFragment.SIMILAR));
+//            add(new FragmentAdapter.FragmentInfo(SimilarImagesFragment.newInstance(), SimilarImagesFragment.SIMILAR));
         }});
 
         // handle search queries
         // used for start, may not be needed
-        Log.i("SEARCH", "DEBUG 3");
 
         handleSearch(getIntent());
     }
@@ -114,28 +113,28 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
     /**
      *
      */
-    private void setUpDrawer() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
-        mToggle = new ActionBarDrawerToggle(
-                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        // This method was deprecated in API level 23.2.0. Use addDrawerListener(DrawerListener)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            drawer.addDrawerListener(mToggle);
-        else
-            drawer.setDrawerListener(mToggle);
-        // just in case
-        mToggle.syncState();
-    }
+//    private void setUpDrawer() {
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//
+//        mToggle = new ActionBarDrawerToggle(
+//                this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        // This method was deprecated in API level 23.2.0. Use addDrawerListener(DrawerListener)
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+//            drawer.addDrawerListener(mToggle);
+//        else
+//            drawer.setDrawerListener(mToggle);
+//        // just in case
+//        mToggle.syncState();
+//    }
 
     /**
      *
      */
-    private void setUpNav()
-    {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-    }
+//    private void setUpNav()
+//    {
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//        navigationView.setNavigationItemSelectedListener(this);
+//    }
 
 //    /**
 //     * @param item
@@ -154,11 +153,7 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.i("SEARCH", "DEBUG 4");
-
         setIntent(intent);
-        Log.i("SEARCH", "DEBUG 5");
-
         // handle search queries
         handleSearch(intent);
     }
@@ -169,11 +164,8 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
      */
     private void handleSearch(Intent intent) {
 
-        Log.i("SEARCH", "DEBUG 1: " + intent.getAction());
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             // get search query
-            Log.i("SEARCH", "DEBUG 2");
-
             String query = intent.getStringExtra(SearchManager.QUERY);
             ImageActivity.openIntentForQuery(this, query);
         }
@@ -210,28 +202,28 @@ public class MainActivity extends TabbedActivity implements NavigationView.OnNav
      * @param item
      * @return
      */
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
+//    @Override
+//    public boolean onNavigationItemSelected(MenuItem item) {
+//        // Handle navigation view item clicks here.
+//        int id = item.getItemId();
+//
+//        if (id == R.id.nav_camera) {
+//            // Handle the camera action
+//        } else if (id == R.id.nav_gallery) {
+//
+//        } else if (id == R.id.nav_slideshow) {
+//
+//        } else if (id == R.id.nav_manage) {
+//
+//        } else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
+//
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        drawer.closeDrawer(GravityCompat.START);
+//        return true;
+//    }
 
 }
