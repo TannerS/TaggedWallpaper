@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.View;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,35 +18,61 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class ImageDownloader extends AsyncTask<String, Void, Boolean> {
-    private File mFile;
-    private Snackbar mSuccessSnackbar;
-    private Snackbar mFailSnackbar;
-    private Context mContext;
+import io.tanners.taggedwallpaper.R;
+import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 
-    public ImageDownloader(Context mContext, File mFile, Snackbar mSuccessSnackbar, Snackbar mFailSnackbar)
-//    public ImageDownloader(Snackbar mSuccessSnackbar, Snackbar mFailSnackbar)
+public class ImageDownloader extends AsyncTask<String, Void, Boolean> {
+    protected File mFile;
+    protected Context mContext;
+    protected View view;
+
+    public ImageDownloader(Context mContext, View view, File mFile)
     {
+        this.view = view;
         this.mFile = mFile;
-        this.mSuccessSnackbar = mSuccessSnackbar;
-        this.mFailSnackbar = mFailSnackbar;
         this.mContext = mContext;
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
+
         // TODO error handling here
         if(result)
         {
+            callMediaScanner();
+
             Log.i("SNACKBAR", "GOOD DNACKBAR");
-            mSuccessSnackbar.show();
+
+            final Snackbar mGoodSnackbar = displaySuccessDownloadSnackBar();
+
+            mGoodSnackbar.setAction("Close", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mGoodSnackbar.dismiss();
+                }
+            });
+
+            mGoodSnackbar.show();
         }
         else
         {
             Log.i("SNACKBAR", "BAD DNACKBAR");
+            final Snackbar mFailSnackbar = displayFailedDownloadSnackBar();
+
+            mFailSnackbar.setAction("Close", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mFailSnackbar.dismiss();
+                }
+            });
 
             mFailSnackbar.show();
         }
+
+
+//        if(this.mCallback != null)
+//            this.mCallback.shareImage(Uri.fromFile(mFile));
+
     }
 
     @Override
@@ -84,9 +111,10 @@ public class ImageDownloader extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPreExecute() {
+    }
 
-        Log.i("MEDIA", mFile.getAbsolutePath());
-
+    private void callMediaScanner()
+    {
         // https://stackoverflow.com/questions/9414955/trigger-mediascanner-on-specific-path-folder-how-to
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
         {
@@ -96,11 +124,34 @@ public class ImageDownloader extends AsyncTask<String, Void, Boolean> {
                 }
             });
         } else {
-//            mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + imagePath)));
             mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + mFile.getAbsolutePath())));
         }
-
-
     }
 
+    private Snackbar displaySuccessDownloadSnackBar()
+    {
+        return SimpleSnackBarBuilder.createSnackBar(view.findViewById(R.id.display_activity_main_id),
+                "Image Downloaded",
+                Snackbar.LENGTH_LONG);
+    }
+
+    private Snackbar displayFailedDownloadSnackBar()
+    {
+        return SimpleSnackBarBuilder.createSnackBar(view.findViewById(R.id.display_activity_main_id),
+                "ERROR: Image Cannot Be Downloaded",
+                Snackbar.LENGTH_INDEFINITE);
+    }
+
+    private void displayStorageErrorSnackBar() {
+        SimpleSnackBarBuilder.createAndDisplaySnackBar(view.findViewById(R.id.display_activity_main_id),
+                "ERROR: Cannot Access External Storage",
+                Snackbar.LENGTH_INDEFINITE,
+                "Close");
+    }
+
+    public static interface imageDownloaderCallBack
+    {
+        public void shareImage(Uri uri);
+        // TODO add more here
+    }
 }

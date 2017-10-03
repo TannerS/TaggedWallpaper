@@ -1,8 +1,12 @@
 package io.tanners.taggedwallpaper;
 
 import android.app.Activity;
+import android.app.WallpaperManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -11,27 +15,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 import io.tanners.taggedwallpaper.Util.ExternalFileStorageUtil;
 import io.tanners.taggedwallpaper.Util.PermissionRequester;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.network.images.ImageDownloader;
+import io.tanners.taggedwallpaper.network.images.ImageSharer;
 
 // https://developer.android.com/reference/android/support/v4/app/ActivityCompat.OnRequestPermissionsResultCallback.html
 public class DisplayActivity extends AppCompatActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback {
@@ -40,7 +46,9 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     public final static String PREVIEW = "PREVIEW";
     private TextView artistTextView;
     private ImageView mainImageView;
-    private final int STORAGE_PERMISSIONS = 2;
+    private final int STORAGE_PERMISSIONS = 128;
+    private final int IMAGE_DOWNLOAD = 256;
+    private final int IMAGE_SHARE = 512;
     private final String MALBUMNAME = "Wallpaper";
 
     @Override
@@ -51,6 +59,11 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         loadBottomNavigation();
         loadResources();
     }
+
+//    private ViewGroup getRootView()
+//    {
+//        return (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
+//    }
 
     private void loadResources()
     {
@@ -99,7 +112,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 switch (item.getItemId()) {
                     // download image
                     case R.id.navigation_download:
-                        downloadImage();
+                        downloadOrShareImage(STORAGE_PERMISSIONS|IMAGE_DOWNLOAD);
                         return true;
                     // set as wallpaper
                     case R.id.navigation_set:
@@ -107,7 +120,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                         return true;
                     // share image
                     case R.id.navigation_share:
-                        shareImage();
+                        downloadOrShareImage(STORAGE_PERMISSIONS|IMAGE_SHARE);
                         return true;
                 }
                 return false;
@@ -116,53 +129,45 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         });
     }
 
-    private void downloadImage()
+    private boolean checkPermissions(int permissionCode)
     {
         // request image downloading permissions
         // result will be in onRequestPermissionsResult
-        if(PermissionRequester.newInstance(this).requestNeededPermissions(new String[]{
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                android.Manifest.permission.READ_EXTERNAL_STORAGE},
-                STORAGE_PERMISSIONS))
-        {
-            savePhoto();
-            Log.i("PHOTO", "DOWNLOAD 1");
-
-
-        }
-        else
-            Log.i("PHOTO", "DOWNLOAD 2");
-
+        return PermissionRequester.newInstance(this).requestNeededPermissions(new String[]{
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                permissionCode);
     }
-
 
     private void setImage()
     {
-        Log.i("NAV", "SET");
+        new WallpaperSetter().execute(getIntent().getStringExtra(FULLIMAGE));
     }
 
-    private void shareImage()
+    private void downloadOrShareImage(int requestCode)
     {
-        Log.i("NAV", "SHARE");
+        if(checkPermissions(STORAGE_PERMISSIONS))
+        {
+            usePhoto(requestCode);
+            Log.i("PHOTO", "DOWNLOAD 1");
+        }
     }
-
 
     // this is called after ActivityCompat.requestPermissions located inside PermissionRequester
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
     {
-        // do task based on which granted permissions
-        switch(requestCode)
-        {
-            // user chose to download image
-            case STORAGE_PERMISSIONS:
-                // check if ALL permissions were granted
-                if(permissionGrantChecker(permissions, grantResults))
-                    // do download task
-                    onGrantedDownloadPermissions();
-                break;
+        // check if ALL permissions were granted
+        if(permissionGrantChecker(permissions, grantResults)) {
+            // do task based on which granted permissions
+            switch(requestCode)
+            {
+                case STORAGE_PERMISSIONS|IMAGE_DOWNLOAD:
+                case STORAGE_PERMISSIONS|IMAGE_SHARE:
+                    usePhoto(requestCode);
+                    break;
+            }
         }
-
     }
 
     private boolean permissionGrantChecker(String permissions[], int[] grantResults)
@@ -178,39 +183,11 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         return true;
     }
 
-    private void onGrantedDownloadPermissions()
-    {
-        savePhoto();
-    }
-
-    public void savePhoto(){
+    private void usePhoto(int code){
         ExternalFileStorageUtil mStorageUtil = new ExternalFileStorageUtil();
         // check if external storage is writable
         if(mStorageUtil.isExternalStorageWritable())
         {
-            final Snackbar mGoodSnackbar = displaySuccessDownloadSnackBar();
-            final Snackbar mBadSnackbar = displayFailedDownloadSnackBar();
-
-            mGoodSnackbar.setAction("Close", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mGoodSnackbar.dismiss();
-                }
-            });
-
-            mBadSnackbar.setAction("Close", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mBadSnackbar.dismiss();
-                }
-            });
-
-            // create file in external storage
-
-
-            Log.i("PHOTO", getIntent().getStringExtra(FULLIMAGE));
-
-
             String[] mImageUrlSplit = getIntent().getStringExtra(FULLIMAGE).split("/");
             String mImageUrlFileName = mImageUrlSplit[mImageUrlSplit.length-1];
 
@@ -218,9 +195,16 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
             File mImageFile = new File(mImageDir, mImageUrlFileName);
 
-            new ImageDownloader(this, mImageFile, mGoodSnackbar, mBadSnackbar).execute(getIntent().getStringExtra(FULLIMAGE));
-//            new ImageDownloader(mImageFile, mGoodSnackbar, mBadSnackbar).execute();
+            switch(code)
+            {
+                case STORAGE_PERMISSIONS|IMAGE_DOWNLOAD:
+                    new ImageDownloader(this, findViewById(R.id.display_activity_main_id), mImageFile).execute(getIntent().getStringExtra(FULLIMAGE));
+                    break;
+                case STORAGE_PERMISSIONS|IMAGE_SHARE:
+                    new ImageSharer(this, findViewById(R.id.display_activity_main_id), mImageFile).execute(getIntent().getStringExtra(FULLIMAGE));
+                    break;
 
+            }
         }
         // cant read, connected to pc, ejected, etc
         else
@@ -228,8 +212,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             // display error as snackbar
             displayStorageErrorSnackBar();
         }
-
-
     }
 
     @Override
@@ -244,20 +226,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         }
     }
 
-    private Snackbar displaySuccessDownloadSnackBar()
-    {
-        return SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
-                "Image Downloaded",
-                Snackbar.LENGTH_LONG);
-    }
-
-    private Snackbar displayFailedDownloadSnackBar()
-    {
-        return SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
-                "ERROR: Image Cannot Be Downloaded",
-                Snackbar.LENGTH_INDEFINITE);
-    }
-
     private void displayStorageErrorSnackBar() {
         SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.display_activity_main_id),
                 "ERROR: Cannot Access External Storage",
@@ -265,5 +233,46 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 "Close");
     }
 
+    private class WallpaperSetter extends AsyncTask<String, Void, Bitmap>
+    {
+        @Override
+        protected Bitmap doInBackground(String... strs)
+        {
+            Bitmap bitmap = null;
+            BitmapTransitionOptions transitionOptions = new BitmapTransitionOptions().crossFade();
 
+            Glide.with(DisplayActivity.this)
+                    .asBitmap()
+                    .load(strs[0])
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+
+
+
+                        }
+                    });
+
+
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap)
+        {
+            super.onPostExecute(bitmap);
+
+            WallpaperManager wallpaperManager = WallpaperManager.getInstance(DisplayActivity.this);
+
+            try
+            {
+                wallpaperManager.setBitmap(bitmap);
+                // wallpaperManager.suggestDesiredDimensions(width, height);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
 }
