@@ -3,6 +3,7 @@ package io.tanners.taggedwallpaper;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -12,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,6 +52,11 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         loadToolBar();
         loadBottomNavigation();
         loadResources();
+    }
+
+    private ViewGroup getRootView()
+    {
+        return (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
     }
 
     private void loadResources()
@@ -107,7 +114,17 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                         return true;
                     // share image
                     case R.id.navigation_share:
-                        shareImage();
+                        shareImage(new ImageDownloader.imageDownloaderCallBack() {
+                            @Override
+                            public void shareImage(Uri uri) {
+                                Intent shareIntent = new Intent();
+                                shareIntent.setAction(Intent.ACTION_SEND);
+                                shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                                shareIntent.setType("image/jpeg");
+//                    startActivity(Intent.createChooser(shareIntent, getResources().getText("Share too"));
+                                startActivity(Intent.createChooser(shareIntent, "Share too..."));
+                            }
+                        });
                         return true;
                 }
                 return false;
@@ -118,6 +135,12 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
     private void downloadImage()
     {
+        downloadImage(null);
+    }
+
+
+    private void downloadImage(ImageDownloader.imageDownloaderCallBack mCallback)
+    {
         // request image downloading permissions
         // result will be in onRequestPermissionsResult
         if(PermissionRequester.newInstance(this).requestNeededPermissions(new String[]{
@@ -125,7 +148,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 android.Manifest.permission.READ_EXTERNAL_STORAGE},
                 STORAGE_PERMISSIONS))
         {
-            savePhoto();
+            savePhoto(mCallback);
             Log.i("PHOTO", "DOWNLOAD 1");
 
 
@@ -141,10 +164,17 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         Log.i("NAV", "SET");
     }
 
-    private void shareImage()
+    private void shareImage(ImageDownloader.imageDownloaderCallBack mCallback)
     {
+        downloadImage(mCallback);
+
         Log.i("NAV", "SHARE");
     }
+
+    public void savePhoto() {
+        savePhoto(null);
+    }
+
 
 
     // this is called after ActivityCompat.requestPermissions located inside PermissionRequester
@@ -183,30 +213,14 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         savePhoto();
     }
 
-    public void savePhoto(){
+//    public void savePhoto(){
+
+
+    public void savePhoto(ImageDownloader.imageDownloaderCallBack mCallback){
         ExternalFileStorageUtil mStorageUtil = new ExternalFileStorageUtil();
         // check if external storage is writable
         if(mStorageUtil.isExternalStorageWritable())
         {
-            final Snackbar mGoodSnackbar = displaySuccessDownloadSnackBar();
-            final Snackbar mBadSnackbar = displayFailedDownloadSnackBar();
-
-            mGoodSnackbar.setAction("Close", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mGoodSnackbar.dismiss();
-                }
-            });
-
-            mBadSnackbar.setAction("Close", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mBadSnackbar.dismiss();
-                }
-            });
-
-            // create file in external storage
-
 
             Log.i("PHOTO", getIntent().getStringExtra(FULLIMAGE));
 
@@ -218,7 +232,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
             File mImageFile = new File(mImageDir, mImageUrlFileName);
 
-            new ImageDownloader(this, mImageFile, mGoodSnackbar, mBadSnackbar).execute(getIntent().getStringExtra(FULLIMAGE));
+            new ImageDownloader(this, findViewById(R.id.display_activity_main_id), mImageFile, mCallback).execute(getIntent().getStringExtra(FULLIMAGE));
 //            new ImageDownloader(mImageFile, mGoodSnackbar, mBadSnackbar).execute();
 
         }
@@ -243,21 +257,21 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             }
         }
     }
+//
+//    private Snackbar displaySuccessDownloadSnackBar()
+//    {
+//        return SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
+//                "Image Downloaded",
+//                Snackbar.LENGTH_LONG);
+//    }
 
-    private Snackbar displaySuccessDownloadSnackBar()
-    {
-        return SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
-                "Image Downloaded",
-                Snackbar.LENGTH_LONG);
-    }
-
-    private Snackbar displayFailedDownloadSnackBar()
-    {
-        return SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
-                "ERROR: Image Cannot Be Downloaded",
-                Snackbar.LENGTH_INDEFINITE);
-    }
-
+//    private Snackbar displayFailedDownloadSnackBar()
+//    {
+//        return SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
+//                "ERROR: Image Cannot Be Downloaded",
+//                Snackbar.LENGTH_INDEFINITE);
+//    }
+//
     private void displayStorageErrorSnackBar() {
         SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.display_activity_main_id),
                 "ERROR: Cannot Access External Storage",
