@@ -5,21 +5,27 @@ import android.app.WallpaperManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -31,6 +37,10 @@ import com.bumptech.glide.request.transition.Transition;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
 import io.tanners.taggedwallpaper.Util.ExternalFileStorageUtil;
@@ -61,9 +71,12 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     }
 
 //    private ViewGroup getRootView()
-//    {
+    private View getRootView()
+    {
+        return this.findViewById(android.R.id.content);
 //        return (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
 //    }
+    }
 
     private void loadResources()
     {
@@ -102,6 +115,13 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_navigation_close);
     }
 
+    private void enableNewFeatures()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+        }
+    }
+
     private void loadBottomNavigation()
     {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.display_navigation);
@@ -116,16 +136,19 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                         return true;
                     // set as wallpaper
                     case R.id.navigation_set:
-                        setImage();
+                        setImage(WallpaperSetter.LOCK_SCREEN);
                         return true;
                     // share image
                     case R.id.navigation_share:
                         downloadOrShareImage(STORAGE_PERMISSIONS|IMAGE_SHARE);
                         return true;
+                    // set as lockscreen
+                    case R.id.navigation_set_lock:
+                        setImage(WallpaperSetter.WALLPAPER);
+                        return true;
                 }
                 return false;
             }
-
         });
     }
 
@@ -139,9 +162,18 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 permissionCode);
     }
 
-    private void setImage()
+    private void setImage(int which)
     {
-        new WallpaperSetter().execute(getIntent().getStringExtra(FULLIMAGE));
+        //WallpaperManager wallpaperManager = WallpaperManager.getInstance(DisplayActivity.this);
+
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            //if(wallpaperManager.isSetWallpaperAllowed())
+                new WallpaperSetter(which).execute(getIntent().getStringExtra(FULLIMAGE));
+       // }
+        //else
+            // TODO for now
+          //  new WallpaperSetter(which).execute(getIntent().getStringExtra(FULLIMAGE));
+
     }
 
     private void downloadOrShareImage(int requestCode)
@@ -180,6 +212,23 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 return false;
         }
         // all permissions granted
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.navigation, menu);
+
+        MenuItem item = menu.findItem(R.id.navigation_set_lock);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            item.setVisible(true);
+        }
+        else
+        {
+            item.setVisible(false);
+        }
         return true;
     }
 
@@ -233,45 +282,100 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 "Close");
     }
 
-    private class WallpaperSetter extends AsyncTask<String, Void, Bitmap>
+    private class WallpaperSetter extends AsyncTask<String, Void, Boolean>
     {
-        @Override
-        protected Bitmap doInBackground(String... strs)
+        public final static int LOCK_SCREEN = 100;
+        public final static int WALLPAPER = 200;
+        private int which;
+
+        public WallpaperSetter(int which)
         {
-            Bitmap bitmap = null;
-            BitmapTransitionOptions transitionOptions = new BitmapTransitionOptions().crossFade();
-
-            Glide.with(DisplayActivity.this)
-                    .asBitmap()
-                    .load(strs[0])
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-
-
-
-                        }
-                    });
-
-
-            return bitmap;
+            this.which = which;
         }
 
         @Override
-        protected void onPostExecute(Bitmap bitmap)
+        protected void onPreExecute()
         {
-            super.onPostExecute(bitmap);
-
-            WallpaperManager wallpaperManager = WallpaperManager.getInstance(DisplayActivity.this);
-
-            try
-            {
-                wallpaperManager.setBitmap(bitmap);
-                // wallpaperManager.suggestDesiredDimensions(width, height);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                switch (this.which) {
+                    case LOCK_SCREEN:
+                        this.which = WallpaperManager.FLAG_LOCK;
+                        break;
+                    case WALLPAPER:
+                        this.which = WallpaperManager.FLAG_SYSTEM;
+                        break;
+                }
             }
-            catch (IOException e)
+            else
             {
+                this.which = WallpaperManager.FLAG_SYSTEM;
+            }
+        }
+
+        private InputStream getNetworkConnection(String strUrl)
+        {
+            URL url = null;
+
+            try {
+                url = new URL(strUrl);
+
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+
+                return connection.getInputStream();
+
+            } catch (MalformedURLException e) {
                 e.printStackTrace();
+                return null;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected Boolean doInBackground(String... strs)
+        {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                try {
+                    WallpaperManager.getInstance(DisplayActivity.this).setStream(getNetworkConnection(strs[0]), null, true, which);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            else
+            {
+                Bitmap bitmap = BitmapFactory.decodeStream(getNetworkConnection(strs[0]));
+                try {
+                    WallpaperManager.getInstance(DisplayActivity.this).setBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result)
+        {
+            super.onPostExecute(result);
+
+            if(result)
+            {
+                SimpleSnackBarBuilder.createSnackBar(getRootView().findViewById(R.id.display_container),
+                        "Image set!",
+                        Snackbar.LENGTH_LONG);
+            }
+            else
+            {
+                SimpleSnackBarBuilder.createSnackBar(getRootView().findViewById(R.id.display_container),
+                        "Error setting image!",
+                        Snackbar.LENGTH_LONG);
             }
         }
     }
