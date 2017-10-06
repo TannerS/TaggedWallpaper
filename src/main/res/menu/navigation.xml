@@ -16,10 +16,10 @@
         android:icon="@drawable/ic_share_black_48dp"
         android:title="Share" />
 
-    <item
-        android:visible="false"
-        android:id="@+id/navigation_set_lock"
-        android:icon="@drawable/ic_wallpaper_black_48dp"
-        android:title="Set As LockScreen" />
+    <!--<item-->
+        <!--android:visible="false"-->
+        <!--android:id="@+id/navigation_set_lock"-->
+        <!--android:icon="@drawable/ic_wallpaper_black_48dp"-->
+        <!--android:title="Set As LockScreen" />-->
 
 </menu>

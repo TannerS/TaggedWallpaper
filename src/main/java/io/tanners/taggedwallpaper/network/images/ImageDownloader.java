@@ -9,6 +9,8 @@ import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,13 +27,24 @@ public class ImageDownloader extends AsyncTask<String, Void, Boolean> {
     protected File mFile;
     protected Context mContext;
     protected View view;
+    protected ProgressBar mProgressBar;
+    protected ImageView mImage;
 
-    public ImageDownloader(Context mContext, View view, File mFile)
+    public ImageDownloader(Context mContext, View view, ProgressBar mProgressBar, ImageView mImage, File mFile)
     {
         this.view = view;
         this.mFile = mFile;
         this.mContext = mContext;
+        this.mProgressBar = mProgressBar;
+        this.mImage = mImage;
     }
+
+    @Override
+    protected void onPreExecute() {
+        mImage.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
 
     @Override
     protected void onPostExecute(Boolean result) {
@@ -70,9 +83,8 @@ public class ImageDownloader extends AsyncTask<String, Void, Boolean> {
         }
 
 
-//        if(this.mCallback != null)
-//            this.mCallback.shareImage(Uri.fromFile(mFile));
-
+        mImage.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -109,9 +121,7 @@ public class ImageDownloader extends AsyncTask<String, Void, Boolean> {
     }
 
 
-    @Override
-    protected void onPreExecute() {
-    }
+
 
     private void callMediaScanner()
     {
