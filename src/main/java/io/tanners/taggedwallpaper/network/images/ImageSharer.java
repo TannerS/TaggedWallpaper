@@ -10,14 +10,11 @@ import android.widget.ProgressBar;
 import java.io.File;
 
 
-public class ImageSharer extends ImageDownloader
+public class ImageSharer extends ImageDownloaderBase
 {
     public ImageSharer(Context mContext, View view, ProgressBar mProgressBar, ImageView mImage, File mFile)
     {
         super(mContext, view, mProgressBar, mImage, mFile);
-
-
-
     }
 
     @Override

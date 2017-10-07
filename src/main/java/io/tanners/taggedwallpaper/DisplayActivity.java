@@ -308,7 +308,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             switch(code)
             {
                 case STORAGE_PERMISSIONS|IMAGE_DOWNLOAD:
-                    new ImageDownloader(this, findViewById(R.id.display_activity_main_id), (ProgressBar) findViewById(R.id.wallpaper_progressbar), (ImageView) findViewById(R.id.wallpaper_image), mImageFile).execute(getIntent().getStringExtra(FULLIMAGE));
+                    new ImageDownloader(this, findViewById(R.id.display_activity_main_id), (ProgressBar) findViewById(R.id.download_progressbar), (ImageView) findViewById(R.id.download_image), mImageFile).execute(getIntent().getStringExtra(FULLIMAGE));
                     break;
                 case STORAGE_PERMISSIONS|IMAGE_SHARE:
                     new ImageSharer(this, findViewById(R.id.display_activity_main_id), (ProgressBar) findViewById(R.id.share_progressbar), (ImageView) findViewById(R.id.share_image), mImageFile).execute(getIntent().getStringExtra(FULLIMAGE));
