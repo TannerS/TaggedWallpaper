@@ -19,13 +19,19 @@ public class ImageSharer extends ImageDownloaderBase
 
     @Override
     protected void onPostExecute(Boolean result) {
-        super.onPostExecute(result);
-
+//        super.onPostExecute(result);
+//
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(mFile));
         shareIntent.setType("image/jpeg");
 
+        if(result)
+            callMediaScanner();
+
         mContext.startActivity(Intent.createChooser(shareIntent, "Share too..."));
+
+        mImage.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.GONE);
     }
 }

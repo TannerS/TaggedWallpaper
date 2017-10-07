@@ -73,6 +73,7 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
     {
         Intent intent = new Intent(context, ImageActivity.class);
         intent.putExtra(ImageActivity.TAG, query);
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(intent);
     }
 

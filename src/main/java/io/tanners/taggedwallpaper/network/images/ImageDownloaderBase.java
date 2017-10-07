@@ -48,9 +48,9 @@ public class ImageDownloaderBase extends AsyncTask<String, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean result) {
 
-        if(result)
-            callMediaScanner();
-
+//        if(result)
+//            callMediaScanner();
+//
 
 
 //        // TODO error handling here
@@ -85,10 +85,13 @@ public class ImageDownloaderBase extends AsyncTask<String, Void, Boolean> {
 //
 //            mFailSnackbar.show();
 //        }
-
+        if(result)
+            callMediaScanner();
 
         mImage.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.GONE);
+
+
     }
 
     @Override
@@ -100,18 +103,24 @@ public class ImageDownloaderBase extends AsyncTask<String, Void, Boolean> {
             URL mUrl = new URL(strings[0]);
             // open stream to image
             InputStream is = mUrl.openStream();
-            // set stream to write to passed in file
-            OutputStream os = new FileOutputStream(mFile);
-            // write buffer size at 1024 bytes at a time
-            byte[] bytes = new byte[1024];
-            int length;
-            // write to file until end
-            while ((length = is.read(bytes)) != -1) {
-                os.write(bytes, 0, length);
+
+
+
+
+            if(!mFile.exists()) {
+                // set stream to write to passed in file
+                OutputStream os = new FileOutputStream(mFile);
+                // write buffer size at 1024 bytes at a time
+                byte[] bytes = new byte[1024];
+                int length;
+                // write to file until end
+                while ((length = is.read(bytes)) != -1) {
+                    os.write(bytes, 0, length);
+                }
+                // close streams
+                is.close();
+                os.close();
             }
-            // close streams
-            is.close();
-            os.close();
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -124,7 +133,7 @@ public class ImageDownloaderBase extends AsyncTask<String, Void, Boolean> {
         return true;
     }
 
-    private void callMediaScanner()
+    protected void callMediaScanner()
     {
         // https://stackoverflow.com/questions/9414955/trigger-mediascanner-on-specific-path-folder-how-to
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)

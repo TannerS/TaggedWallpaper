@@ -30,6 +30,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
             android:launchMode="singleTop"
+            android:persistent="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
 

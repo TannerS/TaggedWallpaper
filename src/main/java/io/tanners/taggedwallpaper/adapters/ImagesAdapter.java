@@ -48,17 +48,17 @@ public class ImagesAdapter extends BaseAdapter {
      * @param mLayoutId
      * @param mRowId
      */
-    public void updateAdapter(ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId)
-    {
-        clearAdapter();
-
-        this.mItems = mItems;
-        this.mLayoutId = mLayoutId;
-        this.mRowId = mRowId;
-
-        notifyDataSetChanged();
-
-    }
+//    public void updateAdapter(ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId)
+//    {
+//        clearAdapter();
+//
+//        this.mItems = mItems;
+//        this.mLayoutId = mLayoutId;
+//        this.mRowId = mRowId;
+//
+//        notifyDataSetChanged();
+//
+//    }
 
     /**
      * clear and erase adapter
