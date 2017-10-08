@@ -25,6 +25,8 @@ public class ImageRequest extends Request
         super(headers, mUrl, body);
 
 
+        Log.i("KEY", mUrl);
+
     }
 
     @Override

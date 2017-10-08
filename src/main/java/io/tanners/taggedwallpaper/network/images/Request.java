@@ -50,7 +50,7 @@ public abstract class Request
         this.mHeaders = mHeaders;
 
 
-        Log.i("URL", mUrl);
+//        Log.i("URL", mUrl);
 //        if(body != null && body.length() > 0)
 //            headers.put("Content-Length", "" + body.getBytes().length);
 //        headers.put("Content-Language", "" + "en-US");

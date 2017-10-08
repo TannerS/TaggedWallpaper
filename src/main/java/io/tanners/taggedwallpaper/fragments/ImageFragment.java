@@ -66,6 +66,7 @@ public class ImageFragment extends Fragment { //implements ErrorCallBack {
             .setAdapter(mAdapter)
             .setGridLayoutId(R.layout.grid_item)
             .setImageViewId(R.id.grid_image_background)
+//            .setRequest(new ImageRequest(builder.getHeaders(), builder.buildRestfulUrl(), null))
             .setRequest(new ImageRequest(builder.getHeaders(), builder.buildRestfulUrl(), null))
     //                .setRequestType(Request.Requested.SEARCH)
             .setView(mPopularGridview)

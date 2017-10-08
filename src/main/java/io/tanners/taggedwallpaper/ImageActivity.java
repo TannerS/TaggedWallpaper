@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
+import android.view.Window;
 
 import java.util.ArrayList;
 
@@ -22,6 +23,9 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_image);
         // other activies pass tag of category or search query using the intent and passed into class var
         tag = getIntent().getStringExtra(TAG);
@@ -34,6 +38,9 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
         }});
         // set page to be a child of parent activity, this will show the back arrow to return to back activity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // change title
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     /**

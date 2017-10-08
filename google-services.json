@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:286873334661:android:1fc68c3803f0c96d",
         "android_client_info": {
-          "package_name": "io.tanners.taggedwallpaper"
+          "package_name": "com.tanners.taggedwallpaper"
         }
       },
       "oauth_client": [
@@ -18,8 +18,96 @@
           "client_id": "286873334661-uv6h1tc4pbuqshtcd3v830c5j06e9eqg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "io.tanners.taggedwallpaper",
+            "package_name": "com.tanners.taggedwallpaper",
             "certificate_hash": "a1199f17eddaa776b2fc7a66d6e540892f13a911"
+          }
+        },
+        {
+          "client_id": "286873334661-4jd6ie4apvruupatroup5splqlkui254.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-AluiNBYC2iQf_LzuteVMEaLRCbl6xV4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "286873334661-4jd6ie4apvruupatroup5splqlkui254.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286873334661:android:2a6b84c6a8e76aa9",
+        "android_client_info": {
+          "package_name": "com.tanners_dev.imagecategorytest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "286873334661-gbvr6tamfc6762e2b6m9l6671tueooa1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tanners_dev.imagecategorytest",
+            "certificate_hash": "a1199f17eddaa776b2fc7a66d6e540892f13a911"
+          }
+        },
+        {
+          "client_id": "286873334661-4jd6ie4apvruupatroup5splqlkui254.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-AluiNBYC2iQf_LzuteVMEaLRCbl6xV4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "286873334661-4jd6ie4apvruupatroup5splqlkui254.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286873334661:android:8a69e7bb6349c576",
+        "android_client_info": {
+          "package_name": "io.tanners.taggedwallpaper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "286873334661-a7599kqcghgi75vac8u1nc1avdqi35ac.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.tanners.taggedwallpaper",
+            "certificate_hash": "f9e9f5fb409a942263f05563d56bfd982cc1f928"
           }
         },
         {

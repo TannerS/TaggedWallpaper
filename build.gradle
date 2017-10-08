@@ -33,6 +33,15 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
+
+        ndk {
+            moduleName "TaggedKeys"
+        }
+
+        sourceSets.main {
+            jni.srcDirs = []
+            jniLibs.srcDir "src/main/libs"
+        }
     }
     buildTypes {
         release {
