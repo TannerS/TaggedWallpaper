@@ -39,7 +39,7 @@ public class ApiBuilder {
     private String mBase = "https://pixabay.com/api/";
 //    private String mApiRules = "&utm_source=TaggedWallpaper&utm_medium=referral&utm_campaign=api-credit";
 //    private final String APIKEY = "Client-ID 53bec55730b75b73e5f615222f83e498e7645300c2b10949e6f8e25442a2fccc";
-    private String mAPIKEY = "6349282-51eccae4204c7aaa690cba84c";
+    private String mAPIKEY = "";
     private final String mEXTRAS = "&image_type=photo&safesearch=true&response_group=high_resolution";
     private String mOrder = "popular";
     private String mTag;
