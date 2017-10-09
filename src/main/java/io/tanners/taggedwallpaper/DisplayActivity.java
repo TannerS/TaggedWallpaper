@@ -151,7 +151,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // change icon to be a x not arrow
-        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_navigation_close);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_navigation_close);
+
+        getSupportActionBar().setTitle("");
+
     }
 //
 //    private void enableNewFeatures()

@@ -231,7 +231,6 @@ public class MainActivity extends TabbedActivity { //implements NavigationView.O
     public void onDestroy ()
     {
         super.onDestroy();
-        Log.i("LIFECYCLE", "MAIN ACT DESTORY");
     }
 
 }
