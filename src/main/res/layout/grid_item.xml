@@ -6,10 +6,24 @@
     android:layout_height="match_parent"
     android:id="@+id/grid_image_container">
 
+    <ProgressBar
+        android:id="@+id/grid_progressbar"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:adjustViewBounds="true"
+        android:cropToPadding="true"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone"
+        />
+
     <ImageView
         android:id="@+id/grid_image_background"
         android:layout_width="match_parent"
         android:layout_height="200dp">
     </ImageView>
+
+
 </FrameLayout>
 

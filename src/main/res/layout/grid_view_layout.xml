@@ -3,16 +3,16 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/image_progressbar"
-        style="?android:attr/progressBarStyleSmall"
-        android:visibility="visible"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        android:padding="150dp"
-        />
+    <!--<ProgressBar-->
+        <!--android:id="@+id/image_progressbar"-->
+        <!--style="?android:attr/progressBarStyleSmall"-->
+        <!--android:visibility="visible"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:indeterminate="true"-->
+        <!--android:padding="150dp"-->
+        <!--/>-->
 
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/universal_grideview"
@@ -25,5 +25,5 @@
         android:gravity="center"
         android:verticalSpacing="2dp"
         android:horizontalSpacing="2dp"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 </LinearLayout>

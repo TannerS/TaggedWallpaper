@@ -25,6 +25,7 @@ public class ImageRequester extends AsyncTask<Void, Void, List<PhotoResult>> {
     private Context mContext;
     private int mGridRowLayoutId;
     private int mGridImageViewId;
+    private int mProgressBarId;
     private ImagesAdapter mAdapter;
     private ProgressBar mProgressBar;
     private ErrorCallBack mCallback;
@@ -90,6 +91,13 @@ public class ImageRequester extends AsyncTask<Void, Void, List<PhotoResult>> {
     }
 
 
+    public ImageRequester setProgressBarId(int mProgressBarId)
+    {
+        this.mProgressBarId = mProgressBarId;
+        return this;
+    }
+
+
     /**
      * Parameter at index 0 is restful api url
      * @param params
@@ -123,24 +131,25 @@ public class ImageRequester extends AsyncTask<Void, Void, List<PhotoResult>> {
         {
             Log.i("REQUEST", "DEBU 1");
 //            mAdapter.updateAdapter(new ArrayList<Photo>(photos),  mGridRowLayoutId, mGridImageViewId);
-            mAdapter = new ImagesAdapter(mContext, new ArrayList<PhotoResult>(photos),  mGridRowLayoutId, mGridImageViewId);
+            mAdapter = new ImagesAdapter(mContext, new ArrayList<PhotoResult>(photos),  mGridRowLayoutId, mGridImageViewId, mProgressBarId);
             mGridView.setAdapter(mAdapter);
-            mProgressBar.setVisibility(View.GONE);
+//            mProgressBar.setVisibility(View.GONE);
             mGridView.setVisibility(View.VISIBLE);
         }
         else
         {
             Log.i("REQUEST", "DEBU 2");
             mCallback.displayError();
-            mProgressBar.setVisibility(View.GONE);
-            mGridView.setVisibility(View.GONE);
+//            mProgressBar.setVisibility(View.GONE);
+//            mGridView.setVisibility(View.GONE);
         }
     }
 
     @Override
     protected void onPreExecute() {
-        mGridView.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.VISIBLE);
+        mGridView.setVisibility(View.VISIBLE);
+//        mGridView.setVisibility(View.GONE);
+//        mProgressBar.setVisibility(View.VISIBLE);
     }
 
 }

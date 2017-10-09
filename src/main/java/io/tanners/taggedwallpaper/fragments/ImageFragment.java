@@ -52,7 +52,7 @@ public class ImageFragment extends Fragment { //implements ErrorCallBack {
     protected void loadResources(View view)
     {
         mPopularGridview = (GridView) view.findViewById(R.id.universal_grideview);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.image_progressbar);
+//        mProgressBar = (ProgressBar) view.findViewById(R.id.image_progressbar);
     }
 
     /**
@@ -63,14 +63,15 @@ public class ImageFragment extends Fragment { //implements ErrorCallBack {
     protected void loadRequest(ErrorCallBack mCallback, ApiBuilder builder)
     {
         new ImageRequester(getContext())
-            .setAdapter(mAdapter)
-            .setGridLayoutId(R.layout.grid_item)
-            .setImageViewId(R.id.grid_image_background)
+                .setAdapter(mAdapter)
+                .setGridLayoutId(R.layout.grid_item)
+                .setImageViewId(R.id.grid_image_background)
 //            .setRequest(new ImageRequest(builder.getHeaders(), builder.buildRestfulUrl(), null))
-            .setRequest(new ImageRequest(builder.getHeaders(), builder.buildRestfulUrl(), null))
+                .setRequest(new ImageRequest(builder.getHeaders(), builder.buildRestfulUrl(), null))
     //                .setRequestType(Request.Requested.SEARCH)
-            .setView(mPopularGridview)
-            .setProgressBar(mProgressBar)
+                .setView(mPopularGridview)
+//                .setProgressBar(mProgressBar)
+                .setProgressBarId(R.id.grid_progressbar)
                 .setCallBack(mCallback).execute();
     }
 }
