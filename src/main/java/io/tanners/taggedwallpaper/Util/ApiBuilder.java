@@ -47,12 +47,7 @@ public class ApiBuilder {
     private String mTag;
 //    private String mUrl;
 
-//    public ApiBuilder()
-//    {
-//       // loadKey();
-//    }
-
-    public String buildRestfulUrl()
+    public String buildUrl()
     {
         //loadKey();
 
@@ -72,7 +67,7 @@ public class ApiBuilder {
         this.mPage = mPage;
         this.mOrder = order.name();
     }
-
+//
     public void setPage(int mPage)
     {
         this.mPage = mPage;

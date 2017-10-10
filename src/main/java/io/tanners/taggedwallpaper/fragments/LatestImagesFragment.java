@@ -2,6 +2,7 @@ package io.tanners.taggedwallpaper.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,9 @@ import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 
 public class LatestImagesFragment extends ImageFragment implements ErrorCallBack{
     public static final String NEWEST = "Newest";
+//    private ApiBuilder mBuilder;
+    private int mPerPage;
+    private int mPage;
     // creates new instance
     public static LatestImagesFragment newInstance() {
         return new LatestImagesFragment();
@@ -21,16 +25,18 @@ public class LatestImagesFragment extends ImageFragment implements ErrorCallBack
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPerPage = 26;
+        mPage = 1;
+        this.mBuilder = new ApiBuilder(this.tag, mPerPage, mPage, ApiBuilder.OrderBy.LATEST);
+
+            Log.i("UPDATE2", "DEBUG 1");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_images, container, false);
-
-        loadResources(view);
-
-        // call base class
-        loadRequest(this, new ApiBuilder(this.tag, 100, 1, ApiBuilder.OrderBy.LATEST));
+        loadRecyclerView(view);
+        Log.i("UPDATE2", "DEBUG 2");
 
         return view;
     }
@@ -48,16 +54,5 @@ public class LatestImagesFragment extends ImageFragment implements ErrorCallBack
 
 
 
-//        public static void createAndDisplaySnackBar(View view, String message, int length, String mDismissMessage,  View.OnClickListener mCallback)
-
-
-//        throw new RuntimeException(this.toString() + " must implement in subclass");
-//        Toast.makeText(mContext, "Error loading images on " + this., Toast.LENGTH_LONG).show();
-//        final Snackbar mErrorSnackBar = Snackbar.make(, , );
-//
-//        mErrorSnackBar.setAction("Close",
-//
-//        mErrorSnackBar.show();
-//    }
 
 }

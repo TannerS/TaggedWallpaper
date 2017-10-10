@@ -6,12 +6,9 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,9 +16,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import io.tanners.taggedwallpaper.R;
-import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 
 public class ImageDownloaderBase extends AsyncTask<String, Void, Boolean> {
     protected File mFile;
@@ -47,51 +41,11 @@ public class ImageDownloaderBase extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
-
-//        if(result)
-//            callMediaScanner();
-//
-
-
-//        // TODO error handling here
-//        if(result)
-//        {
-//            callMediaScanner();
-//
-//            Log.i("SNACKBAR", "GOOD DNACKBAR");
-//
-//            final Snackbar mGoodSnackbar = displaySuccessDownloadSnackBar();
-//
-//            mGoodSnackbar.setAction("Close", new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    mGoodSnackbar.dismiss();
-//                }
-//            });
-//
-//            mGoodSnackbar.show();
-//        }
-//        else
-//        {
-//            Log.i("SNACKBAR", "BAD DNACKBAR");
-//            final Snackbar mFailSnackbar = displayFailedDownloadSnackBar();
-//
-//            mFailSnackbar.setAction("Close", new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    mFailSnackbar.dismiss();
-//                }
-//            });
-//
-//            mFailSnackbar.show();
-//        }
         if(result)
             callMediaScanner();
 
         mImage.setVisibility(View.VISIBLE);
         mProgressBar.setVisibility(View.GONE);
-
-
     }
 
     @Override
@@ -103,9 +57,6 @@ public class ImageDownloaderBase extends AsyncTask<String, Void, Boolean> {
             URL mUrl = new URL(strings[0]);
             // open stream to image
             InputStream is = mUrl.openStream();
-
-
-
 
             if(!mFile.exists()) {
                 // set stream to write to passed in file
@@ -147,31 +98,4 @@ public class ImageDownloaderBase extends AsyncTask<String, Void, Boolean> {
             mContext.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + mFile.getAbsolutePath())));
         }
     }
-
-//    private Snackbar displaySuccessDownloadSnackBar()
-//    {
-//        return SimpleSnackBarBuilder.createSnackBar(view.findViewById(R.id.display_activity_main_id),
-//                "Image Downloaded",
-//                Snackbar.LENGTH_LONG);
-//    }
-//
-//    private Snackbar displayFailedDownloadSnackBar()
-//    {
-//        return SimpleSnackBarBuilder.createSnackBar(view.findViewById(R.id.display_activity_main_id),
-//                "ERROR: Image Cannot Be Downloaded",
-//                Snackbar.LENGTH_INDEFINITE);
-//    }
-
-//    private void displayStorageErrorSnackBar() {
-//        SimpleSnackBarBuilder.createAndDisplaySnackBar(view.findViewById(R.id.display_activity_main_id),
-//                "ERROR: Cannot Access External Storage",
-//                Snackbar.LENGTH_INDEFINITE,
-//                "Close");
-//    }
-
-//    public static interface imageDownloaderCallBack
-//    {
-//        public void shareImage(Uri uri);
-//        // TODO add more here
-//    }
 }

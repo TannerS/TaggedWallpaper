@@ -6,19 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.HashMap;
-
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.ApiBuilder;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
-import io.tanners.taggedwallpaper.interfaces.IGetTag;
-import io.tanners.taggedwallpaper.network.images.ImageRequest;
-import io.tanners.taggedwallpaper.network.images.ImageRequester;
-import io.tanners.taggedwallpaper.network.images.Request;
+//import io.tanners.taggedwallpaper.network.images.ImageRequester;
 
 public class PopularImagesFragment extends ImageFragment implements ErrorCallBack  {
     public static final String POPULAR = "Popular";
+//    private ApiBuilder mBuilder;
+    private int mPerPage;
+    private int mPage;
     // creates new instance
     public static PopularImagesFragment newInstance() {
         return new PopularImagesFragment();
@@ -30,6 +28,10 @@ public class PopularImagesFragment extends ImageFragment implements ErrorCallBac
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPerPage = 26;
+        mPage = 1;
+        this.mBuilder = new ApiBuilder(this.tag, mPerPage, mPage, ApiBuilder.OrderBy.LATEST);
+
     }
 
     /**
@@ -41,11 +43,7 @@ public class PopularImagesFragment extends ImageFragment implements ErrorCallBac
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_images, container, false);
-
-        loadResources(view);
-
-        // call base class
-        loadRequest(this, new ApiBuilder(this.tag, 100, 1, ApiBuilder.OrderBy.POPULAR));
+        loadRecyclerView(view);
 
         return view;
     }

@@ -1,20 +1,15 @@
 package io.tanners.taggedwallpaper.adapters;
 
-import android.app.Activity;
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-
-import java.util.ArrayList;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -26,16 +21,16 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
+import java.util.ArrayList;
+
 import io.tanners.taggedwallpaper.DisplayActivity;
-import io.tanners.taggedwallpaper.ImageActivity;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
-//import io.tanners.taggedwallpaper.data.results.photo.Photo;
 
 /**
- * Class is used to hold gride view of images as a result from the image api
+ * Class to handle a single array recyclerlist such that we will use this for the image categories
  */
-public class ImagesAdapter extends BaseAdapter {
+public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewHolder> {
     private Context mContext;
     private ArrayList<PhotoResult> mItems;
     private int mLayoutId;
@@ -50,137 +45,31 @@ public class ImagesAdapter extends BaseAdapter {
         this.mProgressBarId = mProgressBarId;
     }
 
-    /**
-     * used to update the adapter to a new dataset
-     * @param mItems
-     * @param mLayoutId
-     * @param mRowId
-     */
-//    public void updateAdapter(ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId)
-//    {
-//        clearAdapter();
-//
-//        this.mItems = mItems;
-//        this.mLayoutId = mLayoutId;
-//        this.mRowId = mRowId;
-//
-//        notifyDataSetChanged();
-//
-//    }
-
-    /**
-     * clear and erase adapter
-     */
-    public void clearAdapter()
-    {
-        mItems.clear();
-    }
-
-
-    /**
-     * get count of items in data set
-     * @return
-     */
-    public int getCount() {
-        return mItems == null ? 0 : mItems.size();
-
+    public void updateAdapter(ArrayList<PhotoResult> mItems) {
+        int startPos = this.mItems.size() + 1;
+        this.mItems.addAll(mItems);
+        notifyItemRangeInserted(startPos, mItems.size());
     }
 
     /**
-     * get current item
-     * @param position
-     * @return
-     */
-    public Object getItem(int position) {
-
-        return null;
-    }
-
-    /**
-     * get current item id
-     * @param position
-     * @return
-     */
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    /**
-     * auto fill (not used)
-     * @return
-     */
-    @Override
-    public CharSequence[] getAutofillOptions() {
-
-        return new CharSequence[0];
-    }
-
-    /**
-     *  create a new ImageView for each item referenced by the Adapter
-     * @param position
-     * @param convertView
-     * @param parent
-     * @return
-     */
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View mItem = convertView;
-        PhotoCategoryContainerView mItemContainerView = null;
-
-        // if item is new
-        if (mItem == null) {
-            // inflate layout
-            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-            mItem = inflater.inflate(mLayoutId, parent, false);
-            // create object to hold view
-            mItemContainerView = new PhotoCategoryContainerView();
-            mItemContainerView.image = mItem.findViewById(mRowId);
-            mItemContainerView.progress = mItem.findViewById(mProgressBarId);
-            // set item that holds view
-            mItem.setTag(mItemContainerView);
-        }
-        // view is being recycled
-        else
-        {
-            // get view hold item
-            mItemContainerView = (PhotoCategoryContainerView) mItem.getTag();
-        }
-
-        mItem.setOnClickListener(loadOnClickListener(mItems.get(position)));
-
-        // get photo data at location position
-        PhotoResult mCurrentItem = (PhotoResult) mItems.get(position);
-        // set image to be loaded into current view
-//        setUpImage(mCurrentItem.getUrls().getSmall(), mItemContainerView.image);
-        setUpImage(mCurrentItem.getWebformatURL(), mItemContainerView.image, mItemContainerView.progress);
-
-        return mItem;
-    }
-
-    private View.OnClickListener loadOnClickListener(final PhotoResult mCurrentItem)
-    {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, DisplayActivity.class);
-                intent.putExtra(DisplayActivity.ARTIST, mCurrentItem.getUser());
-                intent.putExtra(DisplayActivity.FULLIMAGE, mCurrentItem.getImageURL());
-                intent.putExtra(DisplayActivity.PREVIEW, mCurrentItem.getLargeImageURL());
-                mContext.startActivity(intent);
-            }
-        };
-    }
-
-    /**
-     * set image to be loaded into current view
-     * @param mElement
+     *  Setup image based on url of image and object to present it in
+     * @param mUrl
      * @param view
      */
-//    private void setUpImage(int mElement, ImageView view)
-//    {
-//        // load image view using glide
-//        loadImage(Glide.with(mContext)
-//                .load(mElement), view);
-//    }
+    private void setUpImage(String mUrl, ImageView view)
+    {
+        // create transition options
+        DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
+        // create request options
+//        RequestOptions cropOptions = new RequestOptions().centerCrop().placeholder(R.drawable.ic_menu_camera).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+        RequestOptions cropOptions = new RequestOptions().centerCrop().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+        // create settings through Glide
+        Glide.with(mContext)
+                .load(mUrl)
+                .apply(cropOptions)
+                .transition(transitionOptions)
+                .into(view);
+    }
 
     /**
      * set image to be loaded into current view
@@ -190,16 +79,10 @@ public class ImagesAdapter extends BaseAdapter {
     private void setUpImage(String mUrl, ImageView view, ProgressBar mProgressBar)
     {
         // load image view using glide
-
         loadImage(Glide.with(mContext)
                 .load(mUrl), view, mProgressBar);
     }
 
-    /**
-     * attach features to image view using glide
-     * @param mRequest
-     * @param view
-     */
     private void loadImage(RequestBuilder<Drawable> mRequest, ImageView view, final ProgressBar mProgressBar)
     {
         mProgressBar.setVisibility(View.VISIBLE);
@@ -229,13 +112,100 @@ public class ImagesAdapter extends BaseAdapter {
                 .into(view);
     }
 
-    /**
-     * contains views that will be recycled
-     */
-    static class PhotoCategoryContainerView
-    {
-        public ImageView image;
-        public ProgressBar progress;
+    @Override
+    public int getItemCount() {
+        return mItems == null ? 0 : mItems.size();
     }
 
+    @Override
+    public void onBindViewHolder(ImageViewHolder holder, int position) {
+        PhotoResult mItem = mItems.get(position);
+        setUpImage(mItem.getPreviewURL(), holder.image, holder.progress);
+    }
+
+    @Override
+    public ImagesAdapter.ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
+        return new ImageViewHolder(mContext, view);
+    }
+
+    public class ImageViewHolder extends RecyclerView.ViewHolder {
+        public ImageView image;
+        public ProgressBar progress;
+
+        public ImageViewHolder(final Context mContext, View view) {
+            super(view);
+
+            image = view.findViewById(mRowId);
+            progress = view.findViewById(mProgressBarId);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    int pos = getAdapterPosition();
+                    PhotoResult result = mItems.get(getAdapterPosition());
+
+                    Intent intent = new Intent(mContext, DisplayActivity.class);
+                    intent.putExtra(DisplayActivity.ARTIST, result.getUser());
+                    intent.putExtra(DisplayActivity.FULLIMAGE, result.getImageURL());
+                    intent.putExtra(DisplayActivity.PREVIEW, result.getLargeImageURL());
+                    mContext.startActivity(intent);
+                }
+            });
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    public View getView(int position, View convertView, ViewGroup parent) {
+//        View mItem = convertView;
+//        PhotoCategoryContainerView mItemContainerView = null;
+//
+//        // if item is new
+//        if (mItem == null) {
+//            // inflate layout
+//            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+//            mItem = inflater.inflate(mLayoutId, parent, false);
+//            // create object to hold view
+//            mItemContainerView = new PhotoCategoryContainerView();
+//            mItemContainerView.image = mItem.findViewById(mRowId);
+//            mItemContainerView.progress = mItem.findViewById(mProgressBarId);
+//            // set item that holds view
+//            mItem.setTag(mItemContainerView);
+//        }
+//        // view is being recycled
+//        else
+//        {
+//            // get view hold item
+//            mItemContainerView = (PhotoCategoryContainerView) mItem.getTag();
+//        }
+//
+//        mItem.setOnClickListener(loadOnClickListener(mItems.get(position)));
+//
+//        // get photo data at location position
+//        PhotoResult mCurrentItem = (PhotoResult) mItems.get(position);
+//        // set image to be loaded into current view
+////        setUpImage(mCurrentItem.getUrls().getSmall(), mItemContainerView.image);
+//        setUpImage(mCurrentItem.getWebformatURL(), mItemContainerView.image, mItemContainerView.progress);
+//
+//        return mItem;
+//    }
+//
+//
+//
+

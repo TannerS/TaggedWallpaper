@@ -6,27 +6,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-
 import java.io.File;
-
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 
 public class ImageDownloader extends ImageDownloaderBase {
-    private File mFile;
-    private Context mContext;
     protected View view;
-    private ProgressBar mProgressBar;
-    private ImageView mImage;
 
     public ImageDownloader(Context mContext, View view, ProgressBar mProgressBar, ImageView mImage, File mFile)
     {
         super(mContext, view, mProgressBar, mImage, mFile);
         this.view = view;
-        this.mFile = mFile;
-        this.mContext = mContext;
-        this.mProgressBar = mProgressBar;
-        this.mImage = mImage;
+//        File mFile1 = mFile;
+//        Context mContext1 = mContext;
+//        ProgressBar mProgressBar1 = mProgressBar;
+//        ImageView mImage1 = mImage;
     }
 
     @Override
