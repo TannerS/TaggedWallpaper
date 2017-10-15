@@ -2,48 +2,40 @@ package io.tanners.taggedwallpaper;
 
 import android.app.Activity;
 import android.app.WallpaperManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.BottomNavigationView;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.ExecutionException;
 
 import io.tanners.taggedwallpaper.Util.ExternalFileStorageUtil;
 import io.tanners.taggedwallpaper.Util.PermissionRequester;
@@ -57,11 +49,12 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     public final static String FULLIMAGE = "FULLIMAGE";
     public final static String PREVIEW = "PREVIEW";
     private TextView artistTextView;
-    private ImageView mainImageView;
+    private ImageView mMainImageView;
     private final int STORAGE_PERMISSIONS = 128;
     private final int IMAGE_DOWNLOAD = 256;
     private final int IMAGE_SHARE = 512;
     private final String MALBUMNAME = "Wallpaper";
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +79,11 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 //        artistTextView = (TextView) findViewById(R.id.artist_text_id);
 //        String artist = "Photo by: " + getIntent().getStringExtra(ARTIST);
 //        artistTextView.setText(artist);
-        mainImageView = (ImageView) findViewById(R.id.main_image_id);
+        mMainImageView = (ImageView) findViewById(R.id.main_image_id);
+
+        mProgressBar = (ProgressBar) findViewById(R.id.display_progress_bar);
+
+
         // set image into imageview
         loadImage(getIntent().getStringExtra(PREVIEW));
 
@@ -140,9 +137,41 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
         Glide.with(this)
                 .load(mImageUrl)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+
+                        Log.i("DISPLAY", "FAIL");
+
+                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                            mMainImageView.setImageDrawable(ContextCompat.getDrawable(DisplayActivity.this, R.drawable.ic_error_black_48dp));
+                        }
+                        else
+                        {
+                            mMainImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_black_48dp));
+                        }
+
+                        mProgressBar.setVisibility(View.GONE);
+                        mMainImageView.setVisibility(View.VISIBLE);
+                        Log.i("DISPLAY", "OK");
+
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        mProgressBar.setVisibility(View.GONE);
+                        mMainImageView.setVisibility(View.VISIBLE);
+
+                        return false;
+                    }
+                })
                 .apply(cropOptions)
 //                .transition(transitionOptions)
-                .into(mainImageView);
+                .into(mMainImageView);
+
+        Log.i("DISPLAY", "OK2");
+
     }
 
     private void loadToolBar()
@@ -152,9 +181,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // change icon to be a x not arrow
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_navigation_close);
-
         getSupportActionBar().setTitle("");
-
     }
 //
 //    private void enableNewFeatures()

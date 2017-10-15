@@ -12,6 +12,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import io.tanners.taggedwallpaper.network.images.Request;
 public class ImageFragment extends Fragment {
     protected View view;
     protected RecyclerView mRecyclerView;
+//    protected ProgressBar mProgressBar;
     protected ImagesAdapter mAdapter;
     protected String tag;
     private boolean loading;
@@ -56,6 +58,8 @@ public class ImageFragment extends Fragment {
 
         // used to not load more of the images until last request is done
         loading = false;
+
+
     }
 
     private RecyclerView.OnScrollListener getListener() {
@@ -72,7 +76,15 @@ public class ImageFragment extends Fragment {
                 int mVisibleCount = mRecyclerViewLayoutManager.getChildCount();
                 int mTotalCount = mRecyclerViewLayoutManager.getItemCount();
                 int mPastCount = mRecyclerViewLayoutManager.findFirstVisibleItemPosition();
+                // if at bottom of list, and there is not an already network call updating the adatper,
+                // and all those results are updated, update the list with next set of results
 
+
+                Log.i("LOADING", String.valueOf(loading));
+//                Log.i("LOADING", String.valueOf(mAdapter.isAllLoaded()));
+
+
+//                if ((mPastCount + mVisibleCount >= mTotalCount) && !loading && mAdapter.isAllLoaded()) {
                 if ((mPastCount + mVisibleCount >= mTotalCount) && !loading) {
                     mBuilder.increasePage();
                     new ImageRequester().execute();
@@ -82,26 +94,9 @@ public class ImageFragment extends Fragment {
         };
     }
 
-//    https://gist.github.com/yqritc/ccca77dc42f2364777e1
-//    private class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
-//
-//        private int mItemOffset;
-//
-//        public ItemOffsetDecoration(int itemOffset) {
-//            mItemOffset = itemOffset;
-//        }
-//
-//        public ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
-//            this(context.getResources().getDimensionPixelSize(itemOffsetId));
-//        }
-//
-//        @Override
-//        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-//                                   RecyclerView.State state) {
-//            super.getItemOffsets(outRect, view, parent, state);
-//            outRect.set(mItemOffset, mItemOffset, mItemOffset, mItemOffset);
-//        }
-//    }
+
+
+
 
     /**
      * @param view
@@ -109,9 +104,8 @@ public class ImageFragment extends Fragment {
 //    protected void loadRecyclerView(View view)
     protected void loadRecyclerView(View view)
     {
-        Log.i("UPDATE2", "DEBUG 3");
-
         mRecyclerView = (RecyclerView) view.findViewById(R.id.universal_grideview);
+//        mProgressBar = (RecyclerView) view.findViewById(R.id.p);
         int cols = 2;
         mRecyclerViewLayoutManager = new GridLayoutManager(getContext(), cols);
 
@@ -123,11 +117,6 @@ public class ImageFragment extends Fragment {
 
         mRecyclerView.setLayoutManager(mRecyclerViewLayoutManager);
 
-//        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getContext(), R.dimen.list_padding);
-//        mRecyclerView.addItemDecoration(itemDecoration);
-
-
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
             mRecyclerView.addOnScrollListener(getListener());
             Log.i("UPDATE2", "DEBUG 4");
@@ -137,12 +126,18 @@ public class ImageFragment extends Fragment {
             mRecyclerView.setOnScrollListener(getListener());
         }
 
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.list_padding);
+
+
+        mRecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
+
         new ImageRequester().execute();
 
     }
 
     private class ImageRequester extends AsyncTask<Void, Void, List<PhotoResult>> {
         private Request<PhotoResult > mRequest;
+        private ImagesAdapter dapter;
 
         public ImageRequester()
 //        public ImageRequester(Request<PhotoResult> mRequest)
@@ -187,7 +182,8 @@ public class ImageFragment extends Fragment {
                 }
                 else
                 {
-                    ((ImagesAdapter) mRecyclerView.getAdapter()).updateAdapter((ArrayList<PhotoResult>) photos);
+//                    ((ImagesAdapter) mRecyclerView.getAdapter()).updateAdapter((ArrayList<PhotoResult>) photos);
+                    mAdapter.updateAdapter((ArrayList<PhotoResult>) photos);
                 }
             }
             else
@@ -199,6 +195,32 @@ public class ImageFragment extends Fragment {
             }
             
             loading = false;
+        }
+    }
+
+    /**
+     * all credit too ianhanniballake
+     * https://stackoverflow.com/questions/28531996/android-recyclerview-gridlayoutmanager-column-spacing
+     */
+    public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
+        private int space;
+
+        public SpacesItemDecoration(int space) {
+            this.space = space;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            outRect.left = space;
+            outRect.right = space;
+            outRect.bottom = space;
+
+            // Add top margin only for the first item to avoid double space between items
+            if (parent.getChildLayoutPosition(view) == 0) {
+                outRect.top = space;
+            } else {
+                outRect.top = 0;
+            }
         }
     }
 }

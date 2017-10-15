@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     private int mLayoutId;
     private int mRowId;
     private int mProgressBarId;
+//    private int mAllLoadedCount;
 
     public ImagesAdapter(Context mContext, ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId, int mProgressBarId) {
         this.mContext = mContext;
@@ -43,6 +45,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
         this.mLayoutId = mLayoutId;
         this.mRowId = mRowId;
         this.mProgressBarId = mProgressBarId;
+//        mAllLoadedCount = 0;
     }
 
     public void updateAdapter(ArrayList<PhotoResult> mItems) {
@@ -51,25 +54,14 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
         notifyItemRangeInserted(startPos, mItems.size());
     }
 
-    /**
-     *  Setup image based on url of image and object to present it in
-     * @param mUrl
-     * @param view
-     */
-    private void setUpImage(String mUrl, ImageView view)
-    {
-        // create transition options
-        DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
-        // create request options
-//        RequestOptions cropOptions = new RequestOptions().centerCrop().placeholder(R.drawable.ic_menu_camera).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        RequestOptions cropOptions = new RequestOptions().centerCrop().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        // create settings through Glide
-        Glide.with(mContext)
-                .load(mUrl)
-                .apply(cropOptions)
-                .transition(transitionOptions)
-                .into(view);
-    }
+
+
+//    public boolean isAllLoaded()
+//    {
+////        return mItems == null ? false : mItems.size();
+//        return mItems != null && (mItems.size() == mAllLoadedCount);
+//        return mItems != null && (mItems.size() == mAllLoadedCount);
+//    }
 
     /**
      * set image to be loaded into current view
@@ -85,7 +77,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
 
     private void loadImage(RequestBuilder<Drawable> mRequest, ImageView view, final ProgressBar mProgressBar)
     {
-        mProgressBar.setVisibility(View.VISIBLE);
+        //mProgressBar.setVisibility(View.VISIBLE);
         // set up transition
         DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
         // set up request options
@@ -98,12 +90,28 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
         mRequest.listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        // basically, keep track of how many are loaded by inc the var which
+                        // will be tested against the total image amount
+                        // so if list has 50 images, this should = 50 when all are loaded (or fails)
+
+//                        Log.i("LOADING", "INC 1 : " + getItemCount() + " : " + mAllLoadedCount);
+
+//                        mAllLoadedCount++;
+
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        mProgressBar.setVisibility(View.GONE);
+                      //  mProgressBar.setVisibility(View.GONE);
+                        // basically, keep track of how many are loaded by inc the var which
+                        // will be tested against the total image amount
+                        // so if list has 50 images, this should = 50 when all are loaded (or fails)
+//                        Log.i("LOADING", "INC 2 : " + getItemCount());
+
+//                        mAllLoadedCount++;
+//                        Log.i("LOADING", "INC 2 : " + getItemCount() + " : " + mAllLoadedCount);
+
                         return false;
                     }
                 })
@@ -156,56 +164,4 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        View mItem = convertView;
-//        PhotoCategoryContainerView mItemContainerView = null;
-//
-//        // if item is new
-//        if (mItem == null) {
-//            // inflate layout
-//            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-//            mItem = inflater.inflate(mLayoutId, parent, false);
-//            // create object to hold view
-//            mItemContainerView = new PhotoCategoryContainerView();
-//            mItemContainerView.image = mItem.findViewById(mRowId);
-//            mItemContainerView.progress = mItem.findViewById(mProgressBarId);
-//            // set item that holds view
-//            mItem.setTag(mItemContainerView);
-//        }
-//        // view is being recycled
-//        else
-//        {
-//            // get view hold item
-//            mItemContainerView = (PhotoCategoryContainerView) mItem.getTag();
-//        }
-//
-//        mItem.setOnClickListener(loadOnClickListener(mItems.get(position)));
-//
-//        // get photo data at location position
-//        PhotoResult mCurrentItem = (PhotoResult) mItems.get(position);
-//        // set image to be loaded into current view
-////        setUpImage(mCurrentItem.getUrls().getSmall(), mItemContainerView.image);
-//        setUpImage(mCurrentItem.getWebformatURL(), mItemContainerView.image, mItemContainerView.progress);
-//
-//        return mItem;
-//    }
-//
-//
-//
 
