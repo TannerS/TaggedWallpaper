@@ -53,6 +53,9 @@ public class ImageFragment extends Fragment {
            // throw new RuntimeException(getActivity().toString() + " must implement IGetTag");
             // nothing to do
         }
+
+        // used to not load more of the images until last request is done
+        loading = false;
     }
 
     private RecyclerView.OnScrollListener getListener() {
@@ -70,7 +73,7 @@ public class ImageFragment extends Fragment {
                 int mTotalCount = mRecyclerViewLayoutManager.getItemCount();
                 int mPastCount = mRecyclerViewLayoutManager.findFirstVisibleItemPosition();
 
-                if (mPastCount + mVisibleCount >= mTotalCount) {
+                if ((mPastCount + mVisibleCount >= mTotalCount) && !loading) {
                     mBuilder.increasePage();
                     new ImageRequester().execute();
 //                    ((ImagesAdapter) mRecyclerView.getAdapter()).updateAdapter();
@@ -149,7 +152,7 @@ public class ImageFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-
+            loading = true;
         }
 
         /**
@@ -194,6 +197,8 @@ public class ImageFragment extends Fragment {
                         Snackbar.LENGTH_INDEFINITE,
                         "Close");
             }
+            
+            loading = false;
         }
     }
 }

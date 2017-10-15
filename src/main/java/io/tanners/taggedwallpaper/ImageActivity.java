@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
-import android.view.Window;
 
 import java.util.ArrayList;
 
@@ -24,8 +23,6 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         setContentView(R.layout.activity_image);
         // other activies pass tag of category or search query using the intent and passed into class var
         tag = getIntent().getStringExtra(TAG);
@@ -33,13 +30,13 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
         // set up fragment tabs
         setUpTabs(R.id.image_view_pager, R.id.image_tab_layout, MAXNUMOFFRAGS);
         setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentInfo>() {{
-            add(new FragmentAdapter.FragmentInfo(LatestImagesFragment.newInstance(), LatestImagesFragment.NEWEST));
+            add(new FragmentAdapter.FragmentInfo(LatestImagesFragment.newInstance(), LatestImagesFragment.LATEST));
             add(new FragmentAdapter.FragmentInfo(PopularImagesFragment.newInstance(), PopularImagesFragment.POPULAR));
         }});
         // set page to be a child of parent activity, this will show the back arrow to return to back activity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // change title
-        getSupportActionBar().setTitle("Results");
+        getSupportActionBar().setTitle("Results for " + tag);
 
     }
 

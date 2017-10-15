@@ -120,7 +120,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
         PhotoResult mItem = mItems.get(position);
-        setUpImage(mItem.getPreviewURL(), holder.image, holder.progress);
+        setUpImage(mItem.getWebformatURL(), holder.image, holder.progress);
     }
 
     @Override

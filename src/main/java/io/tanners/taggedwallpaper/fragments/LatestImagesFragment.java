@@ -13,7 +13,7 @@ import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 
 public class LatestImagesFragment extends ImageFragment implements ErrorCallBack{
-    public static final String NEWEST = "Newest";
+    public static final String LATEST = "Latest";
 //    private ApiBuilder mBuilder;
     private int mPerPage;
     private int mPage;
@@ -28,16 +28,12 @@ public class LatestImagesFragment extends ImageFragment implements ErrorCallBack
         mPerPage = 26;
         mPage = 1;
         this.mBuilder = new ApiBuilder(this.tag, mPerPage, mPage, ApiBuilder.OrderBy.LATEST);
-
-            Log.i("UPDATE2", "DEBUG 1");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_images, container, false);
         loadRecyclerView(view);
-        Log.i("UPDATE2", "DEBUG 2");
-
         return view;
     }
 
@@ -51,8 +47,4 @@ public class LatestImagesFragment extends ImageFragment implements ErrorCallBack
                 Snackbar.LENGTH_INDEFINITE,
                 "Close");
     }
-
-
-
-
 }

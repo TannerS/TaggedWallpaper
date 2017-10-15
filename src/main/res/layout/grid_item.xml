@@ -1,10 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/grid_image_container"
+    android:layout_gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/grid_image_container">
+    card_view:cardCornerRadius="4dp">
+
+
+
+
+    <!--<FrameLayout-->
+        <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--xmlns:tools="http://schemas.android.com/tools"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/grid_image_container">-->
 
     <ProgressBar
         android:id="@+id/grid_progressbar"
@@ -27,5 +39,6 @@
     </ImageView>
 
 
-</FrameLayout>
+<!--</FrameLayout>-->
+</android.support.v7.widget.CardView>
 
