@@ -2,6 +2,7 @@ package io.tanners.taggedwallpaper.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,9 @@ public class PopularImagesFragment extends ImageFragment implements ErrorCallBac
         super.onCreate(savedInstanceState);
         mPerPage = 26;
         mPage = 1;
-        this.mBuilder = new ApiBuilder(this.tag, mPerPage, mPage, ApiBuilder.OrderBy.LATEST);
+        this.mBuilder = new ApiBuilder(this.tag, mPerPage, mPage, ApiBuilder.OrderBy.POPULAR);
+
+        Log.i("POPULAR", mBuilder.buildUrl());
 
     }
 

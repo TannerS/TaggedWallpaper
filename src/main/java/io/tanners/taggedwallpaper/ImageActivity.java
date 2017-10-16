@@ -36,7 +36,7 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
         // set page to be a child of parent activity, this will show the back arrow to return to back activity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // change title
-        getSupportActionBar().setTitle("Results for " + tag);
+        getSupportActionBar().setTitle(tag);
 
     }
 

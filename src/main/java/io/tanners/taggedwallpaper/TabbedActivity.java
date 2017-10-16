@@ -14,7 +14,7 @@ import java.util.List;
 import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
 import io.tanners.taggedwallpaper.animations.ZoomOutPageTransformer;
 import io.tanners.taggedwallpaper.fragments.CategoryFragment;
-import io.tanners.taggedwallpaper.fragments.SimilarImagesFragment;
+//import io.tanners.taggedwallpaper.fragments.SimilarImagesFragment;
 import io.tanners.taggedwallpaper.interfaces.IFindFragment;
 
 public class TabbedActivity extends AppCompatActivity implements IFindFragment {

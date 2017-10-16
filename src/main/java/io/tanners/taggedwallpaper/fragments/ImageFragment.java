@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -30,11 +31,12 @@ import io.tanners.taggedwallpaper.network.images.Request;
 public class ImageFragment extends Fragment {
     protected View view;
     protected RecyclerView mRecyclerView;
-//    protected ProgressBar mProgressBar;
+    protected ProgressBar mProgressBar;
     protected ImagesAdapter mAdapter;
     protected String tag;
     private boolean loading;
-    private GridLayoutManager mRecyclerViewLayoutManager;
+    private LinearLayoutManager mRecyclerViewLayoutManager;
+//    private GridLayoutManager mRecyclerViewLayoutManager;
     protected ApiBuilder mBuilder;
 
     /**
@@ -59,7 +61,6 @@ public class ImageFragment extends Fragment {
         // used to not load more of the images until last request is done
         loading = false;
 
-
     }
 
     private RecyclerView.OnScrollListener getListener() {
@@ -67,11 +68,8 @@ public class ImageFragment extends Fragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (loading) {
-                    Log.i("LOADING", "LOADING");
                     return;
                 }
-
-                Log.i("LOADING", "NOT LOADING");
 
                 int mVisibleCount = mRecyclerViewLayoutManager.getChildCount();
                 int mTotalCount = mRecyclerViewLayoutManager.getItemCount();
@@ -80,23 +78,17 @@ public class ImageFragment extends Fragment {
                 // and all those results are updated, update the list with next set of results
 
 
-                Log.i("LOADING", String.valueOf(loading));
-//                Log.i("LOADING", String.valueOf(mAdapter.isAllLoaded()));
-
-
 //                if ((mPastCount + mVisibleCount >= mTotalCount) && !loading && mAdapter.isAllLoaded()) {
                 if ((mPastCount + mVisibleCount >= mTotalCount) && !loading) {
                     mBuilder.increasePage();
                     new ImageRequester().execute();
+                    Log.i("REQUEST", "DEBUG 1");
+                    mProgressBar.setVisibility(View.VISIBLE);
 //                    ((ImagesAdapter) mRecyclerView.getAdapter()).updateAdapter();
                 }
             }
         };
     }
-
-
-
-
 
     /**
      * @param view
@@ -105,31 +97,35 @@ public class ImageFragment extends Fragment {
     protected void loadRecyclerView(View view)
     {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.universal_grideview);
-//        mProgressBar = (RecyclerView) view.findViewById(R.id.p);
-        int cols = 2;
-        mRecyclerViewLayoutManager = new GridLayoutManager(getContext(), cols);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.universal_progressbar);
+
+        int cols = 1;
+//        mRecyclerViewLayoutManager = new GridLayoutManager(getContext(), cols);
+
+         mRecyclerViewLayoutManager = new LinearLayoutManager(getContext());
+//        mRecyclerViewLayoutManager = new new LinearLayoutManager(getContext(), cols);
 
         // https://stackoverflow.com/questions/42183858/android-recyclerview-large-gap-space-after-some-rows-of-items-on-tablet-landscap
         mRecyclerViewLayoutManager.setSmoothScrollbarEnabled(true);
         mRecyclerViewLayoutManager.setAutoMeasureEnabled(false);
-        mRecyclerViewLayoutManager.setSpanCount(cols);
+//        mRecyclerViewLayoutManager.setSpanCount(cols);
 //        https://stackoverflow.com/questions/35817610/large-gap-forms-between-recyclerview-items-when-scrolling-down
 
+//        mRecyclerView.setLayoutManager(mRecyclerViewLayoutManager);
         mRecyclerView.setLayoutManager(mRecyclerViewLayoutManager);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
             mRecyclerView.addOnScrollListener(getListener());
-            Log.i("UPDATE2", "DEBUG 4");
         }
         else
         {
             mRecyclerView.setOnScrollListener(getListener());
         }
 
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.list_padding);
+//        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.list_padding);
 
 
-        mRecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
+//        mRecyclerView.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
 
         new ImageRequester().execute();
 
@@ -137,7 +133,6 @@ public class ImageFragment extends Fragment {
 
     private class ImageRequester extends AsyncTask<Void, Void, List<PhotoResult>> {
         private Request<PhotoResult > mRequest;
-        private ImagesAdapter dapter;
 
         public ImageRequester()
 //        public ImageRequester(Request<PhotoResult> mRequest)
@@ -177,7 +172,7 @@ public class ImageFragment extends Fragment {
                 if(mAdapter == null || mRecyclerView.getAdapter() == null)
                 {
 //                    mAdapter = new ImagesAdapter(getContext(), new ArrayList<PhotoResult>(photos),  mGridRowLayoutId, mGridImageViewId, mProgressBarId);
-                    mAdapter = new ImagesAdapter(getContext(), new ArrayList<PhotoResult>(photos),  R.layout.grid_item, R.id.grid_image_background, R.id.grid_progressbar);
+                    mAdapter = new ImagesAdapter(getContext(), new ArrayList<PhotoResult>(photos),  R.layout.grid_item, R.id.grid_image_background);
                     mRecyclerView.setAdapter(mAdapter);
                 }
                 else
@@ -195,6 +190,11 @@ public class ImageFragment extends Fragment {
             }
             
             loading = false;
+
+            Log.i("REQUEST", "DEBUG 2");
+
+            mProgressBar.setVisibility(View.GONE);
+
         }
     }
 

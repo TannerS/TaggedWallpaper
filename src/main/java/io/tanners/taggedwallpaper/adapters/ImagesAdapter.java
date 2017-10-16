@@ -36,15 +36,16 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     private ArrayList<PhotoResult> mItems;
     private int mLayoutId;
     private int mRowId;
-    private int mProgressBarId;
+//    private int mProgressBarId;
 //    private int mAllLoadedCount;
 
-    public ImagesAdapter(Context mContext, ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId, int mProgressBarId) {
+    public ImagesAdapter(Context mContext, ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId) {
+//    public ImagesAdapter(Context mContext, ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId, int mProgressBarId) {
         this.mContext = mContext;
         this.mItems = mItems;
         this.mLayoutId = mLayoutId;
         this.mRowId = mRowId;
-        this.mProgressBarId = mProgressBarId;
+//        this.mProgressBarId = mProgressBarId;
 //        mAllLoadedCount = 0;
     }
 
@@ -68,14 +69,14 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
      * @param mUrl
      * @param view
      */
-    private void setUpImage(String mUrl, ImageView view, ProgressBar mProgressBar)
+    private void setUpImage(String mUrl, ImageView view)
     {
         // load image view using glide
         loadImage(Glide.with(mContext)
-                .load(mUrl), view, mProgressBar);
+                .load(mUrl), view);
     }
 
-    private void loadImage(RequestBuilder<Drawable> mRequest, ImageView view, final ProgressBar mProgressBar)
+    private void loadImage(RequestBuilder<Drawable> mRequest, ImageView view)
     {
         //mProgressBar.setVisibility(View.VISIBLE);
         // set up transition
@@ -128,7 +129,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
         PhotoResult mItem = mItems.get(position);
-        setUpImage(mItem.getWebformatURL(), holder.image, holder.progress);
+        setUpImage(mItem.getWebformatURL(), holder.image);
     }
 
     @Override
@@ -139,13 +140,13 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
         public ImageView image;
-        public ProgressBar progress;
+//        public ProgressBar progress;
 
         public ImageViewHolder(final Context mContext, View view) {
             super(view);
 
             image = view.findViewById(mRowId);
-            progress = view.findViewById(mProgressBarId);
+//            progress = view.findViewById(mProgressBarId);
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
