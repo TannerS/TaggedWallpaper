@@ -1,5 +1,6 @@
 package io.tanners.taggedwallpaper;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Intent;
@@ -10,13 +11,16 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -48,13 +52,83 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     public final static String ARTIST = "ARTIST";
     public final static String FULLIMAGE = "FULLIMAGE";
     public final static String PREVIEW = "PREVIEW";
-    private TextView artistTextView;
     private ImageView mMainImageView;
     private final int STORAGE_PERMISSIONS = 128;
     private final int IMAGE_DOWNLOAD = 256;
     private final int IMAGE_SHARE = 512;
     private final String MALBUMNAME = "Wallpaper";
     private ProgressBar mProgressBar;
+
+
+    /**
+     * Whether or not the system UI should be auto-hidden after
+     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
+     */
+    private static final boolean AUTO_HIDE = false;
+    private final Runnable mHidePart2Runnable = new Runnable() {
+        @SuppressLint("InlinedApi")
+        @Override
+        public void run() {
+            // Delayed removal of status and navigation bar
+
+            // Note that some of these constants are new as of API 16 (Jelly Bean)
+            // and API 19 (KitKat). It is safe to use them, as they are inlined
+            // at compile-time and do nothing on earlier devices.
+            mMainImageView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+
+            mProgressBar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+        }
+    };
+    private View mControlsView;
+
+
+
+    private final Runnable mShowPart2Runnable = new Runnable() {
+        @Override
+        public void run() {
+            // Delayed display of UI elements
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.show();
+            }
+            mControlsView.setVisibility(View.VISIBLE);
+        }
+    };
+    private boolean mVisible;
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hide();
+        }
+    };
+//    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
+//        @Override
+//        public boolean onTouch(View view, MotionEvent motionEvent) {
+//            if (AUTO_HIDE) {
+//                delayedHide(AUTO_HIDE_DELAY_MILLIS);
+//            }
+//            return false;
+//        }
+//    };
+
+
+    /**
+     * the number of milliseconds to wait after
+     * user interaction before hiding the system UI.
+     */
+    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+    private static final int UI_ANIMATION_DELAY = 300;
+    private final Handler mHideHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +137,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         loadToolBar();
         //loadBottomNavigation();
         loadResources();
+        setUpUiInteraction();
     }
 
 //    private ViewGroup getRootView()
@@ -75,14 +150,13 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
     private void loadResources()
     {
-        // get values passsed in from intent
+        // get values passed in from intent
 //        artistTextView = (TextView) findViewById(R.id.artist_text_id);
 //        String artist = "Photo by: " + getIntent().getStringExtra(ARTIST);
 //        artistTextView.setText(artist);
+
         mMainImageView = (ImageView) findViewById(R.id.main_image_id);
-
         mProgressBar = (ProgressBar) findViewById(R.id.display_progress_bar);
-
 
         // set image into imageview
         loadImage(getIntent().getStringExtra(PREVIEW));
@@ -122,6 +196,88 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         });
 
 
+
+    }
+
+    private void setUpUiInteraction()
+    {
+
+        mVisible = true;
+        mControlsView = findViewById(R.id.wallpaper_options_layout);
+
+
+        // Set up the user interaction to manually show or hide the system UI.
+        mProgressBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggle();
+            }
+        });
+
+        mMainImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggle();
+            }
+        });
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+
+        // Trigger the initial hide() shortly after the activity has been
+        // created, to briefly hint to the user that UI controls
+        // are available.
+        delayedHide(100);
+    }
+
+    private void toggle() {
+        if (mVisible) {
+            hide();
+        } else {
+            show();
+        }
+    }
+
+    private void hide() {
+        // Hide UI first
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+        mControlsView.setVisibility(View.GONE);
+        mVisible = false;
+
+        // Schedule a runnable to remove the status and navigation bar after a delay
+        mHideHandler.removeCallbacks(mShowPart2Runnable);
+        mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
+    }
+
+    @SuppressLint("InlinedApi")
+    private void show() {
+        // Show the system bar
+        mMainImageView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+
+
+        mProgressBar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+
+        mVisible = true;
+
+        // Schedule a runnable to display UI elements after a delay
+        mHideHandler.removeCallbacks(mHidePart2Runnable);
+        mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
+    }
+
+    /**
+     * Schedules a call to hide() in [delay] milliseconds, canceling any
+     * previously scheduled calls.
+     */
+    private void delayedHide(int delayMillis) {
+        mHideHandler.removeCallbacks(mHideRunnable);
+        mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
     // TODO this is used few places, combine? also used in similarimages
@@ -153,7 +309,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
                         mProgressBar.setVisibility(View.GONE);
                         mMainImageView.setVisibility(View.VISIBLE);
-                        Log.i("DISPLAY", "OK");
+                        Log.i("DISPLAY", "OK22");
 
                         return false;
                     }
@@ -162,7 +318,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                         mProgressBar.setVisibility(View.GONE);
                         mMainImageView.setVisibility(View.VISIBLE);
-
+                        Log.i("DISPLAY", "OK11");
                         return false;
                     }
                 })
@@ -171,6 +327,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 .into(mMainImageView);
 
         Log.i("DISPLAY", "OK2");
+        mMainImageView.setVisibility(View.VISIBLE);
 
     }
 
@@ -468,13 +625,13 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
             if(result)
             {
-                SimpleSnackBarBuilder.createSnackBar(getRootView().findViewById(R.id.display_container),
+                SimpleSnackBarBuilder.createSnackBar(getRootView().findViewById(R.id.main_content),
                         "Image set!",
                         Snackbar.LENGTH_LONG);
             }
             else
             {
-                SimpleSnackBarBuilder.createSnackBar(getRootView().findViewById(R.id.display_container),
+                SimpleSnackBarBuilder.createSnackBar(getRootView().findViewById(R.id.main_content),
                         "Error setting image!",
                         Snackbar.LENGTH_LONG);
             }
