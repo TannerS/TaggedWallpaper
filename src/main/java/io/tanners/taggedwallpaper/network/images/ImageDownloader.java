@@ -17,10 +17,6 @@ public class ImageDownloader extends ImageDownloaderBase {
     {
         super(mContext, view, mProgressBar, mImage, mFile);
         this.view = view;
-//        File mFile1 = mFile;
-//        Context mContext1 = mContext;
-//        ProgressBar mProgressBar1 = mProgressBar;
-//        ImageView mImage1 = mImage;
     }
 
     @Override

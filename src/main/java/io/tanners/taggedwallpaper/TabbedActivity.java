@@ -51,8 +51,6 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
     protected void setUpFragmentAdapters(ArrayList<FragmentAdapter.FragmentInfo> frags)
     {
         this.frags = frags;
-
-        Log.d("LOADS", "DEBUG 4: " + this.frags.size());
 //        frags = new ArrayList<FragmentAdapter.FragmentInfo>() {{
 //            add(new FragmentAdapter.FragmentInfo(CategoryFragment.newInstance(), CategoryFragment.CATEGORY));
 //            //add(new FragmentAdapter.FragmentInfo(PopularImagesFragment.newInstance(), PopularImagesFragment.POPULAR));
@@ -61,8 +59,6 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
 //        }};
 
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(), this.frags);
-
-        Log.d("LOAD", "DEBUG 2: " + frags.size());
         mViewPager.setAdapter(adapter);
     }
 

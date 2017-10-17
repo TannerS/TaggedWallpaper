@@ -11,7 +11,6 @@ import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.ApiBuilder;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
-//import io.tanners.taggedwallpaper.network.images.ImageRequester;
 
 public class PopularImagesFragment extends ImageFragment implements ErrorCallBack  {
     public static final String POPULAR = "Popular";

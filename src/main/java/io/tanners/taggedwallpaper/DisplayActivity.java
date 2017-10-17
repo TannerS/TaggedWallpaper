@@ -229,7 +229,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        delayedHide(100);
+       // delayedHide(100);
     }
 
     private void toggle() {
@@ -340,55 +340,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_navigation_close);
         getSupportActionBar().setTitle("");
     }
-//
-//    private void enableNewFeatures()
-//    {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//
-//        }
-//    }
-
-//    private void loadBottomNavigation()
-//    {
-//        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.display_navigation);
-//
-//        // fix to make no items selected by default
-////        navigation.getMenu().getItem(0).setCheckable(false);
-//        navigation.getMenu().getItem(0).setChecked(false);
-////        navigation.getMenu().getItem(0).setVisible(false);
-//
-//
-//        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            // load nav items click listeners
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                switch (item.getItemId()) {
-//                    // download image
-//                    case R.id.navigation_download:
-//                        item.setChecked(false);
-//                        downloadOrShareImage(STORAGE_PERMISSIONS|IMAGE_DOWNLOAD);
-//                        return true;
-////                        break;
-//
-//                    // set as wallpaper
-//                    case R.id.navigation_set:
-//                        item.setChecked(false);
-//                        setImage(WallpaperSetter.WALLPAPER);
-//                        break;
-//                    // share image
-//                    case R.id.navigation_share:
-//                        item.setChecked(false);
-//                        downloadOrShareImage(STORAGE_PERMISSIONS|IMAGE_SHARE);
-//                        break;
-//                    // set as lockscreen
-////                    case R.id.navigation_set_lock:
-////                        setImage(WallpaperSetter.LOCK_SCREEN);
-////                        break;
-//                }
-//                return false;
-//            }
-//        });
-//    }
 
     private boolean checkPermissions(int permissionCode)
     {
@@ -460,25 +411,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         // all permissions granted
         return true;
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(final Menu menu)
-//    {
-////        getMenuInflater().inflate(R.menu.navigation, menu);
-////
-////        MenuItem item = menu.findItem(R.id.navigation_set_lock);
-////
-////        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//////            item.setVisible(true);
-////            // for now
-////            item.setVisible(false);
-////        }
-////        else
-////        {
-////            item.setVisible(false);
-////        }
-//        return true;
-//    }
 
     private void usePhoto(int code){
         ExternalFileStorageUtil mStorageUtil = new ExternalFileStorageUtil();
@@ -625,14 +557,14 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
             if(result)
             {
-                SimpleSnackBarBuilder.createSnackBar(getRootView().findViewById(R.id.main_content),
-                        "Image set!",
+                SimpleSnackBarBuilder.createSnackBar(getRootView().findViewById(R.id.display_activity_main_id),
+                        "Wallpaper set.",
                         Snackbar.LENGTH_LONG);
             }
             else
             {
-                SimpleSnackBarBuilder.createSnackBar(getRootView().findViewById(R.id.main_content),
-                        "Error setting image!",
+                SimpleSnackBarBuilder.createSnackBar(getRootView().findViewById(R.id.display_activity_main_id),
+                        "ERROR: setting wallpaper.",
                         Snackbar.LENGTH_LONG);
             }
         }
