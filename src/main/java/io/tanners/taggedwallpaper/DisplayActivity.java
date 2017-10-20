@@ -151,7 +151,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             @Override
             public void onClick(View view) {
 //                downloadOrShareImage(STORAGE_PERMISSIONS|IMAGE_SHARE);
-                downloadOrShareImage(IMAGE_SHARE);
+                downloadOrShareImage(IMAGE_SHARE|STORAGE_PERMISSIONS);
 
             }
         });
@@ -168,7 +168,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             @Override
             public void onClick(View view) {
 //                downloadOrShareImage(STORAGE_PERMISSIONS|IMAGE_DOWNLOAD);
-                downloadOrShareImage(IMAGE_DOWNLOAD);
+                downloadOrShareImage(IMAGE_DOWNLOAD|STORAGE_PERMISSIONS);
 
             }
         });
@@ -313,6 +313,8 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      */
     private boolean checkPermissions(int permissionCode)
     {
+        Log.i("PERMISSIONS", "DEBUG 2");
+
         // request image downloading permissions
         // result will be in onRequestPermissionsResult
         return PermissionRequester.newInstance(this).requestNeededPermissions(new String[]{
@@ -344,9 +346,14 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      */
     private void downloadOrShareImage(int requestCode)
     {
+        Log.i("PERMISSIONS", "DEBUG 1");
+
         // check if permissions are granted
-        if(checkPermissions(STORAGE_PERMISSIONS))
+//        if(checkPermissions(STORAGE_PERMISSIONS))
+        if(checkPermissions(requestCode))
         {
+            Log.i("PERMISSIONS", "DEBUG 3");
+
             // no permissions needed, call code
             usePhoto(requestCode);
         }
@@ -360,17 +367,22 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
     {
-        Log.i("DISPLAYACTIVITY", "ONREQUETSPERMISSIONS");
-
-
+        Log.i("PERMISSIONS", "DEBUG 4");
 
         // check if ALL permissions were granted
         if(permissionGrantChecker(permissions, grantResults)) {
+
+            Log.i("PERMISSIONS", "DEBUG 7:" + requestCode);
+
+
             // do task based on which granted permissions
             switch(requestCode)
             {
-                case IMAGE_DOWNLOAD:
-                case IMAGE_SHARE:
+
+                case IMAGE_DOWNLOAD|STORAGE_PERMISSIONS:
+                    Log.i("PERMISSIONS", "DEBUG 8");
+                case IMAGE_SHARE|STORAGE_PERMISSIONS:
+                    Log.i("PERMISSIONS", "DEBUG 9");
                     usePhoto(requestCode);
                     break;
             }
@@ -385,6 +397,8 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      */
     private boolean permissionGrantChecker(String permissions[], int[] grantResults)
     {
+        Log.i("PERMISSIONS", "DEBUG 5");
+
         // check if all permissions were granted
         for(int i = 0; i < permissions.length; i++)
         {
@@ -408,12 +422,12 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             // determine what to do per request
             switch(code)
             {
-                case IMAGE_DOWNLOAD:
+                case IMAGE_DOWNLOAD|STORAGE_PERMISSIONS:
                     // use that newly created image file to share or download
                     // you need to download before sharing
                     new ImageDownloader(this, findViewById(R.id.display_activity_main_id), (ProgressBar) findViewById(R.id.download_progressbar), (ImageView) findViewById(R.id.download_image), getNewFile(code, mStorageUtil)).execute(getIntent().getStringExtra(FULLIMAGE));
                     break;
-                case IMAGE_SHARE:
+                case IMAGE_SHARE|STORAGE_PERMISSIONS:
                     // use that newly created image file to share or download
                     File mImageFile = getNewFile(code, mStorageUtil);
                     // create URI based off file provider
@@ -445,12 +459,12 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         File mImageFile = null;
 
         switch (code) {
-            case IMAGE_DOWNLOAD:
+            case IMAGE_DOWNLOAD|STORAGE_PERMISSIONS:
                 // create album
                 File mImageDir = mStorageUtil.getAlbumStorageDir(MALBUMNAME);
                 // create file based on name and album
                 mImageFile = new File(mImageDir, mImageUrlFileName);
-            case IMAGE_SHARE:
+            case IMAGE_SHARE|STORAGE_PERMISSIONS:
                 // create temp cache file
                 try {
                     // mImageFile = new File(getFilesDir(), mImageUrlFileName);
@@ -463,22 +477,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         // return image file reference
         return mImageFile;
     }
-
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        Log.i("DISPLAYACTIVITY", "if you see this, you may need to fix permissions");
-//
-//
-//        if(resultCode == Activity.RESULT_OK) {
-//
-//            if (requestCode == STORAGE_PERMISSIONS) {
-//
-//            }
-//        }
-//    }
 
     private void displayStorageErrorSnackBar() {
         SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.display_activity_main_id),
@@ -496,6 +494,13 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         private ImageView mImageView;
         private View mRootView;
 
+        /**
+         * constructor
+         * @param view
+         * @param which
+         * @param mProgressBar
+         * @param mImageView
+         */
         public WallpaperSetter(View view, int which, ProgressBar mProgressBar, ImageView mImageView)
         {
             this.mRootView = view;
@@ -504,13 +509,17 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             this.mProgressBar =mProgressBar;
         }
 
+        /**
+         *
+         */
         @Override
         protected void onPreExecute()
         {
+            // show progressbar
             mProgressBar.setVisibility(View.VISIBLE);
+            // hide image
             mImageView.setVisibility(View.GONE);
-
-
+            // choose which wallpaper to set
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 switch (this.which) {
                     case LOCK_SCREEN:
@@ -527,19 +536,24 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             }
         }
 
+        /**
+         * connect to image to download
+         * @param strUrl
+         * @return
+         */
         private InputStream getNetworkConnection(String strUrl)
         {
             URL url = null;
 
             try {
                 url = new URL(strUrl);
-
+                // connect to image url
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                // set to get input
                 connection.setDoInput(true);
                 connection.connect();
-
+                // return stream
                 return connection.getInputStream();
-
             } catch (MalformedURLException e) {
                 e.printStackTrace();
                 return null;
@@ -549,12 +563,17 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             }
         }
 
+        /**
+         * @param strs
+         * @return
+         */
         @Override
         protected Boolean doInBackground(String... strs)
         {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 try {
+                    // set wallpaper based on image stream
                     WallpaperManager.getInstance(DisplayActivity.this).setStream(getNetworkConnection(strs[0]), null, true, which);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -563,8 +582,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             }
             else
             {
+                // get bitmap from stream
                 Bitmap bitmap = BitmapFactory.decodeStream(getNetworkConnection(strs[0]));
                 try {
+                    // set wallpaper
                     WallpaperManager.getInstance(DisplayActivity.this).setBitmap(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -579,32 +600,62 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         protected void onPostExecute(Boolean result)
         {
             super.onPostExecute(result);
-
+            // show image
             mImageView.setVisibility(View.VISIBLE);
+            // hide progressbar
             mProgressBar.setVisibility(View.GONE);
-
-
-            Log.i("WALLPAPER", "DEBUG 1");
-
+            // if success
             if(result)
             {
+                // display snackbar success message
+                final Snackbar mGoodSnackbar = displaySuccessDownloadSnackBar();
 
-                Log.i("WALLPAPER", "DEBUG 2");
-
-
-                SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
-                        "Wallpaper set.",
-                        Snackbar.LENGTH_LONG);
+                mGoodSnackbar.setAction("Close", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mGoodSnackbar.dismiss();
+                    }
+                });
+                // show message
+                mGoodSnackbar.show();
             }
+
             else
             {
+                // display snackbar fail message
+                final Snackbar mFailSnackbar = displayFailedDownloadSnackBar();
 
-                Log.i("WALLPAPER", "DEBUG 3");
-
-                SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
-                        "ERROR: setting wallpaper.",
-                        Snackbar.LENGTH_LONG);
+                mFailSnackbar.setAction("Close", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mFailSnackbar.dismiss();
+                    }
+                });
+                // show message
+                mFailSnackbar.show();
             }
+        }
+
+        /**
+         * display success snackbar
+         * @return
+         */
+        private Snackbar displaySuccessDownloadSnackBar()
+        {
+            return SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
+                    "Image Downloaded",
+                    Snackbar.LENGTH_LONG);
+        }
+
+        /**
+         * display error snackbar
+         * @return
+         */
+        private Snackbar displayFailedDownloadSnackBar()
+        {
+            return SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
+                    "ERROR: Image Cannot Be Downloaded",
+                    Snackbar.LENGTH_INDEFINITE);
         }
     }
 }

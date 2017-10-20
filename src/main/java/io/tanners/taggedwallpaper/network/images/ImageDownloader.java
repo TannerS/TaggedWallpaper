@@ -56,7 +56,7 @@ public class ImageDownloader extends ImageDownloaderBase {
     }
 
     /**
-     * display success
+     * display success snackbar
      * @return
      */
     private Snackbar displaySuccessDownloadSnackBar()
@@ -67,7 +67,7 @@ public class ImageDownloader extends ImageDownloaderBase {
     }
 
     /**
-     * display error
+     * display error snackbar
      * @return
      */
     private Snackbar displayFailedDownloadSnackBar()
