@@ -6,31 +6,40 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-
 import java.io.File;
-
 
 public class ImageSharer extends ImageDownloaderBase
 {
-    public ImageSharer(Context mContext, View view, ProgressBar mProgressBar, ImageView mImage, File mFile)
+    private Uri mImageUri;
+
+    public ImageSharer(Context mContext, View view, ProgressBar mProgressBar, ImageView mImage, File mFile, Uri mImageUri)
     {
         super(mContext, view, mProgressBar, mImage, mFile);
+        this.mImageUri = mImageUri;
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
-
+        // create new intent
         Intent shareIntent = new Intent();
+        // grant uri permissions
+        if (mImageUri != null) {
+            // Grant temporary read permission to the content URI
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
         shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(mFile));
+        // at this point, this is uri to file but actually writing to file is done
+        // in the background task in the parent class
+        shareIntent.putExtra(Intent.EXTRA_STREAM, mImageUri);
         shareIntent.setType("image/jpeg");
-
+        // call media scanner to allow image to show up in gallery and filesystem
         if(result)
             callMediaScanner();
-
+        // start chooser
         mContext.startActivity(Intent.createChooser(shareIntent, "Share too..."));
-
+        // show image
         mImage.setVisibility(View.VISIBLE);
+        // hide progressbar
         mProgressBar.setVisibility(View.GONE);
     }
 }

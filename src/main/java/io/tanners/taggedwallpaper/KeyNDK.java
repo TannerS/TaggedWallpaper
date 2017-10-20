@@ -5,6 +5,6 @@ public class KeyNDK {
     static {
         System.loadLibrary("TaggedKeys");
     }
-
+    // get api key in ndk c++ file, not included with this source
     public native String getApiKey();
 }

@@ -1,6 +1,5 @@
 package io.tanners.taggedwallpaper.interfaces;
 
-
 import android.support.v4.app.Fragment;
 
 /**

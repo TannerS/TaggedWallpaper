@@ -3,7 +3,6 @@ package io.tanners.taggedwallpaper.adapters;
 import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,27 +13,23 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
-
 import io.tanners.taggedwallpaper.ImageActivity;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.data.categories.CategoryItem;
-import io.tanners.taggedwallpaper.fragments.CategoryFragment;
-//import io.tanners.taggedwallpaper.data.CategoryItem;
 
 /**
  * Class to handle a single array recyclerlist such that we will use this for the image categories
  */
-public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.CategoryViewHolder> {
+public class CategoryImageAdapter extends RecyclerView.Adapter<CategoryImageAdapter.CategoryViewHolder> {
     private Context mContext;
     private ArrayList<CategoryItem> mItems;
     private int mLayoutId;
 
-    public RowImageAdapter(Context mContext, ArrayList<CategoryItem> mItems, int mLayoutId) {
+    public CategoryImageAdapter(Context mContext, ArrayList<CategoryItem> mItems, int mLayoutId) {
         this.mContext = mContext;
         this.mItems = mItems;
         this.mLayoutId = mLayoutId;
     }
-
 
     /**
      *  Setup image based on url of image and object to present it in
@@ -43,10 +38,9 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
      */
     private void setUpImage(String mUrl, ImageView view)
     {
-        // creat transition options
+        // create transition options
         DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
         // create request options
-//        RequestOptions cropOptions = new RequestOptions().centerCrop().placeholder(R.drawable.ic_menu_camera).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         RequestOptions cropOptions = new RequestOptions().centerCrop().diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
         // create settings through Glide
         Glide.with(mContext)
@@ -95,14 +89,13 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
     /**
      * recycled views to handle images and text for the images category
      */
-//    public static class CategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
         public ImageView image;
 
         public CategoryViewHolder(final Context mContext, View view) {
             super(view);
-
+            // each category gets handled as a search to the next activity
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -114,7 +107,7 @@ public class RowImageAdapter extends RecyclerView.Adapter<RowImageAdapter.Catego
                 }
 
             });
-
+            // load resources
             this.title = (TextView) view.findViewById(R.id.row_item_text);
             this.image = (ImageView) view.findViewById(R.id.row_image_background);
         }

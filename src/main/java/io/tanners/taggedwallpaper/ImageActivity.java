@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
-
 import java.util.ArrayList;
-
 import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
 import io.tanners.taggedwallpaper.fragments.LatestImagesFragment;
 import io.tanners.taggedwallpaper.fragments.PopularImagesFragment;
@@ -19,12 +17,15 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
     public final static String TAG = "TAG";
     private String tag;
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_image);
-        // other activies pass tag of category or search query using the intent and passed into class var
+        // other activities pass tag of category or search query using the intent and passed into class var
         tag = getIntent().getStringExtra(TAG);
         setUpToolBar(R.id.image_toolbar);
         // set up fragment tabs
@@ -37,7 +38,6 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // change title
         getSupportActionBar().setTitle(tag);
-
     }
 
     /**
@@ -54,6 +54,10 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
         }
     }
 
+    /**
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -81,6 +85,10 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
         context.startActivity(intent);
     }
 
+    /**
+     * get current tag (search result, clicked category, etc)
+     * @return
+     */
     @Override
     public String getTag() {
         return this.tag;

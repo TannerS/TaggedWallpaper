@@ -5,6 +5,14 @@ import android.view.View;
 
 public class SimpleSnackBarBuilder {
 
+    /**
+     * create snackbar and displays it
+     * @param view
+     * @param message
+     * @param length
+     * @param mDismissMessage
+     * @param mCallback
+     */
     public static void createAndDisplaySnackBar(View view, String message, int length, String mDismissMessage,  View.OnClickListener mCallback)
     {
         final Snackbar mSnackBar = SimpleSnackBarBuilder.createSnackBar(view, message, length, mDismissMessage, mCallback);
@@ -12,6 +20,13 @@ public class SimpleSnackBarBuilder {
         mSnackBar.show();
     }
 
+    /**
+     * create snackbar and displays it
+     * @param view
+     * @param message
+     * @param length
+     * @param mDismissMessage
+     */
     public static void createAndDisplaySnackBar(View view, String message, int length, String mDismissMessage)
     {
         final Snackbar mSnackBar = SimpleSnackBarBuilder.createSnackBar(view, message, length);
@@ -26,6 +41,12 @@ public class SimpleSnackBarBuilder {
         mSnackBar.show();
     }
 
+    /**
+     * create snackbar with no message
+     * @param view
+     * @param message
+     * @param length
+     */
     public static Snackbar createSnackBar(View view, String message, int length)
     {
         final Snackbar mSnackBar = Snackbar.make(view, message, length);
@@ -33,6 +54,16 @@ public class SimpleSnackBarBuilder {
         return mSnackBar;
     }
 
+
+    /**
+     * create snackbar
+     * @param view
+     * @param message
+     * @param length
+     * @param mDismissMessage
+     * @param mCallback
+     * @return
+     */
     public static Snackbar createSnackBar(View view, String message, int length, String mDismissMessage,  View.OnClickListener mCallback)
     {
         final Snackbar mSnackBar = Snackbar.make(view, message, length);

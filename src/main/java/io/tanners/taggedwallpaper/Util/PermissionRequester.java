@@ -16,10 +16,21 @@ public class PermissionRequester {
         this.mActivity = mActivity;
     }
 
+    /**
+     * creates new instance
+     * @param mActivity
+     * @return
+     */
     public static PermissionRequester newInstance(Activity mActivity) {
         return new PermissionRequester(mActivity);
     }
 
+    /**
+     * request permissions
+     * @param permissions
+     * @param code
+     * @return
+     */
     public boolean requestNeededPermissions(String[] permissions, int code)
     {
         // check version of android

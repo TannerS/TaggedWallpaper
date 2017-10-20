@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,23 +26,20 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import io.tanners.taggedwallpaper.Util.ExternalFileStorageUtil;
 import io.tanners.taggedwallpaper.Util.PermissionRequester;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
@@ -59,18 +58,15 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     private final String MALBUMNAME = "Wallpaper";
     private ProgressBar mProgressBar;
 
-
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
      */
-    private static final boolean AUTO_HIDE = false;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
         public void run() {
             // Delayed removal of status and navigation bar
-
             // Note that some of these constants are new as of API 16 (Jelly Bean)
             // and API 19 (KitKat). It is safe to use them, as they are inlined
             // at compile-time and do nothing on earlier devices.
@@ -91,8 +87,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     };
     private View mControlsView;
 
-
-
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -105,64 +99,46 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         }
     };
     private boolean mVisible;
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
-//    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-//        @Override
-//        public boolean onTouch(View view, MotionEvent motionEvent) {
-//            if (AUTO_HIDE) {
-//                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-//            }
-//            return false;
-//        }
-//    };
-
 
     /**
      * the number of milliseconds to wait after
      * user interaction before hiding the system UI.
      */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
 
+    /**
+     * When activity is created
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
         loadToolBar();
-        //loadBottomNavigation();
         loadResources();
         setUpUiInteraction();
     }
 
-//    private ViewGroup getRootView()
+    /**
+     * Loads the activities root view
+     * @return
+     */
     private View getRootView()
     {
         return this.findViewById(android.R.id.content);
-//        return (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
-//    }
     }
 
+    /**
+     * Load resources for activity
+     */
     private void loadResources()
     {
-        // get values passed in from intent
-//        artistTextView = (TextView) findViewById(R.id.artist_text_id);
-//        String artist = "Photo by: " + getIntent().getStringExtra(ARTIST);
-//        artistTextView.setText(artist);
-
         mMainImageView = (ImageView) findViewById(R.id.main_image_id);
         mProgressBar = (ProgressBar) findViewById(R.id.display_progress_bar);
-
         // set image into imageview
         loadImage(getIntent().getStringExtra(PREVIEW));
-
-
-
+        // set wallpaper
         findViewById(R.id.wallpaper_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -170,15 +146,16 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
             }
         });
-
+        // download or share image
         findViewById(R.id.share_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                downloadOrShareImage(STORAGE_PERMISSIONS|IMAGE_SHARE);
+//                downloadOrShareImage(STORAGE_PERMISSIONS|IMAGE_SHARE);
+                downloadOrShareImage(IMAGE_SHARE);
 
             }
         });
-
+        // set loack screen
         findViewById(R.id.lockscreen_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,26 +163,24 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
             }
         });
-
+        // download image
         findViewById(R.id.download_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                downloadOrShareImage(STORAGE_PERMISSIONS|IMAGE_DOWNLOAD);
+//                downloadOrShareImage(STORAGE_PERMISSIONS|IMAGE_DOWNLOAD);
+                downloadOrShareImage(IMAGE_DOWNLOAD);
 
             }
         });
-
-
-
     }
 
+    /**
+     * set up fullscreen user interaction
+     */
     private void setUpUiInteraction()
     {
-
         mVisible = true;
         mControlsView = findViewById(R.id.wallpaper_options_layout);
-
-
         // Set up the user interaction to manually show or hide the system UI.
         mProgressBar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,7 +188,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 toggle();
             }
         });
-
         mMainImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -222,30 +196,29 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         });
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-       // delayedHide(100);
-    }
-
+    /**
+     * toggle fullscreen
+     */
     private void toggle() {
+        // if visible, hide
         if (mVisible) {
             hide();
+        // else show
         } else {
             show();
         }
     }
 
+    /**
+     * Hide UI
+     */
     private void hide() {
         // Hide UI first
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
         }
+        // hide controls
         mControlsView.setVisibility(View.GONE);
         mVisible = false;
 
@@ -254,51 +227,40 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
 
+    /**
+     * Show UI
+     */
     @SuppressLint("InlinedApi")
     private void show() {
         // Show the system bar
         mMainImageView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-
-
         mProgressBar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-
         mVisible = true;
-
         // Schedule a runnable to display UI elements after a delay
         mHideHandler.removeCallbacks(mHidePart2Runnable);
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
     }
 
     /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
+     * Load image via URL
+     * @param mImageUrl
      */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
-    }
-
-    // TODO this is used few places, combine? also used in similarimages
     private void loadImage(String mImageUrl)
     {
         // Load image into imageview with options
-//        DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
+        DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
         RequestOptions cropOptions = new RequestOptions()
-//                .centerCrop()
-//                .fitCenter()
                 .error(R.drawable.ic_error_black_48dp)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-
+        // set up image
         Glide.with(this)
                 .load(mImageUrl)
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-
-                        Log.i("DISPLAY", "FAIL");
-
+                        // on image load error
                         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                             mMainImageView.setImageDrawable(ContextCompat.getDrawable(DisplayActivity.this, R.drawable.ic_error_black_48dp));
                         }
@@ -307,9 +269,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                             mMainImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_black_48dp));
                         }
 
+                        // hide progress bar
                         mProgressBar.setVisibility(View.GONE);
+                        // show image
                         mMainImageView.setVisibility(View.VISIBLE);
-                        Log.i("DISPLAY", "OK22");
 
                         return false;
                     }
@@ -323,14 +286,15 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                     }
                 })
                 .apply(cropOptions)
-//                .transition(transitionOptions)
+                .transition(transitionOptions)
                 .into(mMainImageView);
-
-        Log.i("DISPLAY", "OK2");
+        // show imageview
         mMainImageView.setVisibility(View.VISIBLE);
-
     }
 
+    /**
+     * Load Actionbar
+     */
     private void loadToolBar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.display_toolbar);
@@ -341,6 +305,12 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         getSupportActionBar().setTitle("");
     }
 
+    /**
+     * Check permission for given permission code.
+     * The code lets the object know which set of permissions to load.
+     * @param permissionCode
+     * @return
+     */
     private boolean checkPermissions(int permissionCode)
     {
         // request image downloading permissions
@@ -351,34 +321,38 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 permissionCode);
     }
 
+    /**
+     * Set wallpaper based on kind
+     * @param which
+     */
     private void setImage(int which)
     {
-        //WallpaperManager wallpaperManager = WallpaperManager.getInstance(DisplayActivity.this);
         switch(which)
         {
             case WallpaperSetter.LOCK_SCREEN:
-                new WallpaperSetter(which, (ProgressBar) findViewById(R.id.lockscreen_progressbar), (ImageView) findViewById(R.id.lockscreen_image)).execute(getIntent().getStringExtra(FULLIMAGE));
+                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which, (ProgressBar) findViewById(R.id.lockscreen_progressbar), (ImageView) findViewById(R.id.lockscreen_image)).execute(getIntent().getStringExtra(FULLIMAGE));
                 break;
             case WallpaperSetter.WALLPAPER:
-                new WallpaperSetter(which, (ProgressBar) findViewById(R.id.wallpaper_progressbar), (ImageView) findViewById(R.id.wallpaper_image)).execute(getIntent().getStringExtra(FULLIMAGE));
+                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which, (ProgressBar) findViewById(R.id.wallpaper_progressbar), (ImageView) findViewById(R.id.wallpaper_image)).execute(getIntent().getStringExtra(FULLIMAGE));
                 break;
         }
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            //if(wallpaperManager.isSetWallpaperAllowed())
-//                new WallpaperSetter(which, f).execute(getIntent().getStringExtra(FULLIMAGE));
-       // }
-        //else
-            // TODO for now
-          //  new WallpaperSetter(which).execute(getIntent().getStringExtra(FULLIMAGE));
-
     }
 
+    /**
+     * Recycle same code permissions for download and sharing image
+     * @param requestCode
+     */
     private void downloadOrShareImage(int requestCode)
     {
+        // check if permissions are granted
         if(checkPermissions(STORAGE_PERMISSIONS))
         {
+            // no permissions needed, call code
             usePhoto(requestCode);
-            Log.i("PHOTO", "DOWNLOAD 1");
+        }
+        else
+        {
+            // no permissions, do nothing
         }
     }
 
@@ -386,19 +360,29 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
     {
+        Log.i("DISPLAYACTIVITY", "ONREQUETSPERMISSIONS");
+
+
+
         // check if ALL permissions were granted
         if(permissionGrantChecker(permissions, grantResults)) {
             // do task based on which granted permissions
             switch(requestCode)
             {
-                case STORAGE_PERMISSIONS|IMAGE_DOWNLOAD:
-                case STORAGE_PERMISSIONS|IMAGE_SHARE:
+                case IMAGE_DOWNLOAD:
+                case IMAGE_SHARE:
                     usePhoto(requestCode);
                     break;
             }
         }
     }
 
+    /**
+     * Check permissions if they are granted or not
+     * @param permissions
+     * @param grantResults
+     * @return
+     */
     private boolean permissionGrantChecker(String permissions[], int[] grantResults)
     {
         // check if all permissions were granted
@@ -412,29 +396,40 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         return true;
     }
 
+    /**
+     * Do something with image
+     * @param code
+     */
     private void usePhoto(int code){
         ExternalFileStorageUtil mStorageUtil = new ExternalFileStorageUtil();
         // check if external storage is writable
         if(mStorageUtil.isExternalStorageWritable())
         {
-            String[] mImageUrlSplit = getIntent().getStringExtra(FULLIMAGE).split("/");
-            String mImageUrlFileName = mImageUrlSplit[mImageUrlSplit.length-1];
-
-            File mImageDir = mStorageUtil.getAlbumStorageDir(MALBUMNAME);
-
-            File mImageFile = new File(mImageDir, mImageUrlFileName);
-
+            // determine what to do per request
             switch(code)
             {
-                case STORAGE_PERMISSIONS|IMAGE_DOWNLOAD:
-                    new ImageDownloader(this, findViewById(R.id.display_activity_main_id), (ProgressBar) findViewById(R.id.download_progressbar), (ImageView) findViewById(R.id.download_image), mImageFile).execute(getIntent().getStringExtra(FULLIMAGE));
+                case IMAGE_DOWNLOAD:
+                    // use that newly created image file to share or download
+                    // you need to download before sharing
+                    new ImageDownloader(this, findViewById(R.id.display_activity_main_id), (ProgressBar) findViewById(R.id.download_progressbar), (ImageView) findViewById(R.id.download_image), getNewFile(code, mStorageUtil)).execute(getIntent().getStringExtra(FULLIMAGE));
                     break;
-                case STORAGE_PERMISSIONS|IMAGE_SHARE:
-                    new ImageSharer(this, findViewById(R.id.display_activity_main_id), (ProgressBar) findViewById(R.id.share_progressbar), (ImageView) findViewById(R.id.share_image), mImageFile).execute(getIntent().getStringExtra(FULLIMAGE));
+                case IMAGE_SHARE:
+                    // use that newly created image file to share or download
+                    File mImageFile = getNewFile(code, mStorageUtil);
+                    // create URI based off file provider
+                    Uri mImageUri = null;
+                    try {
+                        // get uri from file provider
+                        mImageUri = FileProvider.getUriForFile(DisplayActivity.this, "io.tanners.taggedwallpaper.fileprovider", mImageFile);
+                    } catch (IllegalArgumentException e) {
+                        Log.e("File_PROVIDER", "The selected file can't be shared");
+                    }
+                    // share image
+                    new ImageSharer(this, findViewById(R.id.display_activity_main_id), (ProgressBar) findViewById(R.id.share_progressbar), (ImageView) findViewById(R.id.share_image), mImageFile, mImageUri).execute(getIntent().getStringExtra(FULLIMAGE));
                     break;
             }
         }
-        // cant read, connected to pc, ejected, etc
+            // cant read, connected to pc, ejected, etc
         else
         {
             // display error as snackbar
@@ -442,17 +437,48 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == Activity.RESULT_OK) {
+    private File getNewFile(int code, ExternalFileStorageUtil mStorageUtil) {
+        // get filename
+        String[] mImageUrlSplit = getIntent().getStringExtra(FULLIMAGE).split("/");
+        String mImageUrlFileName = mImageUrlSplit[mImageUrlSplit.length-1];
+        File mImageFile = null;
 
-            if (requestCode == STORAGE_PERMISSIONS) {
-
-            }
+        switch (code) {
+            case IMAGE_DOWNLOAD:
+                // create album
+                File mImageDir = mStorageUtil.getAlbumStorageDir(MALBUMNAME);
+                // create file based on name and album
+                mImageFile = new File(mImageDir, mImageUrlFileName);
+            case IMAGE_SHARE:
+                // create temp cache file
+                try {
+                    // mImageFile = new File(getFilesDir(), mImageUrlFileName);
+                    mImageFile = File.createTempFile(mImageUrlFileName, null, getCacheDir());
+                } catch (IOException e) {
+                    // Error while creating file
+                    Log.e("FILE_SHARE", "Error sharing image");
+                }
         }
+        // return image file reference
+        return mImageFile;
     }
+
+
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        Log.i("DISPLAYACTIVITY", "if you see this, you may need to fix permissions");
+//
+//
+//        if(resultCode == Activity.RESULT_OK) {
+//
+//            if (requestCode == STORAGE_PERMISSIONS) {
+//
+//            }
+//        }
+//    }
 
     private void displayStorageErrorSnackBar() {
         SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.display_activity_main_id),
@@ -468,9 +494,11 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         private int which = -1;
         private ProgressBar mProgressBar;
         private ImageView mImageView;
+        private View mRootView;
 
-        public WallpaperSetter(int which, ProgressBar mProgressBar, ImageView mImageView)
+        public WallpaperSetter(View view, int which, ProgressBar mProgressBar, ImageView mImageView)
         {
+            this.mRootView = view;
             this.which = which;
             this.mImageView = mImageView;
             this.mProgressBar =mProgressBar;
@@ -555,15 +583,25 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             mImageView.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
 
+
+            Log.i("WALLPAPER", "DEBUG 1");
+
             if(result)
             {
-                SimpleSnackBarBuilder.createSnackBar(getRootView().findViewById(R.id.display_activity_main_id),
+
+                Log.i("WALLPAPER", "DEBUG 2");
+
+
+                SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
                         "Wallpaper set.",
                         Snackbar.LENGTH_LONG);
             }
             else
             {
-                SimpleSnackBarBuilder.createSnackBar(getRootView().findViewById(R.id.display_activity_main_id),
+
+                Log.i("WALLPAPER", "DEBUG 3");
+
+                SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
                         "ERROR: setting wallpaper.",
                         Snackbar.LENGTH_LONG);
             }

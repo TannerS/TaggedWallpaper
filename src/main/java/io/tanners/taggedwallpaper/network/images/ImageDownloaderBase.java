@@ -33,21 +33,35 @@ public class ImageDownloaderBase extends AsyncTask<String, Void, Boolean> {
         this.mImage = mImage;
     }
 
+    /**
+     *
+     */
     @Override
     protected void onPreExecute() {
+        // hide image
         mImage.setVisibility(View.GONE);
+        // show progressbar
         mProgressBar.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * @param result
+     */
     @Override
     protected void onPostExecute(Boolean result) {
         if(result)
+            // call media scanner
             callMediaScanner();
-
+        // show image
         mImage.setVisibility(View.VISIBLE);
+        // hide progressbar
         mProgressBar.setVisibility(View.GONE);
     }
 
+    /**
+     * @param strings
+     * @return
+     */
     @Override
     protected Boolean doInBackground(String... strings)
     {
@@ -84,6 +98,9 @@ public class ImageDownloaderBase extends AsyncTask<String, Void, Boolean> {
         return true;
     }
 
+    /**
+     * updates gallery by scanner the newly added image
+     */
     protected void callMediaScanner()
     {
         // https://stackoverflow.com/questions/9414955/trigger-mediascanner-on-specific-path-folder-how-to

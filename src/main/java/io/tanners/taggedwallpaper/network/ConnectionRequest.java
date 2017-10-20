@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ConnectionRequest {
+    // type of connection
     public static enum TYPES {
         POST("POST"),
         GET("GET");
@@ -62,25 +63,45 @@ public class ConnectionRequest {
         this.mUrl = mUrl;
     }
 
+    /**
+     * set connecton type
+     * @param type
+     */
     public void setRequestType(TYPES type) {
         mRequestype = type.toString();
     }
 
+    /**
+     * charste for data
+     * @param charset
+     */
     public void setCharSet(String charset)
     {
         mCharset = charset;
     }
 
+    /**
+     * timeout
+     * @param time
+     */
     public void setConnectionTimeOut(int time)
     {
         mConnectionTimeOut = time;
     }
 
+    /**
+     * reading timeout
+     * @param time
+     */
     public void setReadTimeOut(int time)
     {
         mReadTimeOut = time;
     }
 
+    /**
+     * add passed in headers to http packet
+     * @param entries
+     */
     public void addRequestHeader(HashMap<String, String> entries)
     {
         if(entries != null) {
@@ -93,6 +114,11 @@ public class ConnectionRequest {
         }
     }
 
+    /**
+     * add passed in header to http packet
+     * @param key
+     * @param value
+     */
     public void addRequestHeader(String key, String value)
     {
         if(mEntries != null) {
@@ -100,11 +126,18 @@ public class ConnectionRequest {
         }
     }
 
+    /**
+     * add body
+     * @param body
+     */
     public void addBasicBody(String body)
     {
         this.mBody = body;
     }
 
+    /**
+     * this will set the headers into the connection since the add header methods can be called multiple times
+     */
     private void setHeaders()
     {
         if(mEntries != null) {
@@ -117,19 +150,22 @@ public class ConnectionRequest {
         }
     }
 
+    /**
+     * set body
+     */
     private void setBody()
     {
         if(mBody == null || mBody.length() <= 0)
+            // set body length
             connection.setFixedLengthStreamingMode(0);
         else {
-
+            // set body length
             connection.setFixedLengthStreamingMode(mBody.length());
 
             try {
-
+                // open stream to url
                 writer = new PrintWriter(new OutputStreamWriter(connection.getOutputStream(), mCharset), true);
-
-                // TODO may need newline, may not need it
+                // write to stream
                 writer.append(LINE_BREAK);
                 writer.append(mBody).append(LINE_BREAK);
                 writer.flush();
@@ -139,36 +175,51 @@ public class ConnectionRequest {
                 e.printStackTrace();
             }
             finally {
+                // close stream
                 writer.close();
             }
         }
     }
 
+    /**
+     * defauly settings
+     */
     private void setDefaults()
     {
         if(mBody != null)
+            // means we will be sending content
             connection.setDoOutput(true);
         else
+            // means we will be NOT sending content
             connection.setDoOutput(false);
-
+        // allow redirects
         connection.setInstanceFollowRedirects(false);
+        // timeouts
         connection.setConnectTimeout(mConnectionTimeOut);
         connection.setReadTimeout(mReadTimeOut);
+        // caches, not tested
         connection.setUseCaches(true);
         try {
+            // method type
             connection.setRequestMethod(mRequestype);
         } catch (ProtocolException e) {
             e.printStackTrace();
         }
+        // set charset
         connection.setRequestProperty("charset", mCharset);
     }
 
+    /**
+     * connect to url
+     * @return
+     */
     public boolean connect()
     {
         try
         {
+            // open connect from url object
             connection = (HttpURLConnection) (new URL(mUrl)).openConnection();
-
+            // set options
             mIsGood = true;
             setDefaults();
             setHeaders();
@@ -183,6 +234,9 @@ public class ConnectionRequest {
         return mIsGood;
     }
 
+    /**
+     * close connection
+     */
     public void closeConnection()
     {
         if(connection != null)
@@ -191,6 +245,10 @@ public class ConnectionRequest {
         }
     }
 
+    /**
+     * get current connection
+     * @return
+     */
     public HttpURLConnection getConnection()
     {
         if(mIsGood)
@@ -199,6 +257,10 @@ public class ConnectionRequest {
             return null;
     }
 
+    /**
+     * check if connection is good
+     * @return
+     */
     public boolean isGood()
     {
         return mIsGood;

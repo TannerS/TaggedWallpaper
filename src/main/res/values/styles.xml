@@ -47,11 +47,6 @@
 
     <!--</style>-->
 
-    <style name="NavTitle">
-        <!--<item name="android:textColor">@color/navTitle</item>-->
-        <item name="android:textSize">15sp</item>
-    </style>
-
 
     <style name="listStyle" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">#ffffff</item>

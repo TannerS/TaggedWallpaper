@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.List;
 
-// TODO https://stackoverflow.com/questions/18747975/difference-between-fragmentpageradapter-and-fragmentstatepageradapter
 public class FragmentAdapter extends FragmentStatePagerAdapter
 {
     private List<FragmentInfo> frags;

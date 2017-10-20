@@ -14,9 +14,6 @@ import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 
 public class PopularImagesFragment extends ImageFragment implements ErrorCallBack  {
     public static final String POPULAR = "Popular";
-//    private ApiBuilder mBuilder;
-    private int mPerPage;
-    private int mPage;
     // creates new instance
     public static PopularImagesFragment newInstance() {
         return new PopularImagesFragment();
@@ -28,8 +25,6 @@ public class PopularImagesFragment extends ImageFragment implements ErrorCallBac
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPerPage = 26;
-        mPage = 1;
         this.mBuilder = new ApiBuilder(this.tag, mPerPage, mPage, ApiBuilder.OrderBy.POPULAR);
 
         Log.i("POPULAR", mBuilder.buildUrl());

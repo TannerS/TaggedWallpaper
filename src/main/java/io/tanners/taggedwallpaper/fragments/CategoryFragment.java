@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import io.tanners.taggedwallpaper.R;
-import io.tanners.taggedwallpaper.adapters.RowImageAdapter;
+import io.tanners.taggedwallpaper.adapters.CategoryImageAdapter;
 import io.tanners.taggedwallpaper.data.categories.CategoryItem;
 
 
@@ -44,13 +44,6 @@ public class CategoryFragment extends Fragment {
         return new CategoryFragment();
     }
 
-    /**
-     * @param savedInstanceState
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     /**
      * @param inflater
@@ -67,23 +60,6 @@ public class CategoryFragment extends Fragment {
         loadCategoryList();
         return view;
     }
-
-    /**
-     * @param context
-     */
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
 
     /**
      * load needed objects/views
@@ -133,87 +109,46 @@ public class CategoryFragment extends Fragment {
             {
                 // uses treemap to make it sorted
                 TreeMap<String, String> categoryItems = new TreeMap<String, String>();
-
+                // get data from firebase
                 HashMap<String, String> categoryItemsRaw = (HashMap<String, String>) dataSnapshot.getValue();
-
+                // check new contents
                 if(categoryItemsRaw == null || categoryItemsRaw.size() <= 0)
                 {
+                    // error
                     loadImageError();
                     mProgressBar.setVisibility(View.GONE);
                     mCategoryList.setVisibility(View.GONE);
                 }
                 else {
+                    // add new data
                     categoryItems.putAll(categoryItemsRaw);
-
                     for (Map.Entry<String, String> entry : categoryItems.entrySet()) {
                         categories.add(new CategoryItem(entry.getKey(), entry.getValue()));
                     }
-
-                    mCategoryList.setAdapter(new RowImageAdapter(getContext(), categories, R.layout.row_item));
+                    // set new data
+                    mCategoryList.setAdapter(new CategoryImageAdapter(getContext(), categories, R.layout.row_item));
                     mProgressBar.setVisibility(View.GONE);
                     mCategoryList.setVisibility(View.VISIBLE);
                 }
-
-
-
-                // TODO onclick here
-
-                //        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                //            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                //                Toast.makeText(MainActivity.this, "" + position, Toast.LENGTH_SHORT).show();
-                //            }
-                //        });
             }
         });
     }
 
     /**
-     * if firebase error occurs, dispaly error
+     * if firebase error occurs, display error
      */
     private void loadImageError()
     {
+        // create snackbar message
         final Snackbar mErrorSnackBar = Snackbar.make(view.findViewById(R.id.fragment_category_container_id), "Error loading categories", Snackbar.LENGTH_INDEFINITE);
-
         mErrorSnackBar.setAction("Close", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mErrorSnackBar.dismiss();
             }
         });
-
+        // show error message
         mErrorSnackBar.show();
-
     }
-
-//    /**
-//     * Hows
-//     */
-//    public static class CategoryItem
-//    {
-//        public String getmUrl() {
-//            return mUrl;
-//        }
-//
-//        public void setmUrl(String mUrl) {
-//            this.mUrl = mUrl;
-//        }
-//
-//        public String getmTitle() {
-//            return mTitle;
-//        }
-//
-//        public void setmTitle(String mTitle) {
-//            this.mTitle = mTitle;
-//        }
-//
-//        public CategoryItem(String mTitle, String mUrl) {
-//            this.mUrl = mUrl;
-//            this.mTitle = mTitle;
-//        }
-//
-//        private String mUrl;
-//        private String mTitle;
-//
-//    }
 
 }

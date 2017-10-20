@@ -38,6 +38,8 @@ public class ImageFragment extends Fragment {
     private LinearLayoutManager mRecyclerViewLayoutManager;
 //    private GridLayoutManager mRecyclerViewLayoutManager;
     protected ApiBuilder mBuilder;
+    protected int mPerPage;
+    protected int mPage;
 
     /**
      * we shall get the tag passed into the activity here
@@ -46,6 +48,12 @@ public class ImageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // set page info
+        mPerPage = 20;
+        mPage = 1;
+
+
+
         // check if current activity loading has the igettag interface implemented
         // this is due in part that main activity can load the popular and latest fragments
         // but do not need tags so no need ot implment it, but imageactivity needs it since

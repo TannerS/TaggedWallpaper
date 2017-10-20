@@ -19,15 +19,16 @@ public class ImageDownloader extends ImageDownloaderBase {
         this.view = view;
     }
 
+    /**
+     * @param result
+     */
     @Override
     protected void onPostExecute(Boolean result) {
 
         super.onPostExecute(result);
-        // TODO error handling here
+
         if(result)
         {
-            Log.i("SNACKBAR", "GOOD DNACKBAR");
-
             final Snackbar mGoodSnackbar = displaySuccessDownloadSnackBar();
 
             mGoodSnackbar.setAction("Close", new View.OnClickListener() {
@@ -41,7 +42,6 @@ public class ImageDownloader extends ImageDownloaderBase {
         }
         else
         {
-            Log.i("SNACKBAR", "BAD DNACKBAR");
             final Snackbar mFailSnackbar = displayFailedDownloadSnackBar();
 
             mFailSnackbar.setAction("Close", new View.OnClickListener() {
@@ -55,6 +55,10 @@ public class ImageDownloader extends ImageDownloaderBase {
         }
     }
 
+    /**
+     * display success
+     * @return
+     */
     private Snackbar displaySuccessDownloadSnackBar()
     {
         return SimpleSnackBarBuilder.createSnackBar(view.findViewById(R.id.display_activity_main_id),
@@ -62,18 +66,14 @@ public class ImageDownloader extends ImageDownloaderBase {
                 Snackbar.LENGTH_LONG);
     }
 
+    /**
+     * display error
+     * @return
+     */
     private Snackbar displayFailedDownloadSnackBar()
     {
         return SimpleSnackBarBuilder.createSnackBar(view.findViewById(R.id.display_activity_main_id),
                 "ERROR: Image Cannot Be Downloaded",
                 Snackbar.LENGTH_INDEFINITE);
     }
-
-//    private void displayStorageErrorSnackBar() {
-//        SimpleSnackBarBuilder.createAndDisplaySnackBar(view.findViewById(R.id.display_activity_main_id),
-//                "ERROR: Cannot Access External Storage",
-//                Snackbar.LENGTH_INDEFINITE,
-//                "Close");
-//    }
-
 }

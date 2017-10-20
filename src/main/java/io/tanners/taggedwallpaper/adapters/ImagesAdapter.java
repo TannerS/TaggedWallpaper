@@ -36,33 +36,23 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     private ArrayList<PhotoResult> mItems;
     private int mLayoutId;
     private int mRowId;
-//    private int mProgressBarId;
-//    private int mAllLoadedCount;
 
     public ImagesAdapter(Context mContext, ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId) {
-//    public ImagesAdapter(Context mContext, ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId, int mProgressBarId) {
         this.mContext = mContext;
         this.mItems = mItems;
         this.mLayoutId = mLayoutId;
         this.mRowId = mRowId;
-//        this.mProgressBarId = mProgressBarId;
-//        mAllLoadedCount = 0;
     }
 
+    /**
+     * update adapter with new images
+     * @param mItems
+     */
     public void updateAdapter(ArrayList<PhotoResult> mItems) {
         int startPos = this.mItems.size() + 1;
         this.mItems.addAll(mItems);
         notifyItemRangeInserted(startPos, mItems.size());
     }
-
-
-
-//    public boolean isAllLoaded()
-//    {
-////        return mItems == null ? false : mItems.size();
-//        return mItems != null && (mItems.size() == mAllLoadedCount);
-//        return mItems != null && (mItems.size() == mAllLoadedCount);
-//    }
 
     /**
      * set image to be loaded into current view
@@ -76,62 +66,50 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
                 .load(mUrl), view);
     }
 
+    /**
+     * @param mRequest
+     * @param view
+     */
     private void loadImage(RequestBuilder<Drawable> mRequest, ImageView view)
     {
-        //mProgressBar.setVisibility(View.VISIBLE);
         // set up transition
         DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
         // set up request options
         RequestOptions cropOptions = new RequestOptions()
                 .centerCrop()
-//                .placeholder(R.drawable.ic_photo_camera_black_48dp)
                 .error(R.drawable.ic_error_black_48dp)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        // apply features
-        mRequest.listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        // basically, keep track of how many are loaded by inc the var which
-                        // will be tested against the total image amount
-                        // so if list has 50 images, this should = 50 when all are loaded (or fails)
-
-//                        Log.i("LOADING", "INC 1 : " + getItemCount() + " : " + mAllLoadedCount);
-
-//                        mAllLoadedCount++;
-
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                      //  mProgressBar.setVisibility(View.GONE);
-                        // basically, keep track of how many are loaded by inc the var which
-                        // will be tested against the total image amount
-                        // so if list has 50 images, this should = 50 when all are loaded (or fails)
-//                        Log.i("LOADING", "INC 2 : " + getItemCount());
-
-//                        mAllLoadedCount++;
-//                        Log.i("LOADING", "INC 2 : " + getItemCount() + " : " + mAllLoadedCount);
-
-                        return false;
-                    }
-                })
+        // apply
+        mRequest
                 .apply(cropOptions)
                 .transition(transitionOptions)
                 .into(view);
     }
 
+    /**
+     * get number of items in list
+     * @return
+     */
     @Override
     public int getItemCount() {
         return mItems == null ? 0 : mItems.size();
     }
 
+    /**
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
         PhotoResult mItem = mItems.get(position);
         setUpImage(mItem.getWebformatURL(), holder.image);
     }
 
+    /**
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @Override
     public ImagesAdapter.ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
@@ -140,20 +118,16 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
         public ImageView image;
-//        public ProgressBar progress;
 
         public ImageViewHolder(final Context mContext, View view) {
             super(view);
 
             image = view.findViewById(mRowId);
-//            progress = view.findViewById(mProgressBarId);
-
+            // set onclick per image to load new activity to display full screen image
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    int pos = getAdapterPosition();
                     PhotoResult result = mItems.get(getAdapterPosition());
-
                     Intent intent = new Intent(mContext, DisplayActivity.class);
                     intent.putExtra(DisplayActivity.ARTIST, result.getUser());
                     intent.putExtra(DisplayActivity.FULLIMAGE, result.getImageURL());

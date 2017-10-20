@@ -19,9 +19,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- <meta-data -->
-        <!-- android:name="android.app.default_searchable" -->
-        <!-- android:value=".MainActivity" /> -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="io.tanners.taggedwallpaper.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
 
 
         <!-- http://www.helloandroid.com/tutorials/communicating-between-running-activities -->

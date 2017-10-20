@@ -32,31 +32,24 @@ public class ApiBuilder {
         public String order() {
             return order;
         }
-
     }
 
-    private int mPerPage ;//https://api.unsplash.com/photos?per_page=50&page=1&order_by=newest";
-    private int mPage; //https://api.unsplash.com/photos?per_page=50&page=1&order_by=newest";
-//    private String mBase = "https://api.unsplash.com/search/photos";
+    private int mPerPage ;
+    private int mPage;
     private String mBase = "https://pixabay.com/api/";
-//    private String mApiRules = "&utm_source=TaggedWallpaper&utm_medium=referral&utm_campaign=api-credit";
-//    private final String APIKEY = "Client-ID 53bec55730b75b73e5f615222f83e498e7645300c2b10949e6f8e25442a2fccc";
-//    private String mAPIKEY = "";
     private final String mEXTRAS = "&image_type=photo&safesearch=true&response_group=high_resolution";
     private String mOrder = "popular";
     private String mTag;
-//    private String mUrl;
 
+    /**
+     * builds restful api
+     * @return
+     */
     public String buildUrl()
     {
-        //loadKey();
-
-        // TAKES INTO ACCOUNT NO QUERY FOR GENERAL IMAGE CATEGORIES SUCH AS POPULAR AND LATEST
         if(mTag == null || mTag.length() == 0)
-//            return mBase + "?key=" + mAPIKEY + "&per_page=" + mPerPage + "&page=" + mPage +  "&order=" + mOrder + mEXTRAS;
             return mBase + "?key=" + new KeyNDK().getApiKey() + "&per_page=" + mPerPage + "&page=" + mPage +  "&order=" + mOrder + mEXTRAS;
         else
-//            return mBase + "?key=" + mAPIKEY + "&q=" + mTag + "&per_page=" + mPerPage + "&page=" + mPage +  "&order=" + mOrder + mEXTRAS;
             return mBase + "?key=" + new KeyNDK().getApiKey() + "&q=" + mTag + "&per_page=" + mPerPage + "&page=" + mPage +  "&order=" + mOrder + mEXTRAS;
     }
 
@@ -67,12 +60,20 @@ public class ApiBuilder {
         this.mPage = mPage;
         this.mOrder = order.name();
     }
-//
+
+    /**
+     * current page of restful api
+     * @param mPage
+     */
     public void setPage(int mPage)
     {
         this.mPage = mPage;
     }
 
+    /**
+     * how many images per page (per rest call)
+     * @param mPerPage
+     */
     public void setPerPage(int mPerPage)
     {
         this.mPerPage = mPerPage;
@@ -80,12 +81,17 @@ public class ApiBuilder {
 
     /**
      * Eventually used for pagination
+     * able to get next pages of images for download
      */
     public void increasePage()
     {
         this.mPage++;
     }
 
+    /**
+     * default headers
+     * @return
+     */
     public HashMap<String, String> getHeaders() {
         return new HashMap<String, String>() {{
             put("Accept-Language", "en-US,en;q=0.5");

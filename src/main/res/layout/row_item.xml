@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/row_image_container"
     android:padding="2dp"
     android:layout_margin="5dp">
 
@@ -15,7 +14,6 @@
     </ImageView>
 
     <ImageView
-        android:id="@+id/row_image_bar"
         android:layout_width="match_parent"
         android:layout_gravity="center"
         android:foregroundGravity="center"
