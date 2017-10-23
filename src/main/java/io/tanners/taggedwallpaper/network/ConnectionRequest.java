@@ -1,5 +1,7 @@
 package io.tanners.taggedwallpaper.network;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import org.apache.commons.io.IOUtils;
@@ -15,6 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+//import java.nio.charset.StandardCharsets;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +55,7 @@ public class ConnectionRequest {
     private String mCharset;
     private final String LINE_BREAK = "\r\n";
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public ConnectionRequest(String mUrl) {
         mEntries = new HashMap<String, String>();
         mConnectionTimeOut = 10000;
@@ -59,7 +63,12 @@ public class ConnectionRequest {
         mBody = null;
         mIsGood = false;
         mRequestype = TYPES.GET.toString();
-        mCharset = (StandardCharsets.UTF_8.name().toLowerCase(Locale.getDefault()));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            mCharset = (StandardCharsets.UTF_8.name().toLowerCase(Locale.getDefault()));
+        else
+            mCharset = "utf-8";
+
         this.mUrl = mUrl;
     }
 
