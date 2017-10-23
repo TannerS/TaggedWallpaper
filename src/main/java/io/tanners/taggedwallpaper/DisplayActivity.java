@@ -313,8 +313,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      */
     private boolean checkPermissions(int permissionCode)
     {
-        Log.i("PERMISSIONS", "DEBUG 2");
-
         // request image downloading permissions
         // result will be in onRequestPermissionsResult
         return PermissionRequester.newInstance(this).requestNeededPermissions(new String[]{
@@ -346,14 +344,9 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      */
     private void downloadOrShareImage(int requestCode)
     {
-        Log.i("PERMISSIONS", "DEBUG 1");
-
         // check if permissions are granted
-//        if(checkPermissions(STORAGE_PERMISSIONS))
         if(checkPermissions(requestCode))
         {
-            Log.i("PERMISSIONS", "DEBUG 3");
-
             // no permissions needed, call code
             usePhoto(requestCode);
         }
@@ -367,22 +360,15 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
     {
-        Log.i("PERMISSIONS", "DEBUG 4");
-
         // check if ALL permissions were granted
         if(permissionGrantChecker(permissions, grantResults)) {
-
-            Log.i("PERMISSIONS", "DEBUG 7:" + requestCode);
-
 
             // do task based on which granted permissions
             switch(requestCode)
             {
 
                 case IMAGE_DOWNLOAD|STORAGE_PERMISSIONS:
-                    Log.i("PERMISSIONS", "DEBUG 8");
                 case IMAGE_SHARE|STORAGE_PERMISSIONS:
-                    Log.i("PERMISSIONS", "DEBUG 9");
                     usePhoto(requestCode);
                     break;
             }
@@ -397,8 +383,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      */
     private boolean permissionGrantChecker(String permissions[], int[] grantResults)
     {
-        Log.i("PERMISSIONS", "DEBUG 5");
-
         // check if all permissions were granted
         for(int i = 0; i < permissions.length; i++)
         {

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -36,12 +37,14 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     private ArrayList<PhotoResult> mItems;
     private int mLayoutId;
     private int mRowId;
+    private int mTextId;
 
-    public ImagesAdapter(Context mContext, ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId) {
+    public ImagesAdapter(Context mContext, ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId, int mTextId) {
         this.mContext = mContext;
         this.mItems = mItems;
         this.mLayoutId = mLayoutId;
         this.mRowId = mRowId;
+        this.mTextId = mTextId;
     }
 
     /**
@@ -101,8 +104,13 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
      */
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
+        // get current list item
         PhotoResult mItem = mItems.get(position);
+        // set up image
         setUpImage(mItem.getWebformatURL(), holder.image);
+        // set author/uploader name
+        String mDisplayText = holder.text.getText() + mItem.getUser();
+        holder.text.setText(mDisplayText);
     }
 
     /**
@@ -118,11 +126,13 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
         public ImageView image;
+        public TextView text;
 
         public ImageViewHolder(final Context mContext, View view) {
             super(view);
-
+            // load resources
             image = view.findViewById(mRowId);
+            text = view.findViewById(mTextId);
             // set onclick per image to load new activity to display full screen image
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

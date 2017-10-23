@@ -30,6 +30,7 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
         setUpToolBar(R.id.image_toolbar);
         // set up fragment tabs
         setUpTabs(R.id.image_view_pager, R.id.image_tab_layout, MAXNUMOFFRAGS);
+        // set up fragments
         setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentInfo>() {{
             add(new FragmentAdapter.FragmentInfo(LatestImagesFragment.newInstance(), LatestImagesFragment.LATEST));
             add(new FragmentAdapter.FragmentInfo(PopularImagesFragment.newInstance(), PopularImagesFragment.POPULAR));
