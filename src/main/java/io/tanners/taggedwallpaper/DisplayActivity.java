@@ -120,20 +120,28 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         setUpUiInteraction();
     }
 
-    /**
-     * Loads the activities root view
-     * @return
-     */
-    private View getRootView()
-    {
-        return this.findViewById(android.R.id.content);
-    }
 
     /**
      * Load resources for activity
      */
     private void loadResources()
     {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // set lock screen
+            findViewById(R.id.lockscreen_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    setImage(WallpaperSetter.LOCK_SCREEN);
+
+                }
+            });
+
+        }
+        else
+        {
+            (findViewById(R.id.lockscreen_button)).setVisibility(View.GONE);
+        }
+
         mMainImageView = (ImageView) findViewById(R.id.main_image_id);
         mProgressBar = (ProgressBar) findViewById(R.id.display_progress_bar);
         // set image into imageview
@@ -150,24 +158,22 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         findViewById(R.id.share_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                downloadOrShareImage(STORAGE_PERMISSIONS|IMAGE_SHARE);
                 downloadOrShareImage(IMAGE_SHARE|STORAGE_PERMISSIONS);
 
             }
         });
-        // set loack screen
-        findViewById(R.id.lockscreen_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setImage(WallpaperSetter.LOCK_SCREEN);
-
-            }
-        });
+//        // set loack screen
+//        findViewById(R.id.lockscreen_button).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                setImage(WallpaperSetter.LOCK_SCREEN);
+//
+//            }
+//        });
         // download image
         findViewById(R.id.download_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                downloadOrShareImage(STORAGE_PERMISSIONS|IMAGE_DOWNLOAD);
                 downloadOrShareImage(IMAGE_DOWNLOAD|STORAGE_PERMISSIONS);
 
             }
@@ -366,7 +372,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             // do task based on which granted permissions
             switch(requestCode)
             {
-
                 case IMAGE_DOWNLOAD|STORAGE_PERMISSIONS:
                 case IMAGE_SHARE|STORAGE_PERMISSIONS:
                     usePhoto(requestCode);
@@ -626,9 +631,19 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
          */
         private Snackbar displaySuccessDownloadSnackBar()
         {
-            return SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
-                    "Image Downloaded",
-                    Snackbar.LENGTH_LONG);
+            switch (this.which) {
+                case WallpaperManager.FLAG_LOCK:
+                    return SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
+                            "Lock screen set!",
+                            Snackbar.LENGTH_LONG);
+                case WallpaperManager.FLAG_SYSTEM:
+                    this.which = WallpaperManager.FLAG_SYSTEM;
+                    return SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
+                            "Wallpaper set!",
+                            Snackbar.LENGTH_LONG);
+            }
+
+            return null;
         }
 
         /**
@@ -637,9 +652,18 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
          */
         private Snackbar displayFailedDownloadSnackBar()
         {
-            return SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
-                    "ERROR: Image Cannot Be Downloaded",
-                    Snackbar.LENGTH_INDEFINITE);
+            switch (this.which) {
+                case WallpaperManager.FLAG_LOCK:
+                    return SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
+                            "ERROR: Lock screen cannot be set",
+                            Snackbar.LENGTH_INDEFINITE);
+                case WallpaperManager.FLAG_SYSTEM:
+                    return SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
+                            "ERROR: wallpaper cannot be set",
+                            Snackbar.LENGTH_INDEFINITE);
+            }
+
+            return null;
         }
     }
 }
