@@ -1,51 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto">
-<!--<item android:id="@+id/photo_search"-->
-    <!--android:title="Search"-->
-    <!--android:icon="@android:drawable/ic_menu_search"-->
-    <!--app:showAsAction="always|collapseActionView"-->
-    <!--android:actionViewClass="android.widget.SearchView"-->
-    <!--/>-->
-
     <item android:id="@+id/photo_search"
         android:title="Search"
         android:icon="@android:drawable/ic_menu_search"
-
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView"
         />
-<!--<item android:id="@+id/action_share"-->
-    <!--android:title="Share"-->
-    <!--android:icon="@android:drawable/ic_menu_share"-->
-    <!--app:showAsAction="ifRoom" />-->
-<!--<item android:id="@+id/action_settings"-->
-    <!--android:title="Settings"-->
-    <!--android:icon="@android:drawable/ic_menu_preferences"-->
-    <!--app:showAsAction="never" />-->
 </menu>
-
-    <!--<menu-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:appcompat="http://schemas.android.com/apk/res-auto"-->
-    <!--xmlns:app="http://schemas.android.com/tools">-->
-
-    <!--<item-->
-    <!--android:id="@+id/photo_search"-->
-    <!--android:title="Search"-->
-    <!--appcompat:showAsAction="always"-->
-    <!--appcompat:actionViewClass="android.support.v7.widget.SearchView"-->
-    <!--android:icon="@drawable/ic_action_search_white"-->
-    <!--android:actionViewClass="android.widget.SearchView"-->
-    <!--/>-->
-    <!--&lt;!&ndash;android:showAsAction="collapseActionView|ifRoom"&ndash;&gt;-->
-    <!--&lt;!&ndash;<item&ndash;&gt;-->
-    <!--&lt;!&ndash;android:id="@+id/photo_search"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:title="Search for images"&ndash;&gt;-->
-    <!--&lt;!&ndash;appcompat:actionViewClass="android.support.v7.widget.SearchView"&ndash;&gt;-->
-    <!--&lt;!&ndash;appcompat:showAsAction="always"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:icon="@drawable/ic_action_search_white"&ndash;&gt;-->
-    <!--&lt;!&ndash;android:actionViewClass="android.widget.SearchView"&ndash;&gt;-->
-    <!--&lt;!&ndash;/>&ndash;&gt;-->
-
-    <!--</menu>-->
