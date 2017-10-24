@@ -353,12 +353,23 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         // check if permissions are granted
         if(checkPermissions(requestCode))
         {
+            Log.i("PERMISSIONS", "DEBUG 1");
+
             // no permissions needed, call code
             usePhoto(requestCode);
         }
+        // permissions denied for some reason
         else
         {
+            // runtime permissions came in at sdk 23
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                // set wallpaper based on image stream
+                usePhoto(requestCode);
+
+                Log.i("PERMISSIONS", "DEBUG 2");
+            }
             // no permissions, do nothing
+            Log.i("PERMISSIONS", "DEBUG 3");
         }
     }
 
