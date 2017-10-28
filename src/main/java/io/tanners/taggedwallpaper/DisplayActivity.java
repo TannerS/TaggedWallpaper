@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
@@ -63,7 +64,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
     /**
      * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
      */
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -79,13 +79,13 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-
-            mProgressBar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+//
+//            mProgressBar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+//                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+//                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+//                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
     private View mControlsView;
@@ -98,6 +98,15 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             if (actionBar != null) {
                 actionBar.show();
             }
+
+
+           // getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//            View decorView = getWindow().getDecorView();
+//            // Hide the status bar.
+//            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+//            decorView.setSystemUiVisibility(uiOptions);
+
+
             mControlsView.setVisibility(View.VISIBLE);
         }
     };
@@ -195,12 +204,12 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         mVisible = true;
         mControlsView = findViewById(R.id.wallpaper_options_layout);
         // Set up the user interaction to manually show or hide the system UI.
-        mProgressBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggle();
-            }
-        });
+//        mProgressBar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                toggle();
+//            }
+//        });
         mMainImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -238,6 +247,9 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable);
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
+
+
+       // hideSystemUI();
     }
 
     /**
@@ -248,12 +260,18 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         // Show the system bar
         mMainImageView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mProgressBar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+//        mProgressBar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+        mControlsView.setVisibility(View.VISIBLE);
         mVisible = true;
         // Schedule a runnable to display UI elements after a delay
         mHideHandler.removeCallbacks(mHidePart2Runnable);
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
+
+        //showSystemUI();
+
+
+
     }
 
     /**
@@ -266,7 +284,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
         RequestOptions cropOptions = new RequestOptions()
                 .error(R.drawable.ic_error_black_48dp)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).centerCrop();
         // set up image
         Glide.with(this)
                 .load(mImageUrl)
