@@ -72,7 +72,8 @@
             android:name=".DisplayActivity"
             android:label="@string/title_activity_display"
             android:parentActivityName=".ImageActivity"
-            android:theme="@style/AppTheme">
+
+            android:theme="@style/AppThemeTransparent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.tanners.taggedwallpaper.ImageActivity" />

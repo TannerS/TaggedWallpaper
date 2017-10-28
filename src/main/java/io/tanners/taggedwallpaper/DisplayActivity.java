@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -24,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import com.bumptech.glide.Glide;
@@ -113,6 +116,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // setting to make transparent
+       // getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
         loadToolBar();
@@ -303,12 +310,21 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      */
     private void loadToolBar()
     {
+
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.display_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // change icon to be a x not arrow
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_navigation_close);
         getSupportActionBar().setTitle("");
+        // set set transparent background
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        //getSupportActionBar().setElevation(0);
+
+
+
     }
 
     /**
