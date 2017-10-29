@@ -18,17 +18,15 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="io.tanners.taggedwallpaper.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
-
 
         <!-- http://www.helloandroid.com/tutorials/communicating-between-running-activities -->
         <activity
@@ -42,11 +40,13 @@
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".MainActivity" />
+
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -58,18 +58,7 @@
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />
 
-        <!-- <activity -->
-        <!-- android:name=".ImageActivity" -->
-        <!-- android:label="@string/title_activity_image" -->
-        <!-- android:launchMode="singleTop" -->
-        <!-- android:parentActivityName=".MainActivity" -->
-        <!-- android:theme="@style/AppBaseTheme"> -->
-
-
-        <!-- </activity> -->
-
         <activity
-
             android:name=".DisplayActivity"
             android:label="@string/title_activity_display"
             android:parentActivityName=".ImageActivity"
@@ -77,6 +66,16 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="io.tanners.taggedwallpaper.ImageActivity" />
+        </activity>
+        <activity
+            android:name=".SplashActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_splash"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

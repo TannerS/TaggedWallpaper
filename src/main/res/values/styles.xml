@@ -11,45 +11,12 @@
 
     </style>
 
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
 
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <!--<style name="AppTheme.NoActionBar">-->
-        <!--<item name="windowActionBar">false</item>-->
-        <!--<item name="windowNoTitle">true</item>-->
-    <!--</style>-->
-
-
-
-    <!--<style name="AppThemeTransparent" parent="Theme.AppCompat.Light.DarkActionBar">-->
-
-        <!--<item name="android:windowActionBar">false</item>-->
-        <!--<item name="windowActionBar">false</item>-->
-        <!--<item name="windowNoTitle">true</item>-->
-
-        <!--<item name="android:windowBackground">@null</item>-->
-        <!--<item name="android:actionBarStyle">@style/AppTheme.AppBarOverlayTransparent</item>-->
-        <!--<item name="android:windowActionBarOverlay">true</item>-->
-        <!--&lt;!&ndash; Support library compatibility &ndash;&gt;AppBarOverlayTransparent-->
-        <!--<item name="actionBarStyle">@style/AppTheme.AppBarOverlayTransparent</item>-->
-        <!--<item name="windowActionBarOverlay">true</item>-->
-        <!--<item name="colorPrimary">@android:color/transparent</item>-->
-        <!--<item name="android:windowContentOverlay">@null</item>-->
-    <!--</style>-->
-
-
-    <!--<style name="AppTheme.AppBarOverlayTransparent" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">-->
-
-        <!--<item name="android:background">@color/transparent</item>-->
-        <!--&lt;!&ndash;<item name="android:titleTextStyle">@style/Theme.YourTheme.Styled.ActionBar.TitleTextStyle</item>&ndash;&gt;-->
-        <!--&lt;!&ndash; Support library compatibility &ndash;&gt;-->
-        <!--<item name="background">@color/transparent</item>-->
-        <!--&lt;!&ndash;<item name="titleTextStyle">@style/Theme.YourTheme.Styled.ActionBar.TitleTextStyle</item>&ndash;&gt;-->
-
-    <!--</style>-->
-
-
 
     <style name="listStyle" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">#ffffff</item>
@@ -57,12 +24,6 @@
     </style>
 
 
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
-    </style>
-
 
 </resources>
