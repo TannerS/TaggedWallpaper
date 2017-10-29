@@ -1,6 +1,7 @@
 package io.tanners.taggedwallpaper;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Intent;
@@ -40,6 +41,8 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+//import com.readystatesoftware.systembartint.SystemBarTintManager;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,6 +66,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     private final int IMAGE_SHARE = 512;
     private final String MALBUMNAME = "Wallpaper";
     private ProgressBar mProgressBar;
+    private Toolbar mToolbar;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -136,6 +140,20 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         loadToolBar();
         loadResources();
         setUpUiInteraction();
+    }
+
+    /**
+     * http://blog.raffaeu.com/archive/2015/04/11/android-and-the-transparent-status-bar.aspx
+     *
+     * @return
+     */
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
 
@@ -278,6 +296,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         FitSystemWindowsLayout mainLayout = (FitSystemWindowsLayout) findViewById(R.id.display_activity_main_id);
         mainLayout.setFit(false);
 
+//        mToolbar.setPadding(0, getStatusBarHeight(), 0, 0);
 
 
 
@@ -310,7 +329,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
         FitSystemWindowsLayout mainLayout = (FitSystemWindowsLayout) findViewById(R.id.display_activity_main_id);
         mainLayout.setFit(true);
-
 
     }
 
@@ -371,19 +389,66 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.display_toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.display_toolbar);
+        setSupportActionBar(mToolbar);
+        //setTranslucentStatusBar(getWindow());
+       // mToolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // change icon to be a x not arrow
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_navigation_close);
         getSupportActionBar().setTitle("");
+
+
+
         // set set transparent background
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         //getSupportActionBar().setElevation(0);
-
-
+       // enableStatusBarTransparent();
 
     }
+
+    /**
+     * http://blog.raffaeu.com/archive/2015/04/11/android-and-the-transparent-status-bar.aspx
+     * for kitkat fix for transparent statusbar
+     */
+    private void enableStatusBarTransparent()
+    {
+
+        // create our manager instance after the content view is set
+        //SystemBarTintManager tintManager = new SystemBarTintManager(this);
+        // enable status bar tint
+       // tintManager.setStatusBarTintEnabled(true);
+        // enable navigation bar tint
+      //  tintManager.setNavigationBarTintEnabled(true);
+        // set the transparent color of the status bar, 20% darker
+        //tintManager.setTintColor(Color.parseColor("#20000000"));
+
+    }
+
+    public static void setTranslucentStatusBar(Window window) {
+        if (window == null) return;
+        int sdkInt = Build.VERSION.SDK_INT;
+        if (sdkInt >= Build.VERSION_CODES.LOLLIPOP) {
+            setTranslucentStatusBarLollipop(window);
+        } else if (sdkInt >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatusBarKiKat(window);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private static void setTranslucentStatusBarLollipop(Window window) {
+        window.setStatusBarColor(
+                window.getContext()
+                        .getResources()
+                        .getColor(R.color.transparent));
+    }
+
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private static void setTranslucentStatusBarKiKat(Window window) {
+        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+    }
+
 
     /**
      * Check permission for given permission code.
