@@ -31,9 +31,9 @@ public class MainActivity extends TabbedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setUpToolBar(R.id.main_toolbar);
+        setUpToolBar(R.id.universal_toolbar);
         // set up fragment tabs
-        setUpTabs(R.id.main_view_pager, R.id.main_tab_layout, MAXNUMOFFRAGS);
+        setUpTabs(R.id.universal_view_pager, R.id.universal_tab_layout, MAXNUMOFFRAGS);
         // set up fragments into adapter
         setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentInfo>() {{
             add(new FragmentAdapter.FragmentInfo(CategoryFragment.newInstance(), CategoryFragment.CATEGORY));

@@ -37,14 +37,14 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     private ArrayList<PhotoResult> mItems;
     private int mLayoutId;
     private int mRowId;
-    private int mTextId;
+    //private int mTextId;
 
     public ImagesAdapter(Context mContext, ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId, int mTextId) {
         this.mContext = mContext;
         this.mItems = mItems;
         this.mLayoutId = mLayoutId;
         this.mRowId = mRowId;
-        this.mTextId = mTextId;
+        //this.mTextId = mTextId;
     }
 
     /**
@@ -109,8 +109,8 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
         // set up image
         setUpImage(mItem.getWebformatURL(), holder.image);
         // set author/uploader name
-        String mDisplayText = holder.text.getText() + mItem.getUser();
-        holder.text.setText(mDisplayText);
+       // String mDisplayText = holder.text.getText() + mItem.getUser();
+       // holder.text.setText(mDisplayText);
     }
 
     /**
@@ -132,7 +132,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
             super(view);
             // load resources
             image = view.findViewById(mRowId);
-            text = view.findViewById(mTextId);
+            //text = view.findViewById(mTextId);
             // set onclick per image to load new activity to display full screen image
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

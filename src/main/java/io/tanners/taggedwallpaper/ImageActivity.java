@@ -27,9 +27,9 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
         setContentView(R.layout.activity_image);
         // other activities pass tag of category or search query using the intent and passed into class var
         tag = getIntent().getStringExtra(TAG);
-        setUpToolBar(R.id.image_toolbar);
+        setUpToolBar(R.id.universal_toolbar);
         // set up fragment tabs
-        setUpTabs(R.id.image_view_pager, R.id.image_tab_layout, MAXNUMOFFRAGS);
+        setUpTabs(R.id.universal_view_pager, R.id.universal_tab_layout, MAXNUMOFFRAGS);
         // set up fragments
         setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentInfo>() {{
             add(new FragmentAdapter.FragmentInfo(LatestImagesFragment.newInstance(), LatestImagesFragment.LATEST));
