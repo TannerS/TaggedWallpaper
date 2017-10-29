@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -27,6 +28,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -116,7 +118,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      * the number of milliseconds to wait after
      * user interaction before hiding the system UI.
      */
-    private static final int UI_ANIMATION_DELAY = 300;
+    private static final int UI_ANIMATION_DELAY = 50;
     private final Handler mHideHandler = new Handler();
 
     /**
@@ -222,6 +224,27 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      * toggle fullscreen
      */
     private void toggle() {
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            Window window = getWindow();
+//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+////                window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
+//                window.setStatusBarColor(getResources().getColor(android.R.color.black, getTheme()));
+//
+//            }
+//            else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                //window.setStatusBarColor(getResources().getColor(R.color.black));
+//                window.setStatusBarColor(this.getResources().getColor(android.R.color.black));
+//
+//            }
+//        }
+
+
+
+
         // if visible, hide
         if (mVisible) {
             hide();
@@ -237,19 +260,36 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     private void hide() {
         // Hide UI first
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
+
         // hide controls
         mControlsView.setVisibility(View.GONE);
         mVisible = false;
+
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+
 
         // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable);
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
 
 
-       // hideSystemUI();
+        FitSystemWindowsLayout mainLayout = (FitSystemWindowsLayout) findViewById(R.id.display_activity_main_id);
+        mainLayout.setFit(false);
+
+
+
+
+
+
+
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            window.setStatusBarColor(getApplicationContext().getResources().getColor(android.R.color.black, getTheme()));
+//        }else {
+//        }
+
     }
 
     /**
@@ -268,8 +308,8 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         mHideHandler.removeCallbacks(mHidePart2Runnable);
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
 
-        //showSystemUI();
-
+        FitSystemWindowsLayout mainLayout = (FitSystemWindowsLayout) findViewById(R.id.display_activity_main_id);
+        mainLayout.setFit(true);
 
 
     }
