@@ -37,6 +37,8 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     private ArrayList<PhotoResult> mItems;
     private int mLayoutId;
     private int mRowId;
+    private final int LOGOTYPE = 1;
+    private final int NORMAL = 2;
     //private int mTextId;
 
     public ImagesAdapter(Context mContext, ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId, int mTextId) {
@@ -67,6 +69,14 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
         // load image view using glide
         loadImage(Glide.with(mContext)
                 .load(mUrl), view);
+    }
+
+
+    private void setUpImage(int id, ImageView view)
+    {
+        // load image view using glide
+        loadImage(Glide.with(mContext)
+                .load(id), view);
     }
 
     /**
@@ -104,13 +114,24 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
      */
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
-        // get current list item
-        PhotoResult mItem = mItems.get(position);
-        // set up image
-        setUpImage(mItem.getWebformatURL(), holder.image);
-        // set author/uploader name
-       // String mDisplayText = holder.text.getText() + mItem.getUser();
-       // holder.text.setText(mDisplayText);
+
+        if(holder instanceof ImagesAdapter.ImageViewHolderLogo)
+        {
+//            setUpImage(R.drawable.ic_logo, ((ImageViewHolderLogo) holder).image);
+             ((ImageViewHolderLogo) holder).image.setImageResource(R.drawable.ic_logo);
+        }
+        else if (holder instanceof ImagesAdapter.ImageViewHolder)
+        {
+            // get current list item
+            PhotoResult mItem = mItems.get(position);
+            // set up image
+            setUpImage(mItem.getWebformatURL(), holder.image);
+            // set author/uploader name
+            // String mDisplayText = holder.text.getText() + mItem.getUser();
+            // holder.text.setText(mDisplayText);
+        }
+
+
     }
 
     /**
@@ -120,8 +141,20 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
      */
     @Override
     public ImagesAdapter.ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
-        return new ImageViewHolder(mContext, view);
+        if(viewType == LOGOTYPE)
+        {
+            View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
+            return new ImageViewHolderLogo(mContext, view);
+        }
+        else if (viewType == NORMAL)
+        {
+            View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
+            return new ImageViewHolder(mContext, view);
+        }
+        else
+            return null;
+
+
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
@@ -146,6 +179,29 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
                 }
             });
         }
+    }
+
+    public class ImageViewHolderLogo extends ImageViewHolder {
+        public ImageView image;
+
+        public ImageViewHolderLogo(final Context mContext, View view) {
+            super(mContext, view);
+            // load resources
+            image = view.findViewById(mRowId);
+            // set onclick per image to load new activity to display full screen image
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) return LOGOTYPE;
+        else return NORMAL;
     }
 }
 
