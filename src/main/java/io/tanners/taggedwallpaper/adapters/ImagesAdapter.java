@@ -3,7 +3,10 @@ package io.tanners.taggedwallpaper.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 
 import io.tanners.taggedwallpaper.DisplayActivity;
 import io.tanners.taggedwallpaper.R;
+import io.tanners.taggedwallpaper.Util.TabBuilder;
 import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
 
 /**
@@ -188,11 +192,13 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
             super(mContext, view);
             // load resources
             image = view.findViewById(mRowId);
+            image.setScaleType(ImageView.ScaleType.FIT_XY);
             // set onclick per image to load new activity to display full screen image
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Log.i("TABS", "DEBUG 1");
+                    TabBuilder.buildAndLaunchCustomTab(mContext, "https://pixabay.com/");
                 }
             });
         }
