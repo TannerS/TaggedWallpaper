@@ -2,6 +2,8 @@ package io.tanners.taggedwallpaper.data.results.photo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.ArrayList;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 
 public class PhotoResult
@@ -9,17 +11,17 @@ public class PhotoResult
     public PhotoResult() {
     }
 
-    public PhotoResult(String largeImageURL, String webformatURL, String imageURL, String previewURL, String user, int user_id, int id, String[] tags, String userImageURL) {
-        this.largeImageURL = largeImageURL;
-        this.webformatURL = webformatURL;
-        this.imageURL = imageURL;
-        this.previewURL = previewURL;
-        this.user = user;
-        this.user_id = user_id;
-        this.id = id;
-        this.tags = tags;
-        this.userImageURL = userImageURL;
-    }
+//    public PhotoResult(String largeImageURL, String webformatURL, String imageURL, String previewURL, String user, int user_id, int id, String[] tags, String userImageURL) {
+//        this.largeImageURL = largeImageURL;
+//        this.webformatURL = webformatURL;
+//        this.imageURL = imageURL;
+//        this.previewURL = previewURL;
+//        this.user = user;
+//        this.user_id = user_id;
+//        this.id = id;
+//        this.tags = tags;
+//        this.userImageURL = userImageURL;
+//    }
 
     public String getWebformatURL() {
         return webformatURL;
@@ -69,13 +71,8 @@ public class PhotoResult
         this.id = id;
     }
 
-    public String[] getTags() {
-        return tags;
-    }
 
-    public void setTags(String[] tags) {
-        this.tags = tags;
-    }
+
 
     public String getUserImageURL() {
         return userImageURL;
@@ -92,7 +89,7 @@ public class PhotoResult
     private String user;
     private int user_id;
     private int id;
-    private String[] tags;
+    private String tags;
     private String userImageURL;
 
     public String getLargeImageURL() {
@@ -102,6 +99,15 @@ public class PhotoResult
     public void setLargeImageURL(String largeImageURL) {
         this.largeImageURL = largeImageURL;
     }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
 
 //                       "likes": 10,
 //                       "favorites": 7,

@@ -25,6 +25,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -122,19 +123,24 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
         if(holder instanceof ImagesAdapter.ImageViewHolderLogo)
         {
 //            setUpImage(R.drawable.ic_logo, ((ImageViewHolderLogo) holder).image);
-             ((ImageViewHolderLogo) holder).image.setImageResource(R.drawable.ic_logo);
+            ((ImageViewHolderLogo) holder).image.setImageResource(R.drawable.ic_logo);
         }
         else if (holder instanceof ImagesAdapter.ImageViewHolder)
         {
             // get current list item
             PhotoResult mItem = mItems.get(position);
+
+            Log.i("DEBUG", mItem.getWebformatURL());
+            Log.i("DEBUG", holder.image == null ? "null" : "not null");
+
+
+
             // set up image
             setUpImage(mItem.getWebformatURL(), holder.image);
             // set author/uploader name
             // String mDisplayText = holder.text.getText() + mItem.getUser();
             // holder.text.setText(mDisplayText);
         }
-
 
     }
 
@@ -147,40 +153,39 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     public ImagesAdapter.ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(viewType == LOGOTYPE)
         {
+            Log.i("DEBUG", "TEST 1");
             View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
             return new ImageViewHolderLogo(mContext, view);
         }
         else if (viewType == NORMAL)
         {
+            Log.i("DEBUG", "TEST 2");
+
             View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
             return new ImageViewHolder(mContext, view);
         }
-        else
+        else {
+            Log.i("DEBUG", "TEST 3");
+
             return null;
+        }
 
 
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
         public ImageView image;
-        public TextView text;
 
         public ImageViewHolder(final Context mContext, View view) {
             super(view);
-            // load resources
             image = view.findViewById(mRowId);
-            //text = view.findViewById(mTextId);
             // set onclick per image to load new activity to display full screen image
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     PhotoResult result = mItems.get(getAdapterPosition());
                     Intent intent = new Intent(mContext, DisplayActivity.class);
-//                    intent.putExtra(DisplayActivity.ARTIST, result.getUser());
-//                    intent.putExtra(DisplayActivity.FULLIMAGE, result.getImageURL());
-//                    intent.putExtra(DisplayActivity.PREVIEW, result.getLargeImageURL());
-//                    intent
-                    (new Gson()).toJson(myObject);
+                    intent.putExtra(DisplayActivity.RESULT, ((new Gson()).toJson(result)));
                     mContext.startActivity(intent);
                 }
             });

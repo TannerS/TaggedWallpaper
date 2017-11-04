@@ -2,15 +2,10 @@ package io.tanners.taggedwallpaper;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.WallpaperManager;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -29,10 +24,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -44,6 +37,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.google.gson.Gson;
 //import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.io.File;
@@ -55,14 +49,16 @@ import java.net.URL;
 import io.tanners.taggedwallpaper.Util.ExternalFileStorageUtil;
 import io.tanners.taggedwallpaper.Util.PermissionRequester;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
+import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
 import io.tanners.taggedwallpaper.network.images.ImageDownloader;
 import io.tanners.taggedwallpaper.network.images.ImageSharer;
 
 // https://developer.android.com/reference/android/support/v4/app/ActivityCompat.OnRequestPermissionsResultCallback.html
 public class DisplayActivity extends AppCompatActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback {
-    public final static String ARTIST = "ARTIST";
-    public final static String FULLIMAGE = "FULLIMAGE";
-    public final static String PREVIEW = "PREVIEW";
+//    public final static String ARTIST = "ARTIST";
+//    public final static String FULLIMAGE = "FULLIMAGE";
+//    public final static String PREVIEW = "PREVIEW";
+    public final static String RESULT = "RESULT";
     private ImageView mMainImageView;
     private final int STORAGE_PERMISSIONS = 128;
     private final int IMAGE_DOWNLOAD = 256;
@@ -70,6 +66,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     private final String MALBUMNAME = "Wallpaper";
     private ProgressBar mProgressBar;
     private Toolbar mToolbar;
+    private PhotoResult mPhotoInfo;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -175,10 +172,13 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      */
     private void loadResources()
     {
+        mPhotoInfo = (new Gson()).fromJson(getIntent().getStringExtra(RESULT), PhotoResult.class);
+
         mMainImageView = (ImageView) findViewById(R.id.main_image_id);
         mProgressBar = (ProgressBar) findViewById(R.id.display_progress_bar);
         // set image into imageview
-        loadImage(getIntent().getStringExtra(PREVIEW));
+//        loadPreviewImage(getIntent().getStringExtra(PREVIEW));
+        loadPreviewImage(mPhotoInfo.getLargeImageURL());
     }
 
     /**
@@ -266,7 +266,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      * Load image via URL
      * @param mImageUrl
      */
-    private void loadImage(String mImageUrl)
+    private void loadPreviewImage(String mImageUrl)
     {
         // Load image into imageview with options
         DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
@@ -403,9 +403,9 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         {
             case WallpaperSetter.LOCK_SCREEN:
 //                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which, (ProgressBar) findViewById(R.id.lockscreen_progressbar), (ImageView) findViewById(R.id.lockscreen_image)).execute(getIntent().getStringExtra(FULLIMAGE));
-                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which).execute(getIntent().getStringExtra(FULLIMAGE));
+                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which).execute(mPhotoInfo.getImageURL());
             case WallpaperSetter.WALLPAPER:
-                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which).execute(getIntent().getStringExtra(FULLIMAGE));
+                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which).execute(mPhotoInfo.getImageURL());
                 break;
         }
     }
@@ -491,7 +491,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 case IMAGE_DOWNLOAD|STORAGE_PERMISSIONS:
                     // use that newly created image file to share or download
                     // you need to download before sharing
-                    new ImageDownloader(this, findViewById(R.id.display_activity_main_id), getNewFile(code, mStorageUtil)).execute(getIntent().getStringExtra(FULLIMAGE));
+                    new ImageDownloader(this, findViewById(R.id.display_activity_main_id), getNewFile(code, mStorageUtil)).execute(mPhotoInfo.getImageURL());
                     break;
                 case IMAGE_SHARE|STORAGE_PERMISSIONS:
                     // use that newly created image file to share or download
@@ -505,7 +505,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                         Log.e("File_PROVIDER", "The selected file can't be shared");
                     }
                     // share image
-                    new ImageSharer(this, findViewById(R.id.display_activity_main_id), mImageFile, mImageUri).execute(getIntent().getStringExtra(FULLIMAGE));
+                    new ImageSharer(this, findViewById(R.id.display_activity_main_id), mImageFile, mImageUri).execute(mPhotoInfo.getImageURL());
                     break;
             }
         }
@@ -520,7 +520,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
     private File getNewFile(int code, ExternalFileStorageUtil mStorageUtil) {
         // get filename
-        String[] mImageUrlSplit = getIntent().getStringExtra(FULLIMAGE).split("/");
+        String[] mImageUrlSplit = mPhotoInfo.getImageURL().split("/");
         String mImageUrlFileName = mImageUrlSplit[mImageUrlSplit.length-1];
         File mImageFile = null;
 

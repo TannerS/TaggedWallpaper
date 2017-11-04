@@ -32,7 +32,6 @@ public class ImageFragment extends Fragment {
     protected String tag;
     private boolean loading;
     private LinearLayoutManager mRecyclerViewLayoutManager;
-//    private GridLayoutManager mRecyclerViewLayoutManager;
     protected ApiBuilder mBuilder;
     protected int mPerPage;
     protected int mPage;
@@ -79,7 +78,6 @@ public class ImageFragment extends Fragment {
                 if ((mPastCount + mVisibleCount >= mTotalCount) && !loading) {
                     mBuilder.increasePage();
                     new ImageRequester().execute();
-                    Log.i("REQUEST", "DEBUG 1");
                     mProgressBar.setVisibility(View.VISIBLE);
 //                    ((ImagesAdapter) mRecyclerView.getAdapter()).updateAdapter();
                 }
@@ -112,6 +110,22 @@ public class ImageFragment extends Fragment {
         // request image
         new ImageRequester().execute();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private class ImageRequester extends AsyncTask<Void, Void, List<PhotoResult>> {
         private Request<PhotoResult > mRequest;
