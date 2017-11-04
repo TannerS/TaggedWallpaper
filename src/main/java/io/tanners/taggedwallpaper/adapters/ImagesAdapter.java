@@ -176,9 +176,11 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
                 public void onClick(View view) {
                     PhotoResult result = mItems.get(getAdapterPosition());
                     Intent intent = new Intent(mContext, DisplayActivity.class);
-                    intent.putExtra(DisplayActivity.ARTIST, result.getUser());
-                    intent.putExtra(DisplayActivity.FULLIMAGE, result.getImageURL());
-                    intent.putExtra(DisplayActivity.PREVIEW, result.getLargeImageURL());
+//                    intent.putExtra(DisplayActivity.ARTIST, result.getUser());
+//                    intent.putExtra(DisplayActivity.FULLIMAGE, result.getImageURL());
+//                    intent.putExtra(DisplayActivity.PREVIEW, result.getLargeImageURL());
+//                    intent
+                    (new Gson()).toJson(myObject);
                     mContext.startActivity(intent);
                 }
             });

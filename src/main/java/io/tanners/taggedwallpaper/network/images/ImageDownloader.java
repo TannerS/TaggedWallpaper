@@ -13,9 +13,9 @@ import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 public class ImageDownloader extends ImageDownloaderBase {
     protected View view;
 
-    public ImageDownloader(Context mContext, View view, ProgressBar mProgressBar, ImageView mImage, File mFile)
+    public ImageDownloader(Context mContext, View view, File mFile)
     {
-        super(mContext, view, mProgressBar, mImage, mFile);
+        super(mContext, view, mFile);
         this.view = view;
     }
 

@@ -37,7 +37,8 @@ public class ApiBuilder {
     private int mPerPage ;
     private int mPage;
     private String mBase = "https://pixabay.com/api/";
-    private final String mEXTRAS = "&image_type=photo&safesearch=true&response_group=high_resolution";
+//    private final String mEXTRAS = "&image_type=photo&safesearch=true&response_group=high_resolution";
+    private final String mEXTRAS = "&image_type=photo&safesearch=true";
     private String mOrder = "popular";
     private String mTag;
 

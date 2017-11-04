@@ -26,6 +26,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -85,13 +88,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-//
-//            mProgressBar.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-//                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-//                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-//                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
     private View mControlsView;
@@ -104,14 +100,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             if (actionBar != null) {
                 actionBar.show();
             }
-
-
-           // getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//            View decorView = getWindow().getDecorView();
-//            // Hide the status bar.
-//            int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-//            decorView.setSystemUiVisibility(uiOptions);
-
 
             mControlsView.setVisibility(View.VISIBLE);
         }
@@ -132,9 +120,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        // setting to make transparent
-       // getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
         loadToolBar();
@@ -147,13 +132,41 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      *
      * @return
      */
-    public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
+//    public int getStatusBarHeight() {
+//        int result = 0;
+//        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+//        if (resourceId > 0) {
+//            result = getResources().getDimensionPixelSize(resourceId);
+//        }
+//        return result;
+//    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.display_act_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.homescreen_menu_item:
+                setImage(WallpaperSetter.WALLPAPER);
+                return true;
+            case R.id.lockscreen_menu_item:
+                setImage(WallpaperSetter.LOCK_SCREEN);
+                return true;
+            case R.id.download_menu_item:
+                downloadOrShareImage(IMAGE_DOWNLOAD|STORAGE_PERMISSIONS);
+                return true;
+            case R.id.share_menu_item:
+                downloadOrShareImage(IMAGE_SHARE|STORAGE_PERMISSIONS);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return result;
     }
 
 
@@ -162,58 +175,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      */
     private void loadResources()
     {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            // set lock screen
-            findViewById(R.id.lockscreen_button).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    setImage(WallpaperSetter.LOCK_SCREEN);
-
-                }
-            });
-
-        }
-        else
-        {
-            (findViewById(R.id.lockscreen_button)).setVisibility(View.GONE);
-        }
-
         mMainImageView = (ImageView) findViewById(R.id.main_image_id);
         mProgressBar = (ProgressBar) findViewById(R.id.display_progress_bar);
         // set image into imageview
         loadImage(getIntent().getStringExtra(PREVIEW));
-        // set wallpaper
-        findViewById(R.id.wallpaper_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setImage(WallpaperSetter.WALLPAPER);
-
-            }
-        });
-        // download or share image
-        findViewById(R.id.share_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                downloadOrShareImage(IMAGE_SHARE|STORAGE_PERMISSIONS);
-
-            }
-        });
-//        // set loack screen
-//        findViewById(R.id.lockscreen_button).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                setImage(WallpaperSetter.LOCK_SCREEN);
-//
-//            }
-//        });
-        // download image
-        findViewById(R.id.download_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                downloadOrShareImage(IMAGE_DOWNLOAD|STORAGE_PERMISSIONS);
-
-            }
-        });
     }
 
     /**
@@ -242,28 +207,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      * toggle fullscreen
      */
     private void toggle() {
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            Window window = getWindow();
-//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-////                window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
-//                window.setStatusBarColor(getResources().getColor(android.R.color.black, getTheme()));
-//
-//            }
-//            else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                //window.setStatusBarColor(getResources().getColor(R.color.black));
-//                window.setStatusBarColor(this.getResources().getColor(android.R.color.black));
-//
-//            }
-//        }
-
-
-
-
-        // if visible, hide
         if (mVisible) {
             hide();
         // else show
@@ -295,19 +238,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
         FitSystemWindowsLayout mainLayout = (FitSystemWindowsLayout) findViewById(R.id.display_activity_main_id);
         mainLayout.setFit(false);
-
-//        mToolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-
-
-
-
-
-
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            window.setStatusBarColor(getApplicationContext().getResources().getColor(android.R.color.black, getTheme()));
-//        }else {
-//        }
 
     }
 
@@ -386,9 +316,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      */
     private void loadToolBar()
     {
-
-
-
         mToolbar = (Toolbar) findViewById(R.id.display_toolbar);
         setSupportActionBar(mToolbar);
         //setTranslucentStatusBar(getWindow());
@@ -415,14 +342,14 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     private void enableStatusBarTransparent()
     {
 
-        // create our manager instance after the content view is set
-        //SystemBarTintManager tintManager = new SystemBarTintManager(this);
-        // enable status bar tint
-       // tintManager.setStatusBarTintEnabled(true);
-        // enable navigation bar tint
-      //  tintManager.setNavigationBarTintEnabled(true);
-        // set the transparent color of the status bar, 20% darker
-        //tintManager.setTintColor(Color.parseColor("#20000000"));
+//         create our manager instance after the content view is set
+//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+//         enable status bar tint
+//        tintManager.setStatusBarTintEnabled(true);
+//         enable navigation bar tint
+//        tintManager.setNavigationBarTintEnabled(true);
+//         set the transparent color of the status bar, 20% darker
+//        tintManager.setTintColor(Color.parseColor("#20000000"));
 
     }
 
@@ -475,10 +402,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         switch(which)
         {
             case WallpaperSetter.LOCK_SCREEN:
-                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which, (ProgressBar) findViewById(R.id.lockscreen_progressbar), (ImageView) findViewById(R.id.lockscreen_image)).execute(getIntent().getStringExtra(FULLIMAGE));
-                break;
+//                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which, (ProgressBar) findViewById(R.id.lockscreen_progressbar), (ImageView) findViewById(R.id.lockscreen_image)).execute(getIntent().getStringExtra(FULLIMAGE));
+                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which).execute(getIntent().getStringExtra(FULLIMAGE));
             case WallpaperSetter.WALLPAPER:
-                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which, (ProgressBar) findViewById(R.id.wallpaper_progressbar), (ImageView) findViewById(R.id.wallpaper_image)).execute(getIntent().getStringExtra(FULLIMAGE));
+                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which).execute(getIntent().getStringExtra(FULLIMAGE));
                 break;
         }
     }
@@ -564,7 +491,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 case IMAGE_DOWNLOAD|STORAGE_PERMISSIONS:
                     // use that newly created image file to share or download
                     // you need to download before sharing
-                    new ImageDownloader(this, findViewById(R.id.display_activity_main_id), (ProgressBar) findViewById(R.id.download_progressbar), (ImageView) findViewById(R.id.download_image), getNewFile(code, mStorageUtil)).execute(getIntent().getStringExtra(FULLIMAGE));
+                    new ImageDownloader(this, findViewById(R.id.display_activity_main_id), getNewFile(code, mStorageUtil)).execute(getIntent().getStringExtra(FULLIMAGE));
                     break;
                 case IMAGE_SHARE|STORAGE_PERMISSIONS:
                     // use that newly created image file to share or download
@@ -578,7 +505,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                         Log.e("File_PROVIDER", "The selected file can't be shared");
                     }
                     // share image
-                    new ImageSharer(this, findViewById(R.id.display_activity_main_id), (ProgressBar) findViewById(R.id.share_progressbar), (ImageView) findViewById(R.id.share_image), mImageFile, mImageUri).execute(getIntent().getStringExtra(FULLIMAGE));
+                    new ImageSharer(this, findViewById(R.id.display_activity_main_id), mImageFile, mImageUri).execute(getIntent().getStringExtra(FULLIMAGE));
                     break;
             }
         }
@@ -629,23 +556,17 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         public final static int LOCK_SCREEN = 100;
         public final static int WALLPAPER = 200;
         private int which = -1;
-        private ProgressBar mProgressBar;
-        private ImageView mImageView;
         private View mRootView;
 
         /**
          * constructor
          * @param view
          * @param which
-         * @param mProgressBar
-         * @param mImageView
          */
-        public WallpaperSetter(View view, int which, ProgressBar mProgressBar, ImageView mImageView)
+        public WallpaperSetter(View view, int which)
         {
             this.mRootView = view;
             this.which = which;
-            this.mImageView = mImageView;
-            this.mProgressBar =mProgressBar;
         }
 
         /**
@@ -654,10 +575,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         @Override
         protected void onPreExecute()
         {
-            // show progressbar
-            mProgressBar.setVisibility(View.VISIBLE);
-            // hide image
-            mImageView.setVisibility(View.GONE);
             // choose which wallpaper to set
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 switch (this.which) {
@@ -739,10 +656,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         protected void onPostExecute(Boolean result)
         {
             super.onPostExecute(result);
-            // show image
-            mImageView.setVisibility(View.VISIBLE);
-            // hide progressbar
-            mProgressBar.setVisibility(View.GONE);
             // if success
             if(result)
             {

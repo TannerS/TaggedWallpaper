@@ -21,28 +21,14 @@ public class ImageDownloaderBase extends AsyncTask<String, Void, Boolean> {
     protected File mFile;
     protected Context mContext;
     protected View view;
-    protected ProgressBar mProgressBar;
-    protected ImageView mImage;
 
-    public ImageDownloaderBase(Context mContext, View view, ProgressBar mProgressBar, ImageView mImage, File mFile)
+    public ImageDownloaderBase(Context mContext, View view, File mFile)
     {
         this.view = view;
         this.mFile = mFile;
         this.mContext = mContext;
-        this.mProgressBar = mProgressBar;
-        this.mImage = mImage;
     }
 
-    /**
-     *
-     */
-    @Override
-    protected void onPreExecute() {
-        // hide image
-        mImage.setVisibility(View.GONE);
-        // show progressbar
-        mProgressBar.setVisibility(View.VISIBLE);
-    }
 
     /**
      * @param result
@@ -52,10 +38,6 @@ public class ImageDownloaderBase extends AsyncTask<String, Void, Boolean> {
         if(result)
             // call media scanner
             callMediaScanner();
-        // show image
-        mImage.setVisibility(View.VISIBLE);
-        // hide progressbar
-        mProgressBar.setVisibility(View.GONE);
     }
 
     /**

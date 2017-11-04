@@ -1,5 +1,7 @@
 package io.tanners.taggedwallpaper.network.images;
 
+import android.os.Build;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import java.io.IOException;
@@ -24,7 +26,7 @@ public class ImageRequest extends Request<PhotoResult>
         // temp list of images
         List<PhotoResult> photos = null;
         // make connect to url
-        mConnectionRequest = new ConnectionRequest(mUrl);
+            mConnectionRequest = new ConnectionRequest(mUrl);
         // if set body does not exist
         if (body != null && body.length() > 0) {
             // put body length

@@ -6,22 +6,27 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public class PhotoResult
 {
-    private String largeImageURL;
-    private String webformatURL;
-
     public PhotoResult() {
     }
 
-    private String imageURL;
-    private String previewURL;
-    private String user;
-
-    public String getLargeImageURL() {
-        return largeImageURL;
+    public PhotoResult(String largeImageURL, String webformatURL, String imageURL, String previewURL, String user, int user_id, int id, String[] tags, String userImageURL) {
+        this.largeImageURL = largeImageURL;
+        this.webformatURL = webformatURL;
+        this.imageURL = imageURL;
+        this.previewURL = previewURL;
+        this.user = user;
+        this.user_id = user_id;
+        this.id = id;
+        this.tags = tags;
+        this.userImageURL = userImageURL;
     }
 
-    public void setLargeImageURL(String largeImageURL) {
-        this.largeImageURL = largeImageURL;
+    public String getWebformatURL() {
+        return webformatURL;
+    }
+
+    public void setWebformatURL(String webformatURL) {
+        this.webformatURL = webformatURL;
     }
 
     public String getImageURL() {
@@ -48,11 +53,62 @@ public class PhotoResult
         this.user = user;
     }
 
-    public String getWebformatURL() {
-        return webformatURL;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public void setWebformatURL(String webformatURL) {
-        this.webformatURL = webformatURL;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String[] getTags() {
+        return tags;
+    }
+
+    public void setTags(String[] tags) {
+        this.tags = tags;
+    }
+
+    public String getUserImageURL() {
+        return userImageURL;
+    }
+
+    public void setUserImageURL(String userImageURL) {
+        this.userImageURL = userImageURL;
+    }
+
+    private String largeImageURL;
+    private String webformatURL;
+    private String imageURL;
+    private String previewURL;
+    private String user;
+    private int user_id;
+    private int id;
+    private String[] tags;
+    private String userImageURL;
+
+    public String getLargeImageURL() {
+        return largeImageURL;
+    }
+
+    public void setLargeImageURL(String largeImageURL) {
+        this.largeImageURL = largeImageURL;
+    }
+
+//                       "likes": 10,
+//                       "favorites": 7,
+//                       "views": 546,
+//                       "comments": 3,
+//                       "downloads": 265,
+//                   ,
+//
+
 }

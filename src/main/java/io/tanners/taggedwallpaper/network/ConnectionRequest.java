@@ -55,7 +55,7 @@ public class ConnectionRequest {
     private String mCharset;
     private final String LINE_BREAK = "\r\n";
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+
     public ConnectionRequest(String mUrl) {
         mEntries = new HashMap<String, String>();
         mConnectionTimeOut = 10000;

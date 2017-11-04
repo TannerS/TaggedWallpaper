@@ -12,9 +12,9 @@ public class ImageSharer extends ImageDownloaderBase
 {
     private Uri mImageUri;
 
-    public ImageSharer(Context mContext, View view, ProgressBar mProgressBar, ImageView mImage, File mFile, Uri mImageUri)
+    public ImageSharer(Context mContext, View view, File mFile, Uri mImageUri)
     {
-        super(mContext, view, mProgressBar, mImage, mFile);
+        super(mContext, view, mFile);
         this.mImageUri = mImageUri;
     }
 
@@ -37,9 +37,5 @@ public class ImageSharer extends ImageDownloaderBase
             callMediaScanner();
         // start chooser
         mContext.startActivity(Intent.createChooser(shareIntent, "Share too..."));
-        // show image
-        mImage.setVisibility(View.VISIBLE);
-        // hide progressbar
-        mProgressBar.setVisibility(View.GONE);
     }
 }
