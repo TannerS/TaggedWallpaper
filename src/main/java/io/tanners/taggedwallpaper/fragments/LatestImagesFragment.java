@@ -19,12 +19,21 @@ public class LatestImagesFragment extends ImageFragment implements ErrorCallBack
         return new LatestImagesFragment();
     }
 
+    /**
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mBuilder = new ApiBuilder(this.tag, mPerPage, mPage, ApiBuilder.OrderBy.LATEST);
     }
 
+    /**
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_images, container, false);
