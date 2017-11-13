@@ -26,6 +26,7 @@ public class PopularImagesFragment extends ImageFragment implements ErrorCallBac
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mBuilder = new ApiBuilder(this.tag, mPerPage, mPage, ApiBuilder.OrderBy.POPULAR);
+        Log.i("CATEGORY", mBuilder.buildImageUrl());
     }
 
     /**

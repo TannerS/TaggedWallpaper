@@ -37,7 +37,7 @@ public class ApiBuilder {
     private int mPerPage ;
     private int mPage;
     private String mBase = "https://pixabay.com/api/";
-//    private final String mEXTRAS = "&image_type=photo&safesearch=true&response_group=high_resolution";
+    private final String mHighRes = "&response_group=high_resolution";
     private final String mEXTRAS = "&image_type=photo&safesearch=true";
     private String mOrder = "popular";
     private String mTag;
@@ -46,7 +46,7 @@ public class ApiBuilder {
      * builds restful api
      * @return
      */
-    public String buildUrl()
+    public String buildImageUrl()
     {
         if(mTag == null || mTag.length() == 0)
             return mBase + "?key=" + new KeyNDK().getApiKey() + "&per_page=" + mPerPage + "&page=" + mPage +  "&order=" + mOrder + mEXTRAS;
@@ -54,12 +54,31 @@ public class ApiBuilder {
             return mBase + "?key=" + new KeyNDK().getApiKey() + "&q=" + mTag + "&per_page=" + mPerPage + "&page=" + mPage +  "&order=" + mOrder + mEXTRAS;
     }
 
+    public String buildHighResImageUrl()
+    {
+        if(mTag == null || mTag.length() == 0)
+            return mBase + "?key=" + new KeyNDK().getApiKey() + "&per_page=" + mPerPage + "&page=" + mPage +  "&order=" + mOrder + mEXTRAS + mHighRes;
+        else
+            return mBase + "?key=" + new KeyNDK().getApiKey() + "&q=" + mTag + "&per_page=" + mPerPage + "&page=" + mPage +  "&order=" + mOrder + mEXTRAS + mHighRes;
+    }
+
+    public String buildImageUrlById(String id)
+    {
+            return mBase + "?key=" + new KeyNDK().getApiKey() + "&id=" + id + mHighRes;
+    }
+
+    public ApiBuilder()
+    {
+        //
+    }
+
+
     public ApiBuilder(String tag, int mPerPage, int mPage, OrderBy order)
     {
         this.mTag = tag;
         this.mPerPage = mPerPage;
         this.mPage = mPage;
-        this.mOrder = order.name();
+        this.mOrder = order.name().toLowerCase();
     }
 
     /**

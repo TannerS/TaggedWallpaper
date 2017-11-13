@@ -3,6 +3,7 @@ package io.tanners.taggedwallpaper;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.WallpaperManager;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,7 +30,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
@@ -46,12 +50,17 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+
+import io.tanners.taggedwallpaper.Util.ApiBuilder;
 import io.tanners.taggedwallpaper.Util.ExternalFileStorageUtil;
 import io.tanners.taggedwallpaper.Util.PermissionRequester;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
 import io.tanners.taggedwallpaper.network.images.ImageDownloader;
+import io.tanners.taggedwallpaper.network.images.ImageRequest;
 import io.tanners.taggedwallpaper.network.images.ImageSharer;
+import io.tanners.taggedwallpaper.network.images.Request;
 
 // https://developer.android.com/reference/android/support/v4/app/ActivityCompat.OnRequestPermissionsResultCallback.html
 public class DisplayActivity extends AppCompatActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback {
@@ -110,17 +119,21 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     private static final int UI_ANIMATION_DELAY = 50;
     private final Handler mHideHandler = new Handler();
 
+
     /**
      * When activity is created
      * @param savedInstanceState
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
+
         loadToolBar();
+
         loadResources();
+
         setUpUiInteraction();
     }
 
@@ -170,15 +183,57 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     /**
      * Load resources for activity
      */
-    private void loadResources()
-    {
+    private void loadResources() {
         mPhotoInfo = (new Gson()).fromJson(getIntent().getStringExtra(RESULT), PhotoResult.class);
+
+        Log.i("ID", getIntent().getStringExtra(RESULT));
 
         mMainImageView = (ImageView) findViewById(R.id.main_image_id);
         mProgressBar = (ProgressBar) findViewById(R.id.display_progress_bar);
+
+        new ImageRequesterById().execute(mPhotoInfo.getId_hash());
+    }
+
+    private void loadImageResources(PhotoResult mPhotoInfo)
+    {
         // set image into imageview
-//        loadPreviewImage(getIntent().getStringExtra(PREVIEW));
-        loadPreviewImage(mPhotoInfo.getLargeImageURL());
+        loadImageWithGlide(mMainImageView, mPhotoInfo.getLargeImageURL(), new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                Log.i("IMAGE", "ERROR");
+
+                // on image load error
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
+                    loadImageWithGlide(mMainImageView,  ContextCompat.getDrawable(DisplayActivity.this, R.drawable.ic_error_black_48dp), null);
+                else
+                    loadImageWithGlide(mMainImageView, getResources().getDrawable(R.drawable.ic_error_black_48dp), null);
+                // hide progress bar
+                mProgressBar.setVisibility(View.GONE);
+
+                return false;
+            }
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                mProgressBar.setVisibility(View.GONE);
+                Log.i("IMAGE", "DEBUg1");
+
+                return true;
+            }
+        });
+
+//        loadImageWithGlide(((ImageView) findViewById(R.id.user_profile_image)), mPhotoInfo.getLargeImageURL(), null);
+        loadImageWithGlide(((ImageView) findViewById(R.id.user_profile_image)), mPhotoInfo.getUserImageURL(), null);
+        loadImageWithGlide(((ImageView) findViewById(R.id.main_image_id)), mPhotoInfo.getLargeImageURL(), null);
+
+        ((TextView)findViewById(R.id.user_name)).setText(mPhotoInfo.getUser());
+        ((TextView)findViewById(R.id.image_tags)).setText(mPhotoInfo.getTags());
+
+        Log.i("IMAGE", "DEBUg2: "+ mPhotoInfo.getUser());
+        Log.i("IMAGE", "DEBUg3: "+ mPhotoInfo.getTags());
+        Log.i("IMAGE", "DEBUg4: "+ mPhotoInfo.getLargeImageURL());
+        mProgressBar.setVisibility(View.GONE);
+
     }
 
     /**
@@ -262,53 +317,39 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
     }
 
-    /**
-     * Load image via URL
-     * @param mImageUrl
-     */
-    private void loadPreviewImage(String mImageUrl)
+    private DrawableTransitionOptions loadGlideTransitions()
     {
-        // Load image into imageview with options
-        DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
-        RequestOptions cropOptions = new RequestOptions()
+        return  new DrawableTransitionOptions().crossFade();
+    }
+
+    private RequestOptions loadGlideRequestOptions()
+    {
+        return new RequestOptions()
                 .error(R.drawable.ic_error_black_48dp)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).centerCrop();
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).fitCenter();
+    }
+
+    private void loadImageWithGlide(ImageView view, Drawable mImageDrawable, RequestListener<Drawable> listener)
+    {
+        loadImageWithGlide(view, Glide.with(this)
+                .load(mImageDrawable), listener);
+    }
+
+    private void loadImageWithGlide(ImageView view, String mImageUrl, RequestListener<Drawable> listener)
+    {
         // set up image
-        Glide.with(this)
-                .load(mImageUrl)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        // on image load error
-                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                            mMainImageView.setImageDrawable(ContextCompat.getDrawable(DisplayActivity.this, R.drawable.ic_error_black_48dp));
-                        }
-                        else
-                        {
-                            mMainImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_error_black_48dp));
-                        }
+        loadImageWithGlide(view, Glide.with(this)
+            .load(mImageUrl), listener);
+    }
 
-                        // hide progress bar
-                        mProgressBar.setVisibility(View.GONE);
-                        // show image
-                        mMainImageView.setVisibility(View.VISIBLE);
+    private void loadImageWithGlide(ImageView view, RequestBuilder<Drawable> request, RequestListener<Drawable> listener)
+    {
+        if(listener != null)
+            request = request.listener(listener);
 
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        mProgressBar.setVisibility(View.GONE);
-                        mMainImageView.setVisibility(View.VISIBLE);
-                        Log.i("DISPLAY", "OK11");
-                        return false;
-                    }
-                })
-                .apply(cropOptions)
-                .transition(transitionOptions)
-                .into(mMainImageView);
-        // show imageview
-        mMainImageView.setVisibility(View.VISIBLE);
+        request.apply(loadGlideRequestOptions())
+                .transition(loadGlideTransitions())
+                .into(view);
     }
 
     /**
@@ -339,43 +380,43 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      * http://blog.raffaeu.com/archive/2015/04/11/android-and-the-transparent-status-bar.aspx
      * for kitkat fix for transparent statusbar
      */
-    private void enableStatusBarTransparent()
-    {
+//    private void enableStatusBarTransparent()
+//    {
+//
+////         create our manager instance after the content view is set
+////        SystemBarTintManager tintManager = new SystemBarTintManager(this);
+////         enable status bar tint
+////        tintManager.setStatusBarTintEnabled(true);
+////         enable navigation bar tint
+////        tintManager.setNavigationBarTintEnabled(true);
+////         set the transparent color of the status bar, 20% darker
+////        tintManager.setTintColor(Color.parseColor("#20000000"));
+//
+//    }
 
-//         create our manager instance after the content view is set
-//        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-//         enable status bar tint
-//        tintManager.setStatusBarTintEnabled(true);
-//         enable navigation bar tint
-//        tintManager.setNavigationBarTintEnabled(true);
-//         set the transparent color of the status bar, 20% darker
-//        tintManager.setTintColor(Color.parseColor("#20000000"));
+//    public static void setTranslucentStatusBar(Window window) {
+//        if (window == null) return;
+//        int sdkInt = Build.VERSION.SDK_INT;
+//        if (sdkInt >= Build.VERSION_CODES.LOLLIPOP) {
+//            setTranslucentStatusBarLollipop(window);
+//        } else if (sdkInt >= Build.VERSION_CODES.KITKAT) {
+//            setTranslucentStatusBarKiKat(window);
+//        }
+//    }
 
-    }
-
-    public static void setTranslucentStatusBar(Window window) {
-        if (window == null) return;
-        int sdkInt = Build.VERSION.SDK_INT;
-        if (sdkInt >= Build.VERSION_CODES.LOLLIPOP) {
-            setTranslucentStatusBarLollipop(window);
-        } else if (sdkInt >= Build.VERSION_CODES.KITKAT) {
-            setTranslucentStatusBarKiKat(window);
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private static void setTranslucentStatusBarLollipop(Window window) {
-        window.setStatusBarColor(
-                window.getContext()
-                        .getResources()
-                        .getColor(R.color.transparent));
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    private static void setTranslucentStatusBarKiKat(Window window) {
-        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-    }
-
+//    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+//    private static void setTranslucentStatusBarLollipop(Window window) {
+//        window.setStatusBarColor(
+//                window.getContext()
+//                        .getResources()
+//                        .getColor(R.color.transparent));
+//    }
+//
+//    @TargetApi(Build.VERSION_CODES.KITKAT)
+//    private static void setTranslucentStatusBarKiKat(Window window) {
+//        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//    }
+//
 
     /**
      * Check permission for given permission code.
@@ -516,7 +557,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             displayStorageErrorSnackBar();
         }
     }
-
 
     private File getNewFile(int code, ExternalFileStorageUtil mStorageUtil) {
         // get filename
@@ -729,4 +769,57 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             return null;
         }
     }
+
+    public class ImageRequesterById extends AsyncTask<String, Void, List<PhotoResult>> {
+        private Request<PhotoResult > mRequest;
+        private ApiBuilder mBuilder;
+        private View view;
+
+        public ImageRequesterById()
+        {
+            this.view = findViewById(android.R.id.content);
+            this.mRequest = new ImageRequest();
+            this.mBuilder = new ApiBuilder();
+        }
+
+        @Override
+        protected List<PhotoResult> doInBackground(String... params)
+        {
+            List<PhotoResult> photos = null;
+
+            try {
+                photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildImageUrlById(params[0]), null);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return photos;
+        }
+
+        @Override
+        protected void onPostExecute(List<PhotoResult> photoDetails) {
+            if(photoDetails != null)
+            {
+                PhotoResult currentPhotoResult = photoDetails.get(0);
+                // combine api calls results into one
+                mPhotoInfo.setTags(currentPhotoResult.getTags());
+                mPhotoInfo.setUser_id(currentPhotoResult.getUser_id());
+                mPhotoInfo.setUser(currentPhotoResult.getUser());
+                mPhotoInfo.setImageURL(currentPhotoResult.getImageURL());
+                currentPhotoResult = null;
+                    // should only be one result
+                loadImageResources(mPhotoInfo);
+            }
+            else
+            {
+                // display error snackbar
+//                SimpleSnackBarBuilder.createAndDisplaySnackBar(view.findViewById(R.id.fragment_images_container_id),
+//                        "Error loading image details",
+//                        Snackbar.LENGTH_INDEFINITE,
+//                        "Close");
+            }
+        }
+    }
+
 }

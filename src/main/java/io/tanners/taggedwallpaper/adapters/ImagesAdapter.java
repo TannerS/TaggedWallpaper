@@ -129,12 +129,6 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
         {
             // get current list item
             PhotoResult mItem = mItems.get(position);
-
-            Log.i("DEBUG", mItem.getWebformatURL());
-            Log.i("DEBUG", holder.image == null ? "null" : "not null");
-
-
-
             // set up image
             setUpImage(mItem.getWebformatURL(), holder.image);
             // set author/uploader name
@@ -153,19 +147,16 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     public ImagesAdapter.ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(viewType == LOGOTYPE)
         {
-            Log.i("DEBUG", "TEST 1");
             View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
             return new ImageViewHolderLogo(mContext, view);
         }
         else if (viewType == NORMAL)
         {
-            Log.i("DEBUG", "TEST 2");
 
             View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
             return new ImageViewHolder(mContext, view);
         }
         else {
-            Log.i("DEBUG", "TEST 3");
 
             return null;
         }
@@ -183,7 +174,16 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+
+
                     PhotoResult result = mItems.get(getAdapterPosition());
+
+
+
+                    Log.i("IDDDDDD", (new Gson()).toJson(result));
+                    Log.i("IDDDDDD", String.valueOf(result.getId()));
+
                     Intent intent = new Intent(mContext, DisplayActivity.class);
                     intent.putExtra(DisplayActivity.RESULT, ((new Gson()).toJson(result)));
                     mContext.startActivity(intent);

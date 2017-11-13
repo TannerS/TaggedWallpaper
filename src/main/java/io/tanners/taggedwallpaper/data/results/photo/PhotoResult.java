@@ -63,15 +63,6 @@ public class PhotoResult
         this.user_id = user_id;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-
 
 
     public String getUserImageURL() {
@@ -89,8 +80,20 @@ public class PhotoResult
     private String user;
     private int user_id;
     private int id;
+
     private String tags;
     private String userImageURL;
+
+    public String getId_hash() {
+        return id_hash;
+    }
+
+    public void setId_hash(String id_hash) {
+        this.id_hash = id_hash;
+    }
+
+    private String id_hash;
+
 
     public String getLargeImageURL() {
         return largeImageURL;
@@ -109,12 +112,11 @@ public class PhotoResult
     }
 
 
-//                       "likes": 10,
-//                       "favorites": 7,
-//                       "views": 546,
-//                       "comments": 3,
-//                       "downloads": 265,
-//                   ,
-//
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 }

@@ -26,6 +26,8 @@ public class LatestImagesFragment extends ImageFragment implements ErrorCallBack
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mBuilder = new ApiBuilder(this.tag, mPerPage, mPage, ApiBuilder.OrderBy.LATEST);
+        Log.i("CATEGORY", mBuilder.buildImageUrl());
+
     }
 
     /**

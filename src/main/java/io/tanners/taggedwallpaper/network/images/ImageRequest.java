@@ -50,12 +50,19 @@ public class ImageRequest extends Request<PhotoResult>
         mConnectionRequest.connect();
         // get response
         if(mConnectionRequest.getConnection() != null) {
-            String response = IOUtils.toString(mConnectionRequest.getConnection().getInputStream());
-            ObjectMapper objectMapper = new ObjectMapper();
-            // map objects from json
-            photos = (objectMapper.readValue(response, PhotosResultsWrapper.class)).getHits();
-            // close connection
-            mConnectionRequest.closeConnection();
+            try
+            {
+                String response = IOUtils.toString(mConnectionRequest.getConnection().getInputStream());
+                ObjectMapper objectMapper = new ObjectMapper();
+                // map objects from json
+                photos = (objectMapper.readValue(response, PhotosResultsWrapper.class)).getHits();
+                // close connection
+                mConnectionRequest.closeConnection();
+            }
+            catch(java.net.UnknownHostException ex)
+            {
+                return null;
+            }
         }
         // return new photos
         return photos;

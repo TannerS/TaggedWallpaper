@@ -1,6 +1,5 @@
 package io.tanners.taggedwallpaper.fragments;
 
-import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -150,7 +149,10 @@ public class ImageFragment extends Fragment {
 
             try {
                 // builder api url and request images
-                photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildUrl(), null);
+//                photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buidImageUrl(), null);
+                photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildHighResImageUrl(), null);
+                Log.i("IDDDDDD2", mBuilder.buildHighResImageUrl());
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
