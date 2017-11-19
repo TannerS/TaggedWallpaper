@@ -8,6 +8,8 @@
 <searchable
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:label="@string/search_label"
-    android:hint="@string/search_hint">
+    android:hint="@string/search_hint"
+    android:searchSuggestAuthority="io.tanners.ImageSearchProvider"
+    android:searchSuggestSelection=" ?" >
 </searchable>
 

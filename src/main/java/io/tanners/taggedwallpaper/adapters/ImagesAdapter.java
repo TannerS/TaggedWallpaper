@@ -174,15 +174,9 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-
-
                     PhotoResult result = mItems.get(getAdapterPosition());
 
-
-
-                    Log.i("IDDDDDD", (new Gson()).toJson(result));
-                    Log.i("IDDDDDD", String.valueOf(result.getId()));
+                    Log.i("ON CLICK", (new Gson()).toJson(result));
 
                     Intent intent = new Intent(mContext, DisplayActivity.class);
                     intent.putExtra(DisplayActivity.RESULT, ((new Gson()).toJson(result)));

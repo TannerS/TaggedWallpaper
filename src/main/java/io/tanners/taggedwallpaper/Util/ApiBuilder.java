@@ -62,11 +62,6 @@ public class ApiBuilder {
             return mBase + "?key=" + new KeyNDK().getApiKey() + "&q=" + mTag + "&per_page=" + mPerPage + "&page=" + mPage +  "&order=" + mOrder + mEXTRAS + mHighRes;
     }
 
-    public String buildImageUrlById(String id)
-    {
-            return mBase + "?key=" + new KeyNDK().getApiKey() + "&id=" + id + mHighRes;
-    }
-
     public ApiBuilder()
     {
         //

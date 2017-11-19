@@ -104,6 +104,10 @@ public class ImageFragment extends Fragment {
         {
             mRecyclerView.setOnScrollListener(getListener());
         }
+    }
+
+    protected void loadImageData()
+    {
         // request image
         new ImageRequester().execute();
     }
@@ -149,9 +153,10 @@ public class ImageFragment extends Fragment {
 
             try {
                 // builder api url and request images
-//                photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buidImageUrl(), null);
+//                photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildImageUrl(), null);
                 photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildHighResImageUrl(), null);
-                Log.i("IDDDDDD2", mBuilder.buildHighResImageUrl());
+//                photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildHighResImageUrl(), null);
+                Log.i("FIRST CALL", mBuilder.buildHighResImageUrl());
 
             } catch (IOException e) {
                 e.printStackTrace();

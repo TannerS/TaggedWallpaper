@@ -1,4 +1,4 @@
-package io.tanners.taggedwallpaper;
+package io.tanners.taggedwallpaper.Util;
 
         import android.annotation.TargetApi;
         import android.content.Context;

@@ -18,6 +18,11 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <provider android:name=".ImageSearchProvider"
+            android:authorities="io.tanners.ImageSearchProvider" />
+
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="io.tanners.taggedwallpaper.fileprovider"
@@ -70,7 +75,7 @@
         <activity
             android:name=".SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_splash"
+            android:label="@string/app_name"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

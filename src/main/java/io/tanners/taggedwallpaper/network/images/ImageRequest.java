@@ -61,6 +61,7 @@ public class ImageRequest extends Request<PhotoResult>
             }
             catch(java.net.UnknownHostException ex)
             {
+                // TODO .
                 return null;
             }
         }

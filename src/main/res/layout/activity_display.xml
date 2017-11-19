@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:alpha=".5"
+        android:alpha=".8"
         android:fitsSystemWindows="false"
         android:background="@color/black"
        >

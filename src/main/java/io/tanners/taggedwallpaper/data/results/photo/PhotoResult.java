@@ -11,18 +11,6 @@ public class PhotoResult
     public PhotoResult() {
     }
 
-//    public PhotoResult(String largeImageURL, String webformatURL, String imageURL, String previewURL, String user, int user_id, int id, String[] tags, String userImageURL) {
-//        this.largeImageURL = largeImageURL;
-//        this.webformatURL = webformatURL;
-//        this.imageURL = imageURL;
-//        this.previewURL = previewURL;
-//        this.user = user;
-//        this.user_id = user_id;
-//        this.id = id;
-//        this.tags = tags;
-//        this.userImageURL = userImageURL;
-//    }
-
     public String getWebformatURL() {
         return webformatURL;
     }

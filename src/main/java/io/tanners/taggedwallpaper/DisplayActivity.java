@@ -1,9 +1,7 @@
 package io.tanners.taggedwallpaper;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.WallpaperManager;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,7 +14,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -26,8 +23,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -50,17 +45,14 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 
-import io.tanners.taggedwallpaper.Util.ApiBuilder;
 import io.tanners.taggedwallpaper.Util.ExternalFileStorageUtil;
+import io.tanners.taggedwallpaper.Util.FitSystemWindowsLayout;
 import io.tanners.taggedwallpaper.Util.PermissionRequester;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
 import io.tanners.taggedwallpaper.network.images.ImageDownloader;
-import io.tanners.taggedwallpaper.network.images.ImageRequest;
 import io.tanners.taggedwallpaper.network.images.ImageSharer;
-import io.tanners.taggedwallpaper.network.images.Request;
 
 // https://developer.android.com/reference/android/support/v4/app/ActivityCompat.OnRequestPermissionsResultCallback.html
 public class DisplayActivity extends AppCompatActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback {
@@ -134,6 +126,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
         loadResources();
 
+        //        new ImageRequesterById().execute();
+//        loadImageResources(mPhotoInfo.getLargeImageURL());
+        loadImageResources();
+
         setUpUiInteraction();
     }
 
@@ -190,12 +186,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
         mMainImageView = (ImageView) findViewById(R.id.main_image_id);
         mProgressBar = (ProgressBar) findViewById(R.id.display_progress_bar);
-
-        new ImageRequesterById().execute(mPhotoInfo.getId_hash());
     }
 
-    private void loadImageResources(PhotoResult mPhotoInfo)
-    {
+//    private void loadImageResources(String mUrl)
+    private void loadImageResources() {
         // set image into imageview
         loadImageWithGlide(mMainImageView, mPhotoInfo.getLargeImageURL(), new RequestListener<Drawable>() {
             @Override
@@ -203,10 +197,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 Log.i("IMAGE", "ERROR");
 
                 // on image load error
-                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
-                    loadImageWithGlide(mMainImageView,  ContextCompat.getDrawable(DisplayActivity.this, R.drawable.ic_error_black_48dp), null);
-                else
-                    loadImageWithGlide(mMainImageView, getResources().getDrawable(R.drawable.ic_error_black_48dp), null);
+//                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
+//                    loadImageWithGlide(mMainImageView, ContextCompat.getDrawable(DisplayActivity.this, R.drawable.ic_error_black_48dp), null);
+//                else
+//                    loadImageWithGlide(mMainImageView, getResources().getDrawable(R.drawable.ic_error_black_48dp), null);
                 // hide progress bar
                 mProgressBar.setVisibility(View.GONE);
 
@@ -216,22 +210,40 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             @Override
             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                 mProgressBar.setVisibility(View.GONE);
-                Log.i("IMAGE", "DEBUg1");
+                Log.i("IMAGE", "DEBUg1 : " + mPhotoInfo.getLargeImageURL());
 
                 return true;
             }
         });
 
-//        loadImageWithGlide(((ImageView) findViewById(R.id.user_profile_image)), mPhotoInfo.getLargeImageURL(), null);
-        loadImageWithGlide(((ImageView) findViewById(R.id.user_profile_image)), mPhotoInfo.getUserImageURL(), null);
-        loadImageWithGlide(((ImageView) findViewById(R.id.main_image_id)), mPhotoInfo.getLargeImageURL(), null);
+//
+//        if (mPhotoInfo.getUserImageURL() == null || mPhotoInfo.getUserImageURL().length() <= 0)
+//        {
+//            ((ImageView) findViewById(R.id.user_profile_image)).setImageResource(R.drawable.ic_face_white_48dp);
+////
+//        } else {
+//            loadImageWithGlide(((ImageView) findViewById(R.id.user_profile_image)), mPhotoInfo.getUserImageURL(), new RequestListener<Drawable>() {
+//                @Override
+//                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                    // on image load error
+//                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
+//                        loadImageWithGlide(((ImageView) findViewById(R.id.user_profile_image)), ContextCompat.getDrawable(DisplayActivity.this, R.drawable.ic_error_black_48dp), null);
+//                    else
+//                        loadImageWithGlide(((ImageView) findViewById(R.id.user_profile_image)), getResources().getDrawable(R.drawable.ic_error_black_48dp), null);
+//
+//                    return false;
+//                }
+//
+//                @Override
+//                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                    return true;
+//                }
+//            });
+//        }
+
 
         ((TextView)findViewById(R.id.user_name)).setText(mPhotoInfo.getUser());
-        ((TextView)findViewById(R.id.image_tags)).setText(mPhotoInfo.getTags());
 
-        Log.i("IMAGE", "DEBUg2: "+ mPhotoInfo.getUser());
-        Log.i("IMAGE", "DEBUg3: "+ mPhotoInfo.getTags());
-        Log.i("IMAGE", "DEBUg4: "+ mPhotoInfo.getLargeImageURL());
         mProgressBar.setVisibility(View.GONE);
 
     }
@@ -337,6 +349,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
     private void loadImageWithGlide(ImageView view, String mImageUrl, RequestListener<Drawable> listener)
     {
+        Log.i("DEBUg2)", mImageUrl);
         // set up image
         loadImageWithGlide(view, Glide.with(this)
             .load(mImageUrl), listener);
@@ -770,56 +783,58 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         }
     }
 
-    public class ImageRequesterById extends AsyncTask<String, Void, List<PhotoResult>> {
-        private Request<PhotoResult > mRequest;
-        private ApiBuilder mBuilder;
-        private View view;
-
-        public ImageRequesterById()
-        {
-            this.view = findViewById(android.R.id.content);
-            this.mRequest = new ImageRequest();
-            this.mBuilder = new ApiBuilder();
-        }
-
-        @Override
-        protected List<PhotoResult> doInBackground(String... params)
-        {
-            List<PhotoResult> photos = null;
-
-            try {
-                photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildImageUrlById(params[0]), null);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return photos;
-        }
-
-        @Override
-        protected void onPostExecute(List<PhotoResult> photoDetails) {
-            if(photoDetails != null)
-            {
-                PhotoResult currentPhotoResult = photoDetails.get(0);
-                // combine api calls results into one
-                mPhotoInfo.setTags(currentPhotoResult.getTags());
-                mPhotoInfo.setUser_id(currentPhotoResult.getUser_id());
-                mPhotoInfo.setUser(currentPhotoResult.getUser());
-                mPhotoInfo.setImageURL(currentPhotoResult.getImageURL());
-                currentPhotoResult = null;
-                    // should only be one result
-                loadImageResources(mPhotoInfo);
-            }
-            else
-            {
-                // display error snackbar
-//                SimpleSnackBarBuilder.createAndDisplaySnackBar(view.findViewById(R.id.fragment_images_container_id),
-//                        "Error loading image details",
-//                        Snackbar.LENGTH_INDEFINITE,
-//                        "Close");
-            }
-        }
-    }
+//    public class ImageRequesterById extends AsyncTask<String, Void, List<PhotoResult>> {
+//        private Request<PhotoResult > mRequest;
+//        private ApiBuilder mBuilder;
+//        private View view;
+//
+//        public ImageRequesterById()
+//        {
+//            this.view = findViewById(android.R.id.content);
+//            this.mRequest = new ImageRequest();
+//            this.mBuilder = new ApiBuilder();
+//        }
+//
+//        @Override
+//        protected List<PhotoResult> doInBackground(String... params)
+//        {
+//            List<PhotoResult> photos = null;
+//
+//            try {
+//                photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildImageUrl(), null);
+////                photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildImageUrlById(params[0]), null);
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            return photos;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(List<PhotoResult> photoDetails) {
+//            if(photoDetails != null)
+//            {
+//                PhotoResult currentPhotoResult = photoDetails.get(0);
+//                // combine api calls results into one
+//                mPhotoInfo.setTags(currentPhotoResult.getTags());
+//                mPhotoInfo.setUser_id(currentPhotoResult.getUser_id());
+//                mPhotoInfo.setUser(currentPhotoResult.getUser());
+//                mPhotoInfo.setImageURL(currentPhotoResult.getImageURL());
+//                currentPhotoResult = null;
+//                    // should only be one result
+//                loadImageResources(mPhotoInfo.getImageURL());
+//                loadImageResources();
+//            }
+//            else
+//            {
+//                // display error snackbar
+////                SimpleSnackBarBuilder.createAndDisplaySnackBar(view.findViewById(R.id.fragment_images_container_id),
+////                        "Error loading image details",
+////                        Snackbar.LENGTH_INDEFINITE,
+////                        "Close");
+//            }
+//        }
+//    }
 
 }
