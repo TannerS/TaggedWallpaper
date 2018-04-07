@@ -1,8 +1,8 @@
 package io.tanners.taggedwallpaper.interfaces;
 
-/**
- * Created by tanners on 4/7/18.
- */
+public interface IImageLoadOptions
+{
+    public void loadingImage();
+    public void errorLoadingImage();
 
-public class IImageLoadOptions {
 }

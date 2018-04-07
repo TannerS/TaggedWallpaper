@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -53,6 +54,7 @@ import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
 import io.tanners.taggedwallpaper.network.images.ImageDownloader;
 import io.tanners.taggedwallpaper.network.images.ImageSharer;
+import io.tanners.taggedwallpaper.interfaces.IImageLoadOptions;
 
 // https://developer.android.com/reference/android/support/v4/app/ActivityCompat.OnRequestPermissionsResultCallback.html
 public class DisplayActivity extends AppCompatActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback {
@@ -121,15 +123,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
-
         loadToolBar();
-
         loadResources();
-
-        //        new ImageRequesterById().execute();
-//        loadImageResources(mPhotoInfo.getLargeImageURL());
-        loadImageResources();
-
+        loadSelectedPhoto();
+        loadUserProfilePhoto();
         setUpUiInteraction();
     }
 
@@ -181,72 +178,87 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      */
     private void loadResources() {
         mPhotoInfo = (new Gson()).fromJson(getIntent().getStringExtra(RESULT), PhotoResult.class);
-
-        Log.i("ID", getIntent().getStringExtra(RESULT));
-
         mMainImageView = (ImageView) findViewById(R.id.main_image_id);
         mProgressBar = (ProgressBar) findViewById(R.id.display_progress_bar);
+        ((TextView)findViewById(R.id.user_name)).setText(mPhotoInfo.getUser());
     }
 
-//    private void loadImageResources(String mUrl)
-    private void loadImageResources() {
-        // set image into imageview
-        loadImageWithGlide(mMainImageView, mPhotoInfo.getLargeImageURL(), new RequestListener<Drawable>() {
+    private void loadSelectedPhoto()
+    {
+        loadImage(mPhotoInfo.getLargeImageURL(), mMainImageView, new IImageLoadOptions() {
             @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                Log.i("IMAGE", "ERROR");
-
-                // on image load error
-//                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
-//                    loadImageWithGlide(mMainImageView, ContextCompat.getDrawable(DisplayActivity.this, R.drawable.ic_error_black_48dp), null);
-//                else
-//                    loadImageWithGlide(mMainImageView, getResources().getDrawable(R.drawable.ic_error_black_48dp), null);
-                // hide progress bar
+            public void loadingImage() {
                 mProgressBar.setVisibility(View.GONE);
-
-                return false;
+                mMainImageView.setVisibility(View.VISIBLE);
             }
 
             @Override
-            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+            public void errorLoadingImage() {
                 mProgressBar.setVisibility(View.GONE);
-                Log.i("IMAGE", "DEBUg1 : " + mPhotoInfo.getLargeImageURL());
-
-                return true;
+                mMainImageView.setVisibility(View.VISIBLE);
             }
         });
-
-//
-//        if (mPhotoInfo.getUserImageURL() == null || mPhotoInfo.getUserImageURL().length() <= 0)
-//        {
-//            ((ImageView) findViewById(R.id.user_profile_image)).setImageResource(R.drawable.ic_face_white_48dp);
-////
-//        } else {
-//            loadImageWithGlide(((ImageView) findViewById(R.id.user_profile_image)), mPhotoInfo.getUserImageURL(), new RequestListener<Drawable>() {
-//                @Override
-//                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                    // on image load error
-//                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
-//                        loadImageWithGlide(((ImageView) findViewById(R.id.user_profile_image)), ContextCompat.getDrawable(DisplayActivity.this, R.drawable.ic_error_black_48dp), null);
-//                    else
-//                        loadImageWithGlide(((ImageView) findViewById(R.id.user_profile_image)), getResources().getDrawable(R.drawable.ic_error_black_48dp), null);
-//
-//                    return false;
-//                }
-//
-//                @Override
-//                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                    return true;
-//                }
-//            });
-//        }
-
-
-        ((TextView)findViewById(R.id.user_name)).setText(mPhotoInfo.getUser());
-
-        mProgressBar.setVisibility(View.GONE);
-
     }
+
+    private void loadUserProfilePhoto() {
+        if (mPhotoInfo.getUserImageURL() == null || mPhotoInfo.getUserImageURL().length() <= 0) {
+            ((ImageView) findViewById(R.id.user_profile_image)).setImageResource(R.drawable.ic_face_white_48dp);
+        } else {
+            loadImage(mPhotoInfo.getUserImageURL(), ((ImageView) findViewById(R.id.user_profile_image)), null);
+        }
+    }
+
+
+    private void loadImage(String mUrl, final ImageView mView, final IImageLoadOptions mCallback) {
+        Glide.with(DisplayActivity.this)
+                .load(mUrl)
+                .apply(loadGlideRequestOptions())
+                .transition(loadGlideTransitions())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        // on image load error
+                        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                            Glide.with(DisplayActivity.this).load(ContextCompat.getDrawable(DisplayActivity.this, R.drawable.ic_error_black_48dp))
+                                    .apply(loadGlideRequestOptions())
+                                    .transition(loadGlideTransitions())
+                                    .into(mView);
+                        }
+                        else {
+                            Glide.with(DisplayActivity.this).load(getResources().getDrawable(R.drawable.ic_error_black_48dp))
+                                    .apply(loadGlideRequestOptions())
+                                    .transition(loadGlideTransitions())
+                                    .into(mView);
+                        }
+                        // hide progress bar
+                        if(mCallback != null)
+                            mCallback.errorLoadingImage();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        if(mCallback != null)
+                            mCallback.loadingImage();
+                        // https://stackoverflow.com/questions/32503327/glide-listener-doesnt-work
+                        return false;
+                    }
+                })
+                .into(mView);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * set up fullscreen user interaction
@@ -302,8 +314,8 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         mHideHandler.removeCallbacks(mShowPart2Runnable);
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
 
-
         FitSystemWindowsLayout mainLayout = (FitSystemWindowsLayout) findViewById(R.id.display_activity_main_id);
+
         mainLayout.setFit(false);
 
     }
@@ -341,29 +353,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).fitCenter();
     }
 
-    private void loadImageWithGlide(ImageView view, Drawable mImageDrawable, RequestListener<Drawable> listener)
-    {
-        loadImageWithGlide(view, Glide.with(this)
-                .load(mImageDrawable), listener);
-    }
 
-    private void loadImageWithGlide(ImageView view, String mImageUrl, RequestListener<Drawable> listener)
-    {
-        Log.i("DEBUg2)", mImageUrl);
-        // set up image
-        loadImageWithGlide(view, Glide.with(this)
-            .load(mImageUrl), listener);
-    }
-
-    private void loadImageWithGlide(ImageView view, RequestBuilder<Drawable> request, RequestListener<Drawable> listener)
-    {
-        if(listener != null)
-            request = request.listener(listener);
-
-        request.apply(loadGlideRequestOptions())
-                .transition(loadGlideTransitions())
-                .into(view);
-    }
 
     /**
      * Load Actionbar

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<io.tanners.taggedwallpaper.FitSystemWindowsLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<io.tanners.taggedwallpaper.Util.FitSystemWindowsLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -31,7 +31,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_display"
-        />
+    <include layout="@layout/content_display" />
 
-</io.tanners.taggedwallpaper.FitSystemWindowsLayout>
+</io.tanners.taggedwallpaper.Util.FitSystemWindowsLayout>
