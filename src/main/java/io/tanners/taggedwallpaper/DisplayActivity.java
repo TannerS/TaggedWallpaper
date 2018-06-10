@@ -2,19 +2,22 @@ package io.tanners.taggedwallpaper;
 
 import android.annotation.SuppressLint;
 import android.app.WallpaperManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -33,13 +36,14 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.google.gson.Gson;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import io.tanners.taggedwallpaper.Util.ExternalFileStorageUtil;
 import io.tanners.taggedwallpaper.Util.FitSystemWindowsLayout;
 import io.tanners.taggedwallpaper.Util.PermissionRequester;
@@ -50,15 +54,27 @@ import io.tanners.taggedwallpaper.network.image.download.ImageDownloader;
 import io.tanners.taggedwallpaper.interfaces.IImageLoadOptions;
 
 // https://developer.android.com/reference/android/support/v4/app/ActivityCompat.OnRequestPermissionsResultCallback.html
-public class DisplayActivity extends AppCompatActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback {
+public class DisplayActivity extends AppCompatActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback, LoaderManager.LoaderCallbacks<Boolean> {
     public final static String RESULT = "RESULT";
     private ImageView mMainImageView;
     private final int IMAGE_DOWNLOAD = 256;
-    private final int IMAGE_SHARE = 512;
     private final String MALBUMNAME = "Wallpaper";
     private ProgressBar mProgressBar;
     private Toolbar mToolbar;
     private PhotoResult mPhotoInfo;
+    private boolean mVisible;
+    /**
+     * the number of milliseconds to wait after
+     * user interaction before hiding the system UI.
+     */
+    private static final int UI_ANIMATION_DELAY = 50;
+    private final Handler mHideHandler = new Handler();
+    private View mControlsView;
+    /*
+     * This number will uniquely identify our Loader and is chosen arbitrarily. You can change this
+     * to any number you like, as long as you use the same variable name.
+     */
+    private final int WALLPAPER_SEARCH_LOADER = 2;
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -79,7 +95,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-    private View mControlsView;
 
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
@@ -93,30 +108,34 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             mControlsView.setVisibility(View.VISIBLE);
         }
     };
-    private boolean mVisible;
-
-    /**
-     * the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int UI_ANIMATION_DELAY = 50;
-    private final Handler mHideHandler = new Handler();
-
 
     /**
      * When activity is created
+     *
      * @param savedInstanceState
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
+
         loadToolBar();
         loadResources();
         loadSelectedPhoto();
         loadUserProfilePhoto();
         setUpUiInteraction();
+    }
+
+    private void loadBundle(Bundle savedInstanceState) {
+//        Bundle queryBundle = new Bundle();
+//        -        // TODO (20) Use putString with SEARCH_QUERY_URL_EXTRA as the key and the String value of the URL as the value
+//                +        // COMPLETED (20) Use putString with SEARCH_QUERY_URL_EXTRA as the key and the String value of the URL as the value
+//                        -
+//                                +        queryBundle.putString(SEARCH_QUERY_URL_EXTRA, githubSearchUrl.toString())
+        if (savedInstanceState != null) {
+//            String queryUrl = savedInstanceState.get(String.valueOf(WALLPAPER_SEARCH_LOADER));
+//            mUrlDisplayTextView.setText(queryUrl);
+        }
     }
 
     @Override
@@ -131,10 +150,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.homescreen_menu_item:
-                setImage(WallpaperSetter.WALLPAPER);
+                setImageWithLoader(WallpaperSetter.WALLPAPER);
                 return true;
             case R.id.lockscreen_menu_item:
-                setImage(WallpaperSetter.LOCK_SCREEN);
+                setImageWithLoader(WallpaperSetter.LOCK_SCREEN);
                 return true;
             case R.id.download_menu_item:
                 downloadImage(IMAGE_DOWNLOAD);
@@ -151,15 +170,13 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      * Load resources for activity
      */
     private void loadResources() {
-//        mPhotoInfo = (new Gson()).fromJson(getIntent().getStringExtra(RESULT), PhotoResult.class);
         mPhotoInfo = getIntent().getParcelableExtra(RESULT);
         mMainImageView = (ImageView) findViewById(R.id.main_image_id);
         mProgressBar = (ProgressBar) findViewById(R.id.display_progress_bar);
-        ((TextView)findViewById(R.id.user_name)).setText(mPhotoInfo.getUser());
+        ((TextView) findViewById(R.id.user_name)).setText(mPhotoInfo.getUser());
     }
 
-    private void loadSelectedPhoto()
-    {
+    private void loadSelectedPhoto() {
         loadImage(mPhotoInfo.getLargeImageURL(), mMainImageView, new IImageLoadOptions() {
             @Override
             public void loadingImage() {
@@ -197,22 +214,21 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                                     .apply(loadGlideRequestOptions())
                                     .transition(loadGlideTransitions())
                                     .into(mView);
-                        }
-                        else {
+                        } else {
                             Glide.with(DisplayActivity.this).load(getResources().getDrawable(R.drawable.ic_error_black_48dp))
                                     .apply(loadGlideRequestOptions())
                                     .transition(loadGlideTransitions())
                                     .into(mView);
                         }
                         // hide progress bar
-                        if(mCallback != null)
+                        if (mCallback != null)
                             mCallback.errorLoadingImage();
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        if(mCallback != null)
+                        if (mCallback != null)
                             mCallback.loadingImage();
                         // https://stackoverflow.com/questions/32503327/glide-listener-doesnt-work
                         return false;
@@ -224,8 +240,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     /**
      * set up fullscreen user interaction
      */
-    private void setUpUiInteraction()
-    {
+    private void setUpUiInteraction() {
         mVisible = true;
         mControlsView = findViewById(R.id.wallpaper_options_layout);
         // Set up the user interaction to manually show or hide the system UI.
@@ -249,7 +264,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     private void toggle() {
         if (mVisible) {
             hide();
-        // else show
+            // else show
         } else {
             show();
         }
@@ -301,13 +316,11 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
     }
 
-    private DrawableTransitionOptions loadGlideTransitions()
-    {
-        return  new DrawableTransitionOptions().crossFade();
+    private DrawableTransitionOptions loadGlideTransitions() {
+        return new DrawableTransitionOptions().crossFade();
     }
 
-    private RequestOptions loadGlideRequestOptions()
-    {
+    private RequestOptions loadGlideRequestOptions() {
         return new RequestOptions()
                 .error(R.drawable.ic_error_black_48dp)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).fitCenter();
@@ -316,12 +329,11 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     /**
      * Load Actionbar
      */
-    private void loadToolBar()
-    {
+    private void loadToolBar() {
         mToolbar = (Toolbar) findViewById(R.id.display_toolbar);
         setSupportActionBar(mToolbar);
         //setTranslucentStatusBar(getWindow());
-       // mToolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+        // mToolbar.setPadding(0, getStatusBarHeight(), 0, 0);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // change icon to be a x not arrow
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_navigation_close);
@@ -374,11 +386,11 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     /**
      * Check permission for given permission code.
      * The code lets the object know which set of permissions to load.
+     *
      * @param permissionCode
      * @return
      */
-    private boolean checkPermissions(int permissionCode)
-    {
+    private boolean checkPermissions(int permissionCode) {
         // request image downloading permissions
         // result will be in onRequestPermissionsResult
         return PermissionRequester.newInstance(this).requestNeededPermissions(new String[]{
@@ -389,35 +401,49 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
     /**
      * Set wallpaper based on kind
+     *
      * @param which
      */
-    private void setImage(int which)
-    {
-        switch(which)
-        {
+    private void setImageWithLoader(int which) {
+        // bundle for loader
+        Bundle mBundle = new Bundle();
+        mBundle.putString(WallpaperSetter.IMAGES_QUERY_URL, mPhotoInfo.getImageURL());
+
+        switch (which) {
             case WallpaperSetter.LOCK_SCREEN:
-                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which).execute(mPhotoInfo.getImageURL());
-            case WallpaperSetter.WALLPAPER:
-                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which).execute(mPhotoInfo.getImageURL());
+                mBundle.putInt(WallpaperSetter.WHICH, which);
                 break;
+            case WallpaperSetter.WALLPAPER:
+                mBundle.putInt(WallpaperSetter.WHICH, which);
+                break;
+        }
+
+        LoaderManager mLoaderManager = getSupportLoaderManager();
+        Loader<Boolean> mWallPaperLoader = mLoaderManager.getLoader(WALLPAPER_SEARCH_LOADER);
+
+        if(mWallPaperLoader != null)
+        {
+            mLoaderManager.initLoader(WALLPAPER_SEARCH_LOADER, mBundle, this).forceLoad();
+        }
+        else
+        {
+            mLoaderManager.restartLoader(WALLPAPER_SEARCH_LOADER, mBundle, this).forceLoad();
         }
     }
 
     /**
      * Recycle same code permissions for download and sharing image
+     *
      * @param requestCode
      */
-    private void downloadImage(int requestCode)
-    {
+    private void downloadImage(int requestCode) {
         // check if permissions are granted
-        if(checkPermissions(requestCode))
-        {
+        if (checkPermissions(requestCode)) {
             // no permissions needed, call code
             downloadImage();
         }
         // permissions denied for some reason
-        else
-        {
+        else {
             // runtime permissions came in at sdk 23
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 // set wallpaper based on image stream
@@ -429,14 +455,12 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
     // this is called after ActivityCompat.requestPermissions located inside PermissionRequester
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
-    {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         // check if ALL permissions were granted
-        if(permissionGrantChecker(permissions, grantResults)) {
+        if (permissionGrantChecker(permissions, grantResults)) {
 
             // do task based on which granted permissions
-            switch(requestCode)
-            {
+            switch (requestCode) {
                 case IMAGE_DOWNLOAD:
                     downloadImage();
                     break;
@@ -446,16 +470,15 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
     /**
      * Check permissions if they are granted or not
+     *
      * @param permissions
      * @param grantResults
      * @return
      */
-    private boolean permissionGrantChecker(String permissions[], int[] grantResults)
-    {
+    private boolean permissionGrantChecker(String permissions[], int[] grantResults) {
         // check if all permissions were granted
-        for(int i = 0; i < permissions.length; i++)
-        {
-            if(grantResults[i] != PackageManager.PERMISSION_GRANTED)
+        for (int i = 0; i < permissions.length; i++) {
+            if (grantResults[i] != PackageManager.PERMISSION_GRANTED)
                 // found a non granted permissions
                 return false;
         }
@@ -466,7 +489,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     /**
      * Do something with image
      */
-    private void downloadImage(){
+    private void downloadImage() {
         ExternalFileStorageUtil mStorageUtil = new ExternalFileStorageUtil();
         // check if external storage is writable
         if (mStorageUtil.isExternalStorageWritable()) {
@@ -510,15 +533,13 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             ).execute(mPhotoInfo.getImageURL());
         }
         // cant read, connected to pc, ejected, etc
-        else
-        {
+        else {
             // display error as snackbar
             displayStorageErrorSnackBar();
         }
     }
 
-    private void shareImage()
-    {
+    private void shareImage() {
         // create new intent
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
@@ -529,31 +550,15 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         startActivity(Intent.createChooser(shareIntent, "Share too..."));
     }
 
-
-//
-//    private File getNewFile(int code, ExternalFileStorageUtil mStorageUtil) {
     private File getNewFile(ExternalFileStorageUtil mStorageUtil) {
         // get filename
         String[] mImageUrlSplit = mPhotoInfo.getImageURL().split("/");
-        String mImageUrlFileName = mImageUrlSplit[mImageUrlSplit.length-1];
+        String mImageUrlFileName = mImageUrlSplit[mImageUrlSplit.length - 1];
         File mImageFile = null;
-
-//        switch (code) {
-//            case IMAGE_DOWNLOAD|STORAGE_PERMISSIONS:
-                // create album
-                File mImageDir = mStorageUtil.getAlbumStorageDir(MALBUMNAME);
-                // create file based on name and album
-                mImageFile = new File(mImageDir, mImageUrlFileName);
-//            case IMAGE_SHARE|STORAGE_PERMISSIONS:
-//                // create temp cache file
-//                try {
-//                    // mImageFile = new File(getFilesDir(), mImageUrlFileName);
-//                    mImageFile = File.createTempFile(mImageUrlFileName, null, getCacheDir());
-//                } catch (IOException e) {
-//                    // Error while creating file
-//                    Log.e("FILE_SHARE", "Error sharing image");
-//                }
-//        }
+        // create album
+        File mImageDir = mStorageUtil.getAlbumStorageDir(MALBUMNAME);
+        // create file based on name and album
+        mImageFile = new File(mImageDir, mImageUrlFileName);
         // return image file reference
         return mImageFile;
     }
@@ -565,46 +570,114 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 "Close");
     }
 
-    // TODO loader in future implmentation
-    private class WallpaperSetter extends AsyncTask<String, Void, Boolean>
-    {
-        public final static int LOCK_SCREEN = 100;
-        public final static int WALLPAPER = 200;
-        private int which = -1;
-        private View mRootView;
+    @NonNull
+    @Override
+    public Loader<Boolean> onCreateLoader(int id, @Nullable final Bundle args) {
+        return new WallpaperSetter(this, args);
+    }
 
-        /**
-         * constructor
-         * @param view
-         * @param which
-         */
-        public WallpaperSetter(View view, int which)
+    @Override
+    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
+        // not needed
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
+        if(data)
         {
-            this.mRootView = view;
-            this.which = which;
+            final Snackbar mGoodSnackbar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
+                    "Image set.",
+                    Snackbar.LENGTH_INDEFINITE);
+
+            mGoodSnackbar.setAction("Close", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mGoodSnackbar.dismiss();
+                }
+            });
+            // show message
+            mGoodSnackbar.show();
+        }
+        else
+        {
+            final Snackbar mBadSnackbar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
+                    "Error has occurred, image not set.",
+                    Snackbar.LENGTH_INDEFINITE);
+
+            mBadSnackbar.setAction("Close", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mBadSnackbar.dismiss();
+                }
+            });
+            // show message
+            mBadSnackbar.show();
+        }
+    }
+
+    private class WallpaperSetter extends AsyncTaskLoader<Boolean> {
+        public static final int LOCK_SCREEN = 100;
+        public static final int WALLPAPER = 200;
+        public static final String WHICH = "WALLPAPER_TYPE";
+        public static final String IMAGES_QUERY_URL = "IMAGE_PATH";
+        private int mType;
+        private String mUrl;
+
+        public WallpaperSetter(@NonNull Context context, Bundle mBundle) {
+            super(context);
+            if (mBundle == null)
+                return;
+            this.mType = mBundle.getInt(WHICH);
+            this.mUrl = mBundle.getString(IMAGES_QUERY_URL);
         }
 
-        /**
-         *
-         */
         @Override
-        protected void onPreExecute()
-        {
+        protected void onStartLoading() {
+            super.onStartLoading();
             // choose which wallpaper to set
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                switch (this.which) {
+                switch (mType) {
                     case LOCK_SCREEN:
-                        this.which = WallpaperManager.FLAG_LOCK;
+                        mType = WallpaperManager.FLAG_LOCK;
                         break;
                     case WALLPAPER:
-                        this.which = WallpaperManager.FLAG_SYSTEM;
+                        mType = WallpaperManager.FLAG_SYSTEM;
                         break;
                 }
+            } else {
+                mType = WallpaperManager.FLAG_SYSTEM;
             }
-            else
-            {
-                this.which = WallpaperManager.FLAG_SYSTEM;
+        }
+
+        @Nullable
+        @Override
+        public Boolean loadInBackground() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                try {
+                    // set wallpaper based on image stream
+                    WallpaperManager.getInstance(DisplayActivity.this).setStream(
+                            getNetworkConnection(mUrl),
+                            null,
+                            true,
+                            mType
+                    );
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            } else {
+                // get bitmap from stream
+                Bitmap bitmap = BitmapFactory.decodeStream(getNetworkConnection(mUrl));
+                try {
+                    // set wallpaper
+                    WallpaperManager.getInstance(DisplayActivity.this).setBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
             }
+
+            return true;
         }
 
         /**
@@ -633,116 +706,5 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 return null;
             }
         }
-
-        /**
-         * @param strs
-         * @return
-         */
-        @Override
-        protected Boolean doInBackground(String... strs)
-        {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                try {
-                    // set wallpaper based on image stream
-                    WallpaperManager.getInstance(DisplayActivity.this).setStream(getNetworkConnection(strs[0]), null, true, which);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return false;
-                }
-            }
-            else
-            {
-                // get bitmap from stream
-                Bitmap bitmap = BitmapFactory.decodeStream(getNetworkConnection(strs[0]));
-                try {
-                    // set wallpaper
-                    WallpaperManager.getInstance(DisplayActivity.this).setBitmap(bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result)
-        {
-            super.onPostExecute(result);
-            // if success
-            if(result)
-            {
-                // display snackbar success message
-                final Snackbar mGoodSnackbar = displaySuccessDownloadSnackBar();
-
-                mGoodSnackbar.setAction("Close", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mGoodSnackbar.dismiss();
-                    }
-                });
-                // show message
-                mGoodSnackbar.show();
-            }
-
-            else
-            {
-                // display snackbar fail message
-                final Snackbar mFailSnackbar = displayFailedDownloadSnackBar();
-
-                mFailSnackbar.setAction("Close", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mFailSnackbar.dismiss();
-                    }
-                });
-                // show message
-                mFailSnackbar.show();
-            }
-        }
-
-        /**
-         * display success snackbar
-         * @return
-         */
-        private Snackbar displaySuccessDownloadSnackBar()
-        {
-            switch (this.which) {
-                case WallpaperManager.FLAG_LOCK:
-                    return SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
-                            "Lock screen set!",
-                            Snackbar.LENGTH_LONG);
-                case WallpaperManager.FLAG_SYSTEM:
-                    this.which = WallpaperManager.FLAG_SYSTEM;
-                    return SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
-                            "Wallpaper set!",
-                            Snackbar.LENGTH_LONG);
-            }
-
-            return null;
-        }
-
-        /**
-         * display error snackbar
-         * @return
-         */
-        private Snackbar displayFailedDownloadSnackBar()
-        {
-            switch (this.which) {
-                case WallpaperManager.FLAG_LOCK:
-                    return SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
-                            "ERROR: Lock screen cannot be set",
-                            Snackbar.LENGTH_INDEFINITE);
-                case WallpaperManager.FLAG_SYSTEM:
-                    return SimpleSnackBarBuilder.createSnackBar(mRootView.findViewById(R.id.display_activity_main_id),
-                            "ERROR: wallpaper cannot be set",
-                            Snackbar.LENGTH_INDEFINITE);
-            }
-
-            return null;
-        }
     }
-
 }

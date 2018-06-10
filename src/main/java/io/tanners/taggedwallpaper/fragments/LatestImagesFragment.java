@@ -38,7 +38,7 @@ public class LatestImagesFragment extends ImageFragment implements ErrorCallBack
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_images, container, false);
         loadRecyclerView(view);
-        loadImageData();
+        loadLoader();
         return view;
     }
 

@@ -1,41 +1,48 @@
 package io.tanners.taggedwallpaper.fragments;
 
-import android.os.AsyncTask;
+import android.content.Context;
+
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.tanners.taggedwallpaper.DisplayActivity;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.ApiBuilder;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
 import io.tanners.taggedwallpaper.model.results.photo.PhotoResult;
 import io.tanners.taggedwallpaper.interfaces.IGetTag;
+import io.tanners.taggedwallpaper.network.ConnectionRequest;
 import io.tanners.taggedwallpaper.network.image.ImageRequest;
-import io.tanners.taggedwallpaper.network.Request;
 
 // TODO live data for image adpaters
 
-public class ImageFragment extends Fragment {
+public class ImageFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<PhotoResult>> {
     protected View view;
     protected RecyclerView mRecyclerView;
     protected ProgressBar mProgressBar;
     protected ImagesAdapter mAdapter;
     protected String tag;
-    private boolean loading;
-    private LinearLayoutManager mRecyclerViewLayoutManager;
+    protected boolean loading;
+    protected LinearLayoutManager mRecyclerViewLayoutManager;
     protected ApiBuilder mBuilder;
     protected int mPerPage;
     protected int mPage;
+    protected final int IMAGE_SEARCH_LOADER = 4;
 
     /**
      * we shall get the tag passed into the activity here
@@ -49,7 +56,7 @@ public class ImageFragment extends Fragment {
         mPage = 1;
         // check if current activity loading has the igettag interface implemented
         // this is due in part that main activity can load the popular and latest fragments
-        // but do not need tags so no need ot implment it, but imageactivity needs it since
+        // but do not need tags so no need to implement it, but imageactivity needs it since
         // it does take in tags so it does implement it
         if (getActivity() instanceof IGetTag) {
             // get tag from activity
@@ -77,8 +84,8 @@ public class ImageFragment extends Fragment {
                 // and all those results are updated, update the list with next set of results
                 if ((mPastCount + mVisibleCount >= mTotalCount) && !loading) {
                     mBuilder.increasePage();
-                    new ImageRequester().execute();
                     mProgressBar.setVisibility(View.VISIBLE);
+                    loadLoader();
                 }
             }
         };
@@ -107,33 +114,81 @@ public class ImageFragment extends Fragment {
         }
     }
 
-    protected void loadImageData()
+    protected void loadLoader()
     {
-        // request image
-        new ImageRequester().execute();
+        // bundle for loader, but not needed for this but can't be null
+        Bundle mBundle = new Bundle();
+
+        LoaderManager mLoaderManager = getLoaderManager();
+        Loader<List<PhotoResult>> mImageLoader = mLoaderManager.getLoader(IMAGE_SEARCH_LOADER);
+
+        loading = true;
+
+        if(mImageLoader != null) {
+            mLoaderManager.initLoader(IMAGE_SEARCH_LOADER, mBundle, this).forceLoad();
+        }
+        else
+        {
+            mLoaderManager.restartLoader(IMAGE_SEARCH_LOADER, mBundle, this).forceLoad();
+        }
     }
 
-    private class ImageRequester extends AsyncTask<Void, Void, List<PhotoResult>> {
-        private Request<PhotoResult > mRequest;
+    @NonNull
+    @Override
+    public Loader<List<PhotoResult>> onCreateLoader(int id, @Nullable Bundle args) {
+        return new ImageRequester(getContext(), mBuilder);
+    }
 
-        public ImageRequester()
+    @Override
+    public void onLoadFinished(@NonNull Loader<List<PhotoResult>> loader, List<PhotoResult> data) {
+        if(data != null)
         {
+            // if adapter has no images
+            if(mAdapter == null || mRecyclerView.getAdapter() == null)
+            {
+                // create new object with photo data
+                mAdapter = new ImagesAdapter(getContext(), new ArrayList<PhotoResult>(data),  R.layout.grid_item, R.id.image_background, R.id.image_text);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+            else
+            {
+                // update adapter
+                mAdapter.updateAdapter((ArrayList<PhotoResult>) data);
+            }
+        }
+        else
+        {
+            // display error snackbar
+            SimpleSnackBarBuilder.createAndDisplaySnackBar(view.findViewById(R.id.fragment_images_container_id),
+                    "Error loading images",
+                    Snackbar.LENGTH_INDEFINITE,
+                    "Close");
+        }
+        // let system know images are no longer being loaded
+        loading = false;
+        // hide progressbar
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<List<PhotoResult>> loader) {
+        // not needed
+    }
+
+    private static class ImageRequester extends AsyncTaskLoader<List<PhotoResult> > {
+        private ImageRequest mRequest;
+        private ApiBuilder mBuilder;
+
+        public ImageRequester(Context mContext, ApiBuilder mBuilder)
+        {
+            super(mContext);
+            this.mBuilder = mBuilder;
             this.mRequest = new ImageRequest();
         }
 
+        @Nullable
         @Override
-        protected void onPreExecute() {
-            loading = true;
-        }
-
-        /**
-         * Parameter at index 0 is restful api url
-         * @param params
-         * @return
-         */
-        @Override
-        protected List<PhotoResult> doInBackground(Void... params)
-        {
+        public List<PhotoResult> loadInBackground() {
             List<PhotoResult> photos = null;
 
             try {
@@ -147,34 +202,8 @@ public class ImageFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(List<PhotoResult> photos) {
-            if(photos != null)
-            {
-                // if adapter has no images
-                if(mAdapter == null || mRecyclerView.getAdapter() == null)
-                {
-                    // create new object with photo data
-                    mAdapter = new ImagesAdapter(getContext(), new ArrayList<PhotoResult>(photos),  R.layout.grid_item, R.id.image_background, R.id.image_text);
-                    mRecyclerView.setAdapter(mAdapter);
-                }
-                else
-                {
-                    // update adapter
-                    mAdapter.updateAdapter((ArrayList<PhotoResult>) photos);
-                }
-            }
-            else
-            {
-                // display error snackbar
-                SimpleSnackBarBuilder.createAndDisplaySnackBar(view.findViewById(R.id.fragment_images_container_id),
-                        "Error loading images",
-                        Snackbar.LENGTH_INDEFINITE,
-                        "Close");
-            }
-            // let system know images are no longer being loaded
-            loading = false;
-            // hide progressbar
-            mProgressBar.setVisibility(View.GONE);
+        protected void onStartLoading() {
+            super.onStartLoading();
         }
     }
 }

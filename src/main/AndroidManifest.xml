@@ -37,13 +37,14 @@
         </provider>
 
         <!-- http://www.helloandroid.com/tutorials/communicating-between-running-activities -->
+        <!--android:screenOrientation="portrait"-->
+
         <activity
         android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:persistent="true"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.app.default_searchable"

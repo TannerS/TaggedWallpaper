@@ -40,7 +40,6 @@ public class ConnectionRequest {
         public String type() {
             return type;
         }
-
     }
 
     private HttpURLConnection connection;

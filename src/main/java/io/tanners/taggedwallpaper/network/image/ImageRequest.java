@@ -3,26 +3,26 @@ package io.tanners.taggedwallpaper.network.image;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import java.io.IOException;
-import java.net.ProtocolException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import io.tanners.taggedwallpaper.model.results.photo.PhotoResult;
 import io.tanners.taggedwallpaper.model.results.photo.PhotosResultsWrapper;
 import io.tanners.taggedwallpaper.network.ConnectionRequest;
-import io.tanners.taggedwallpaper.network.Request;
 
-public class ImageRequest extends Request<PhotoResult>
+public class ImageRequest
 {
+    private ConnectionRequest mConnectionRequest;
+
     /**
      * get images after restful call
+     *
      * @param headers
      * @param mUrl
      * @param body
      * @return
      * @throws IOException
      */
-    @Override
     public List<PhotoResult> getResult(HashMap<String, String> headers, String mUrl, String body) throws IOException {
         // temp list of images
         List<PhotoResult> photos = null;
