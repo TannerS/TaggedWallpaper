@@ -49,13 +49,10 @@ import io.tanners.taggedwallpaper.model.results.photo.PhotoResult;
 import io.tanners.taggedwallpaper.network.image.download.ImageDownloader;
 import io.tanners.taggedwallpaper.interfaces.IImageLoadOptions;
 
-// TODO need time out?
-
 // https://developer.android.com/reference/android/support/v4/app/ActivityCompat.OnRequestPermissionsResultCallback.html
 public class DisplayActivity extends AppCompatActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback {
     public final static String RESULT = "RESULT";
     private ImageView mMainImageView;
-//    private final int STORAGE_PERMISSIONS = 128;
     private final int IMAGE_DOWNLOAD = 256;
     private final int IMAGE_SHARE = 512;
     private final String MALBUMNAME = "Wallpaper";

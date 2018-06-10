@@ -47,7 +47,6 @@ public class ConnectionRequest {
     private int mConnectionTimeOut;
     private int mReadTimeOut;
     private HashMap<String, String> mEntries;
-    private boolean mIsGood;
     private String mBody;
     private String mUrl;
     private String mRequestype;
@@ -57,10 +56,9 @@ public class ConnectionRequest {
 
     public ConnectionRequest(String mUrl) {
         mEntries = new HashMap<String, String>();
-        mConnectionTimeOut = 10000;
+        mConnectionTimeOut = 5000;
         mReadTimeOut = 5000;
         mBody = null;
-        mIsGood = false;
         mRequestype = TYPES.GET.toString();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
@@ -221,25 +219,15 @@ public class ConnectionRequest {
      * connect to url
      * @return
      */
-    public boolean connect()
-    {
-        try
-        {
-            // open connect from url object
-            connection = (HttpURLConnection) (new URL(mUrl)).openConnection();
-            // set options
-            mIsGood = true;
-            setDefaults();
-            setHeaders();
-            setBody();
-        }
-        catch (IOException e)
-        {
-            mIsGood = false;
-            e.printStackTrace();
-        }
+    public boolean connect() throws IOException {
+        // open connect from url object
+        connection = (HttpURLConnection) (new URL(mUrl)).openConnection();
+        // set options
+        setDefaults();
+        setHeaders();
+        setBody();
 
-        return mIsGood;
+        return (connection.getResponseCode() == HttpURLConnection.HTTP_OK);
     }
 
     /**
@@ -259,18 +247,6 @@ public class ConnectionRequest {
      */
     public HttpURLConnection getConnection()
     {
-        if(mIsGood)
-            return this.connection;
-        else
-            return null;
-    }
-
-    /**
-     * check if connection is good
-     * @return
-     */
-    public boolean isGood()
-    {
-        return mIsGood;
+        return this.connection;
     }
 }

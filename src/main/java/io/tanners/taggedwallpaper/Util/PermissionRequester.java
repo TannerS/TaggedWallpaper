@@ -46,7 +46,6 @@ public class PermissionRequester {
                 }
             }
 
-            // TODO test, may be better solution
             // request if any non granted permissions
             if (needed_permissions.size() >= 1)
                 ActivityCompat.requestPermissions((Activity) mActivity, needed_permissions.toArray(new String[needed_permissions.size()]), code);
