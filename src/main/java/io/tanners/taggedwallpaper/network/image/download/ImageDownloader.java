@@ -7,15 +7,16 @@ import android.view.View;
 import java.io.File;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
+import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 import io.tanners.taggedwallpaper.network.image.ImageDownloaderBase;
 
 public class ImageDownloader extends ImageDownloaderBase {
-    protected View view;
+    private ErrorCallBack mErrorCallBack;
 
-    public ImageDownloader(Context mContext, View view, File mFile)
+    public ImageDownloader(Context mContext, File mFile, ErrorCallBack mErrorCallBack)
     {
-        super(mContext, view, mFile);
-        this.view = view;
+        super(mContext, mFile);
+        this.mErrorCallBack = mErrorCallBack;
     }
 
     /**
@@ -28,51 +29,11 @@ public class ImageDownloader extends ImageDownloaderBase {
 
         if(result)
         {
-            final Snackbar mGoodSnackbar = displaySuccessDownloadSnackBar();
-
-            mGoodSnackbar.setAction("Close", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mGoodSnackbar.dismiss();
-                }
-            });
-
-            mGoodSnackbar.show();
+            mErrorCallBack.displayNoError();
         }
         else
         {
-            final Snackbar mFailSnackbar = displayFailedDownloadSnackBar();
-
-            mFailSnackbar.setAction("Close", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mFailSnackbar.dismiss();
-                }
-            });
-
-            mFailSnackbar.show();
+            mErrorCallBack.displayError();
         }
-    }
-
-    /**
-     * display success snackbar
-     * @return
-     */
-    private Snackbar displaySuccessDownloadSnackBar()
-    {
-        return SimpleSnackBarBuilder.createSnackBar(view.findViewById(R.id.display_activity_main_id),
-                "Image Downloaded",
-                Snackbar.LENGTH_LONG);
-    }
-
-    /**
-     * display error snackbar
-     * @return
-     */
-    private Snackbar displayFailedDownloadSnackBar()
-    {
-        return SimpleSnackBarBuilder.createSnackBar(view.findViewById(R.id.display_activity_main_id),
-                "ERROR: Image Cannot Be Downloaded",
-                Snackbar.LENGTH_INDEFINITE);
     }
 }

@@ -53,4 +53,10 @@ public class LatestImagesFragment extends ImageFragment implements ErrorCallBack
                 Snackbar.LENGTH_INDEFINITE,
                 "Close");
     }
+
+
+    @Override
+    public void displayNoError() {
+        // no need for implementation
+    }
 }

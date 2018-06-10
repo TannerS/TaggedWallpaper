@@ -149,5 +149,4 @@ public class CategoryFragment extends Fragment {
         // show error message
         mErrorSnackBar.show();
     }
-
 }

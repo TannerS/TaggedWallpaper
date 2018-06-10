@@ -6,8 +6,6 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.view.View;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,15 +17,12 @@ import java.net.URL;
 public class ImageDownloaderBase extends AsyncTask<String, Void, Boolean> {
     protected File mFile;
     protected Context mContext;
-    protected View view;
 
-    public ImageDownloaderBase(Context mContext, View view, File mFile)
+    public ImageDownloaderBase(Context mContext, File mFile)
     {
-        this.view = view;
         this.mFile = mFile;
         this.mContext = mContext;
     }
-
 
     /**
      * @param result

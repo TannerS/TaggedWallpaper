@@ -53,4 +53,9 @@ public class PopularImagesFragment extends ImageFragment implements ErrorCallBac
                 Snackbar.LENGTH_INDEFINITE,
                 "Close");
     }
+
+    @Override
+    public void displayNoError() {
+        // no need for implementation
+    }
 }
