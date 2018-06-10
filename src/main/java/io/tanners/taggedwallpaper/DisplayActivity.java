@@ -153,7 +153,8 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      * Load resources for activity
      */
     private void loadResources() {
-        mPhotoInfo = (new Gson()).fromJson(getIntent().getStringExtra(RESULT), PhotoResult.class);
+//        mPhotoInfo = (new Gson()).fromJson(getIntent().getStringExtra(RESULT), PhotoResult.class);
+        mPhotoInfo = getIntent().getParcelableExtra(RESULT);
         mMainImageView = (ImageView) findViewById(R.id.main_image_id);
         mProgressBar = (ProgressBar) findViewById(R.id.display_progress_bar);
         ((TextView)findViewById(R.id.user_name)).setText(mPhotoInfo.getUser());

@@ -63,9 +63,6 @@
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />
-
-        <!--TODO make sure prev data is not erased in memory on back-->
-
         <activity
             android:name=".DisplayActivity"
             android:label="@string/title_activity_display"

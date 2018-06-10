@@ -3,6 +3,7 @@ package io.tanners.taggedwallpaper.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -151,10 +152,9 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO implement parcelable
                     PhotoResult result = mItems.get(getAdapterPosition());
                     Intent intent = new Intent(mContext, DisplayActivity.class);
-                    intent.putExtra(DisplayActivity.RESULT, ((new Gson()).toJson(result)));
+                    intent.putExtra(DisplayActivity.RESULT, (Parcelable) result);
                     mContext.startActivity(intent);
                 }
             });

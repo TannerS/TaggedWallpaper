@@ -72,21 +72,6 @@ public class ImageActivity extends TabbedActivity implements IGetTag {
         return super.onOptionsItemSelected(item);
     }
 
-
-//    /**
-//     * Provides a way to provide the same functionality to pass and connect to this intent and pass the tag
-//     *
-//     * @param context
-//     * @param query
-//     */
-//    public static void openIntentForQuery(Context context, String query)
-//    {
-//        Intent intent = new Intent(context, ImageActivity.class);
-//        intent.putExtra(ImageActivity.TAG, query);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//        context.startActivity(intent);
-//    }
-
     /**
      * get current tag (search result, clicked category, etc)
      * @return

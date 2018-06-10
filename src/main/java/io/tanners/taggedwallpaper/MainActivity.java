@@ -196,7 +196,6 @@ public class MainActivity extends TabbedActivity {
         context.startActivity(intent);
     }
 
-
     /**
      * when use clicks back
      */

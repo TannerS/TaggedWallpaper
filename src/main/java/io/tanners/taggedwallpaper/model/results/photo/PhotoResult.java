@@ -1,13 +1,43 @@
 package io.tanners.taggedwallpaper.model.results.photo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * https://stackoverflow.com/questions/2139134/how-to-send-an-object-from-one-android-activity-to-another-using-intents?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
-
-public class PhotoResult
+public class PhotoResult implements Parcelable
 {
     public PhotoResult() {
     }
+
+    protected PhotoResult(Parcel in) {
+        largeImageURL = in.readString();
+        webformatURL = in.readString();
+        imageURL = in.readString();
+        previewURL = in.readString();
+        user = in.readString();
+        user_id = in.readInt();
+        id = in.readInt();
+        tags = in.readString();
+        userImageURL = in.readString();
+        id_hash = in.readString();
+    }
+
+    public static final Creator<PhotoResult> CREATOR = new Creator<PhotoResult>() {
+        @Override
+        public PhotoResult createFromParcel(Parcel in) {
+            return new PhotoResult(in);
+        }
+
+        @Override
+        public PhotoResult[] newArray(int size) {
+            return new PhotoResult[size];
+        }
+    };
 
     public String getWebformatURL() {
         return webformatURL;
@@ -49,8 +79,6 @@ public class PhotoResult
         this.user_id = user_id;
     }
 
-
-
     public String getUserImageURL() {
         return userImageURL;
     }
@@ -80,7 +108,6 @@ public class PhotoResult
 
     private String id_hash;
 
-
     public String getLargeImageURL() {
         return largeImageURL;
     }
@@ -97,12 +124,30 @@ public class PhotoResult
         this.tags = tags;
     }
 
-
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(largeImageURL);
+        dest.writeString(webformatURL);
+        dest.writeString(imageURL);
+        dest.writeString(previewURL);
+        dest.writeString(user);
+        dest.writeInt(user_id);
+        dest.writeInt(id);
+        dest.writeString(tags);
+        dest.writeString(userImageURL);
+        dest.writeString(id_hash);
     }
 }
