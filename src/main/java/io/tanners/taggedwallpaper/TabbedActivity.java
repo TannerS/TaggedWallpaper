@@ -32,7 +32,6 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
      */
     protected void setUpTabs(int mPageViewerId, int mTabLayoutId, int mFragAmount)
     {
-        Log.d("LOADS", "DEBUG 3");
         mViewPager = (ViewPager) findViewById(mPageViewerId);
         // limit of screens before memory destroys them
         // needed to prevent view destroy and reloads images each time
@@ -81,8 +80,6 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
      */
     @Override
     public Fragment findFragmentByTitle(String title) {
-
-        int pos = 0;
 
         for(FragmentAdapter.FragmentInfo fragInfo : this.frags)
         {

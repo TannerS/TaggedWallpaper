@@ -18,10 +18,10 @@ import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.ApiBuilder;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.adapters.ImagesAdapter;
-import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
+import io.tanners.taggedwallpaper.model.results.photo.PhotoResult;
 import io.tanners.taggedwallpaper.interfaces.IGetTag;
-import io.tanners.taggedwallpaper.network.images.ImageRequest;
-import io.tanners.taggedwallpaper.network.images.Request;
+import io.tanners.taggedwallpaper.network.image.ImageRequest;
+import io.tanners.taggedwallpaper.network.Request;
 
 public class ImageFragment extends Fragment {
     protected View view;
@@ -56,7 +56,6 @@ public class ImageFragment extends Fragment {
            // throw new RuntimeException(getActivity().toString() + " must implement IGetTag");
             // nothing to do
         }
-
         // used to not load more of the images until last request is done
         loading = false;
 
@@ -112,22 +111,6 @@ public class ImageFragment extends Fragment {
         new ImageRequester().execute();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     private class ImageRequester extends AsyncTask<Void, Void, List<PhotoResult>> {
         private Request<PhotoResult > mRequest;
 
@@ -153,11 +136,7 @@ public class ImageFragment extends Fragment {
 
             try {
                 // builder api url and request images
-//                photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildImageUrl(), null);
                 photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildHighResImageUrl(), null);
-//                photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildHighResImageUrl(), null);
-                Log.i("FIRST CALL", mBuilder.buildHighResImageUrl());
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -196,30 +175,4 @@ public class ImageFragment extends Fragment {
             mProgressBar.setVisibility(View.GONE);
         }
     }
-
-    /**
-     * all credit too ianhanniballake
-     * https://stackoverflow.com/questions/28531996/android-recyclerview-gridlayoutmanager-column-spacing
-     */
-//    public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
-//        private int space;
-//
-//        public SpacesItemDecoration(int space) {
-//            this.space = space;
-//        }
-//
-//        @Override
-//        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-//            outRect.left = space;
-//            outRect.right = space;
-//            outRect.bottom = space;
-//
-//            // Add top margin only for the first item to avoid double space between items
-//            if (parent.getChildLayoutPosition(view) == 0) {
-//                outRect.top = space;
-//            } else {
-//                outRect.top = 0;
-//            }
-//        }
-//    }
 }

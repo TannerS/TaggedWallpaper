@@ -1,15 +1,14 @@
-package io.tanners.taggedwallpaper.network.images;
-
-import android.os.Build;
+package io.tanners.taggedwallpaper.network.image;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
-import io.tanners.taggedwallpaper.data.results.photo.PhotosResultsWrapper;
+import io.tanners.taggedwallpaper.model.results.photo.PhotoResult;
+import io.tanners.taggedwallpaper.model.results.photo.PhotosResultsWrapper;
 import io.tanners.taggedwallpaper.network.ConnectionRequest;
+import io.tanners.taggedwallpaper.network.Request;
 
 public class ImageRequest extends Request<PhotoResult>
 {

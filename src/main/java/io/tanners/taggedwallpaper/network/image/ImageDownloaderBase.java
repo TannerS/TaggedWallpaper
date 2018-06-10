@@ -1,4 +1,4 @@
-package io.tanners.taggedwallpaper.network.images;
+package io.tanners.taggedwallpaper.network.image;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,8 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

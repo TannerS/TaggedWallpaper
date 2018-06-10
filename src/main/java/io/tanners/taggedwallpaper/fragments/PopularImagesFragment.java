@@ -47,10 +47,10 @@ public class PopularImagesFragment extends ImageFragment implements ErrorCallBac
      */
     @Override
     public void displayError() {
-        SimpleSnackBarBuilder.createAndDisplaySnackBar(view.findViewById(R.id.fragment_images_container_id),
+        SimpleSnackBarBuilder.createAndDisplaySnackBar(
+                view.findViewById(R.id.fragment_images_container_id),
                 "Error loading images",
                 Snackbar.LENGTH_INDEFINITE,
                 "Close");
     }
-
 }

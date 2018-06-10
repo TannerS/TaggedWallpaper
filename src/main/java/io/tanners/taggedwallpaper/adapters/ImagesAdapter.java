@@ -3,28 +3,18 @@ package io.tanners.taggedwallpaper.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -32,7 +22,7 @@ import java.util.ArrayList;
 import io.tanners.taggedwallpaper.DisplayActivity;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.TabBuilder;
-import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
+import io.tanners.taggedwallpaper.model.results.photo.PhotoResult;
 
 /**
  * Class to handle a single array recyclerlist such that we will use this for the image categories
@@ -44,14 +34,12 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
     private int mRowId;
     private final int LOGOTYPE = 1;
     private final int NORMAL = 2;
-    //private int mTextId;
 
     public ImagesAdapter(Context mContext, ArrayList<PhotoResult> mItems, int mLayoutId, int mRowId, int mTextId) {
         this.mContext = mContext;
         this.mItems = mItems;
         this.mLayoutId = mLayoutId;
         this.mRowId = mRowId;
-        //this.mTextId = mTextId;
     }
 
     /**
@@ -76,7 +64,6 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
                 .load(mUrl), view);
     }
 
-
     private void setUpImage(int id, ImageView view)
     {
         // load image view using glide
@@ -97,7 +84,6 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
                 .centerCrop()
                 .error(R.drawable.ic_error_black_48dp)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
-        // apply
         mRequest
                 .apply(cropOptions)
                 .transition(transitionOptions)
@@ -122,7 +108,6 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
 
         if(holder instanceof ImagesAdapter.ImageViewHolderLogo)
         {
-//            setUpImage(R.drawable.ic_logo, ((ImageViewHolderLogo) holder).image);
             ((ImageViewHolderLogo) holder).image.setImageResource(R.drawable.ic_logo);
         }
         else if (holder instanceof ImagesAdapter.ImageViewHolder)
@@ -131,11 +116,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
             PhotoResult mItem = mItems.get(position);
             // set up image
             setUpImage(mItem.getWebformatURL(), holder.image);
-            // set author/uploader name
-            // String mDisplayText = holder.text.getText() + mItem.getUser();
-            // holder.text.setText(mDisplayText);
         }
-
     }
 
     /**
@@ -152,16 +133,12 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
         }
         else if (viewType == NORMAL)
         {
-
             View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
             return new ImageViewHolder(mContext, view);
         }
         else {
-
             return null;
         }
-
-
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
@@ -174,10 +151,9 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    //TODO implement parcelable
                     PhotoResult result = mItems.get(getAdapterPosition());
-
-                    Log.i("ON CLICK", (new Gson()).toJson(result));
-
                     Intent intent = new Intent(mContext, DisplayActivity.class);
                     intent.putExtra(DisplayActivity.RESULT, ((new Gson()).toJson(result)));
                     mContext.startActivity(intent);
@@ -198,7 +174,6 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.i("TABS", "DEBUG 1");
                     TabBuilder.buildAndLaunchCustomTab(mContext, "https://pixabay.com/");
                 }
             });

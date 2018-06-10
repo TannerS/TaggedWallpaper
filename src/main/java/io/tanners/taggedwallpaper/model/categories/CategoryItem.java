@@ -1,4 +1,4 @@
-package io.tanners.taggedwallpaper.data.categories;
+package io.tanners.taggedwallpaper.model.categories;
 
 /**
  * Can be inner class but for now we will try here to find it better

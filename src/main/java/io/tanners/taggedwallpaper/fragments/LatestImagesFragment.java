@@ -47,7 +47,8 @@ public class LatestImagesFragment extends ImageFragment implements ErrorCallBack
      */
     @Override
     public void displayError() {
-        SimpleSnackBarBuilder.createAndDisplaySnackBar(view.findViewById(R.id.fragment_images_container_id),
+        SimpleSnackBarBuilder.createAndDisplaySnackBar(
+                view.findViewById(R.id.fragment_images_container_id),
                 "Error loading images",
                 Snackbar.LENGTH_INDEFINITE,
                 "Close");

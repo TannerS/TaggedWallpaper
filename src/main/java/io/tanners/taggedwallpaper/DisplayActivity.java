@@ -29,7 +29,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
@@ -51,16 +50,13 @@ import io.tanners.taggedwallpaper.Util.ExternalFileStorageUtil;
 import io.tanners.taggedwallpaper.Util.FitSystemWindowsLayout;
 import io.tanners.taggedwallpaper.Util.PermissionRequester;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
-import io.tanners.taggedwallpaper.data.results.photo.PhotoResult;
-import io.tanners.taggedwallpaper.network.images.ImageDownloader;
-import io.tanners.taggedwallpaper.network.images.ImageSharer;
+import io.tanners.taggedwallpaper.model.results.photo.PhotoResult;
+import io.tanners.taggedwallpaper.network.image.download.ImageDownloader;
+import io.tanners.taggedwallpaper.network.image.share.ImageSharer;
 import io.tanners.taggedwallpaper.interfaces.IImageLoadOptions;
 
 // https://developer.android.com/reference/android/support/v4/app/ActivityCompat.OnRequestPermissionsResultCallback.html
 public class DisplayActivity extends AppCompatActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback {
-//    public final static String ARTIST = "ARTIST";
-//    public final static String FULLIMAGE = "FULLIMAGE";
-//    public final static String PREVIEW = "PREVIEW";
     public final static String RESULT = "RESULT";
     private ImageView mMainImageView;
     private final int STORAGE_PERMISSIONS = 128;
@@ -130,20 +126,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         setUpUiInteraction();
     }
 
-    /**
-     * http://blog.raffaeu.com/archive/2015/04/11/android-and-the-transparent-status-bar.aspx
-     *
-     * @return
-     */
-//    public int getStatusBarHeight() {
-//        int result = 0;
-//        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-//        if (resourceId > 0) {
-//            result = getResources().getDimensionPixelSize(resourceId);
-//        }
-//        return result;
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -171,7 +153,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     /**
      * Load resources for activity
@@ -207,7 +188,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             loadImage(mPhotoInfo.getUserImageURL(), ((ImageView) findViewById(R.id.user_profile_image)), null);
         }
     }
-
 
     private void loadImage(String mUrl, final ImageView mView, final IImageLoadOptions mCallback) {
         Glide.with(DisplayActivity.this)
@@ -246,19 +226,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 })
                 .into(mView);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * set up fullscreen user interaction
@@ -309,7 +276,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             actionBar.hide();
         }
 
-
         // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable);
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
@@ -353,8 +319,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).fitCenter();
     }
 
-
-
     /**
      * Load Actionbar
      */
@@ -364,18 +328,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         setSupportActionBar(mToolbar);
         //setTranslucentStatusBar(getWindow());
        // mToolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // change icon to be a x not arrow
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_navigation_close);
         getSupportActionBar().setTitle("");
-
-
-
-        // set set transparent background
-        //getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        //getSupportActionBar().setElevation(0);
-       // enableStatusBarTransparent();
 
     }
 
@@ -446,7 +402,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         switch(which)
         {
             case WallpaperSetter.LOCK_SCREEN:
-//                new WallpaperSetter(findViewById(R.id.display_activity_main_id), which, (ProgressBar) findViewById(R.id.lockscreen_progressbar), (ImageView) findViewById(R.id.lockscreen_image)).execute(getIntent().getStringExtra(FULLIMAGE));
                 new WallpaperSetter(findViewById(R.id.display_activity_main_id), which).execute(mPhotoInfo.getImageURL());
             case WallpaperSetter.WALLPAPER:
                 new WallpaperSetter(findViewById(R.id.display_activity_main_id), which).execute(mPhotoInfo.getImageURL());
@@ -463,8 +418,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         // check if permissions are granted
         if(checkPermissions(requestCode))
         {
-            Log.i("PERMISSIONS", "DEBUG 1");
-
             // no permissions needed, call code
             usePhoto(requestCode);
         }
@@ -475,11 +428,8 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 // set wallpaper based on image stream
                 usePhoto(requestCode);
-
-                Log.i("PERMISSIONS", "DEBUG 2");
             }
             // no permissions, do nothing
-            Log.i("PERMISSIONS", "DEBUG 3");
         }
     }
 
@@ -594,6 +544,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 "Close");
     }
 
+    // TODO loader in future implmentation
     private class WallpaperSetter extends AsyncTask<String, Void, Boolean>
     {
         public final static int LOCK_SCREEN = 100;
@@ -772,59 +723,5 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             return null;
         }
     }
-
-//    public class ImageRequesterById extends AsyncTask<String, Void, List<PhotoResult>> {
-//        private Request<PhotoResult > mRequest;
-//        private ApiBuilder mBuilder;
-//        private View view;
-//
-//        public ImageRequesterById()
-//        {
-//            this.view = findViewById(android.R.id.content);
-//            this.mRequest = new ImageRequest();
-//            this.mBuilder = new ApiBuilder();
-//        }
-//
-//        @Override
-//        protected List<PhotoResult> doInBackground(String... params)
-//        {
-//            List<PhotoResult> photos = null;
-//
-//            try {
-//                photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildImageUrl(), null);
-////                photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildImageUrlById(params[0]), null);
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//            return photos;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(List<PhotoResult> photoDetails) {
-//            if(photoDetails != null)
-//            {
-//                PhotoResult currentPhotoResult = photoDetails.get(0);
-//                // combine api calls results into one
-//                mPhotoInfo.setTags(currentPhotoResult.getTags());
-//                mPhotoInfo.setUser_id(currentPhotoResult.getUser_id());
-//                mPhotoInfo.setUser(currentPhotoResult.getUser());
-//                mPhotoInfo.setImageURL(currentPhotoResult.getImageURL());
-//                currentPhotoResult = null;
-//                    // should only be one result
-//                loadImageResources(mPhotoInfo.getImageURL());
-//                loadImageResources();
-//            }
-//            else
-//            {
-//                // display error snackbar
-////                SimpleSnackBarBuilder.createAndDisplaySnackBar(view.findViewById(R.id.fragment_images_container_id),
-////                        "Error loading image details",
-////                        Snackbar.LENGTH_INDEFINITE,
-////                        "Close");
-//            }
-//        }
-//    }
 
 }

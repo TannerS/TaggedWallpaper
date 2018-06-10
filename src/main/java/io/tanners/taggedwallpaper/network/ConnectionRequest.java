@@ -55,7 +55,6 @@ public class ConnectionRequest {
     private String mCharset;
     private final String LINE_BREAK = "\r\n";
 
-
     public ConnectionRequest(String mUrl) {
         mEntries = new HashMap<String, String>();
         mConnectionTimeOut = 10000;

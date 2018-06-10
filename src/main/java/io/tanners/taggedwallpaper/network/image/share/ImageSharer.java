@@ -1,12 +1,13 @@
-package io.tanners.taggedwallpaper.network.images;
+package io.tanners.taggedwallpaper.network.image.share;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
+
 import java.io.File;
+
+import io.tanners.taggedwallpaper.network.image.ImageDownloaderBase;
 
 public class ImageSharer extends ImageDownloaderBase
 {

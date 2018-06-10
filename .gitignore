@@ -209,3 +209,7 @@ cmake-build-debug/
 .idea/
 
 # End of https://www.gitignore.io/api/android,intellij+all,androidstudio
+
+google-services.json
+
+/src/main/jni/*

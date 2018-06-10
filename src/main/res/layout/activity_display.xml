@@ -7,7 +7,7 @@
     tools:context="io.tanners.taggedwallpaper.DisplayActivity"
     android:id="@+id/display_activity_main_id"
     android:background="@color/black"
-    android:fitsSystemWindows="false">
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -15,19 +15,14 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:alpha=".8"
         android:fitsSystemWindows="false"
-        android:background="@color/black"
-       >
+        android:background="@color/black">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/display_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="?android:attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-
-           />
-
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     </android.support.design.widget.AppBarLayout>
 

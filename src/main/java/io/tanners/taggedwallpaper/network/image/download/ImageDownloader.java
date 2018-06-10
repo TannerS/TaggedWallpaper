@@ -1,14 +1,13 @@
-package io.tanners.taggedwallpaper.network.images;
+package io.tanners.taggedwallpaper.network.image.download;
 
 import android.content.Context;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
+
 import java.io.File;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
+import io.tanners.taggedwallpaper.network.image.ImageDownloaderBase;
 
 public class ImageDownloader extends ImageDownloaderBase {
     protected View view;

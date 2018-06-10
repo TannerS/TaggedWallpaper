@@ -1,6 +1,5 @@
 package io.tanners.taggedwallpaper.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -25,7 +24,7 @@ import java.util.TreeMap;
 
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.adapters.CategoryImageAdapter;
-import io.tanners.taggedwallpaper.data.categories.CategoryItem;
+import io.tanners.taggedwallpaper.model.categories.CategoryItem;
 
 
 public class CategoryFragment extends Fragment {

@@ -15,7 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 import io.tanners.taggedwallpaper.ImageActivity;
 import io.tanners.taggedwallpaper.R;
-import io.tanners.taggedwallpaper.data.categories.CategoryItem;
+import io.tanners.taggedwallpaper.model.categories.CategoryItem;
 
 /**
  * Class to handle a single array recyclerlist such that we will use this for the image categories

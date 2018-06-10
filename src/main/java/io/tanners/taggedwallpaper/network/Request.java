@@ -1,4 +1,4 @@
-package io.tanners.taggedwallpaper.network.images;
+package io.tanners.taggedwallpaper.network;
 
 import java.io.IOException;
 import java.util.HashMap;

@@ -1,8 +1,6 @@
-package io.tanners.taggedwallpaper.data.results.photo;
+package io.tanners.taggedwallpaper.model.results.photo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 
