@@ -151,7 +151,6 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     //TODO implement parcelable
                     PhotoResult result = mItems.get(getAdapterPosition());
                     Intent intent = new Intent(mContext, DisplayActivity.class);

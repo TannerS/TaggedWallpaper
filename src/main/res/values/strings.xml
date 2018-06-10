@@ -2,7 +2,7 @@
     <string name="app_name">Tagged Wallpaper</string>
     <string name="title_activity_image">ImageActivity</string>
     <string name="search_label">Search</string>
-    <string name="search_hint">Search for photos!</string>
+    <string name="search_hint">Search</string>
     <string name="title_activity_display">DisplayActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
 

@@ -8,6 +8,12 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
         android:orderInCategory="100"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/clear_search_history"
+        android:title="Clear searches"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
+
     <item android:id="@+id/photo_search"
         android:title="Search"
         android:icon="@android:drawable/ic_menu_search"

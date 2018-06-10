@@ -2,11 +2,11 @@ package io.tanners.taggedwallpaper;
 
 import android.annotation.SuppressLint;
 import android.app.WallpaperManager;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,11 +15,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,7 +25,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -37,29 +34,27 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
-//import com.readystatesoftware.systembartint.SystemBarTintManager;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import io.tanners.taggedwallpaper.Util.ExternalFileStorageUtil;
 import io.tanners.taggedwallpaper.Util.FitSystemWindowsLayout;
 import io.tanners.taggedwallpaper.Util.PermissionRequester;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.model.results.photo.PhotoResult;
 import io.tanners.taggedwallpaper.network.image.download.ImageDownloader;
-import io.tanners.taggedwallpaper.network.image.share.ImageSharer;
 import io.tanners.taggedwallpaper.interfaces.IImageLoadOptions;
+
+// TODO need time out?
 
 // https://developer.android.com/reference/android/support/v4/app/ActivityCompat.OnRequestPermissionsResultCallback.html
 public class DisplayActivity extends AppCompatActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback {
     public final static String RESULT = "RESULT";
     private ImageView mMainImageView;
-    private final int STORAGE_PERMISSIONS = 128;
+//    private final int STORAGE_PERMISSIONS = 128;
     private final int IMAGE_DOWNLOAD = 256;
     private final int IMAGE_SHARE = 512;
     private final String MALBUMNAME = "Wallpaper";
@@ -144,10 +139,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 setImage(WallpaperSetter.LOCK_SCREEN);
                 return true;
             case R.id.download_menu_item:
-                downloadOrShareImage(IMAGE_DOWNLOAD|STORAGE_PERMISSIONS);
+                downloadImage(IMAGE_DOWNLOAD);
                 return true;
             case R.id.share_menu_item:
-                downloadOrShareImage(IMAGE_SHARE|STORAGE_PERMISSIONS);
+                shareImage();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -413,13 +408,13 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
      * Recycle same code permissions for download and sharing image
      * @param requestCode
      */
-    private void downloadOrShareImage(int requestCode)
+    private void downloadImage(int requestCode)
     {
         // check if permissions are granted
         if(checkPermissions(requestCode))
         {
             // no permissions needed, call code
-            usePhoto(requestCode);
+            downloadImage();
         }
         // permissions denied for some reason
         else
@@ -427,7 +422,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             // runtime permissions came in at sdk 23
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                 // set wallpaper based on image stream
-                usePhoto(requestCode);
+                downloadImage();
             }
             // no permissions, do nothing
         }
@@ -443,9 +438,8 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             // do task based on which granted permissions
             switch(requestCode)
             {
-                case IMAGE_DOWNLOAD|STORAGE_PERMISSIONS:
-                case IMAGE_SHARE|STORAGE_PERMISSIONS:
-                    usePhoto(requestCode);
+                case IMAGE_DOWNLOAD:
+                    downloadImage();
                     break;
             }
         }
@@ -472,38 +466,16 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
 
     /**
      * Do something with image
-     * @param code
      */
-    private void usePhoto(int code){
+    private void downloadImage(){
         ExternalFileStorageUtil mStorageUtil = new ExternalFileStorageUtil();
         // check if external storage is writable
-        if(mStorageUtil.isExternalStorageWritable())
-        {
-            // determine what to do per request
-            switch(code)
-            {
-                case IMAGE_DOWNLOAD|STORAGE_PERMISSIONS:
-                    // use that newly created image file to share or download
-                    // you need to download before sharing
-                    new ImageDownloader(this, findViewById(R.id.display_activity_main_id), getNewFile(code, mStorageUtil)).execute(mPhotoInfo.getImageURL());
-                    break;
-                case IMAGE_SHARE|STORAGE_PERMISSIONS:
-                    // use that newly created image file to share or download
-                    File mImageFile = getNewFile(code, mStorageUtil);
-                    // create URI based off file provider
-                    Uri mImageUri = null;
-                    try {
-                        // get uri from file provider
-                        mImageUri = FileProvider.getUriForFile(DisplayActivity.this, "io.tanners.taggedwallpaper.fileprovider", mImageFile);
-                    } catch (IllegalArgumentException e) {
-                        Log.e("File_PROVIDER", "The selected file can't be shared");
-                    }
-                    // share image
-                    new ImageSharer(this, findViewById(R.id.display_activity_main_id), mImageFile, mImageUri).execute(mPhotoInfo.getImageURL());
-                    break;
-            }
+        if (mStorageUtil.isExternalStorageWritable()) {
+            // use that newly created image file to share or download
+            // you need to download before sharing
+            new ImageDownloader(this, findViewById(R.id.display_activity_main_id), getNewFile(mStorageUtil)).execute(mPhotoInfo.getImageURL());
         }
-            // cant read, connected to pc, ejected, etc
+        // cant read, connected to pc, ejected, etc
         else
         {
             // display error as snackbar
@@ -511,28 +483,43 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         }
     }
 
-    private File getNewFile(int code, ExternalFileStorageUtil mStorageUtil) {
+    private void shareImage()
+    {
+        // create new intent
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        // at this point, this is uri to file but actually writing to file is done
+        // in the background task in the parent class
+        shareIntent.putExtra(Intent.EXTRA_TEXT, mPhotoInfo.getImageURL());
+        shareIntent.setType("text/plain");
+        startActivity(Intent.createChooser(shareIntent, "Share too..."));
+    }
+
+
+//
+//    private File getNewFile(int code, ExternalFileStorageUtil mStorageUtil) {
+    private File getNewFile(ExternalFileStorageUtil mStorageUtil) {
         // get filename
         String[] mImageUrlSplit = mPhotoInfo.getImageURL().split("/");
         String mImageUrlFileName = mImageUrlSplit[mImageUrlSplit.length-1];
         File mImageFile = null;
 
-        switch (code) {
-            case IMAGE_DOWNLOAD|STORAGE_PERMISSIONS:
+//        switch (code) {
+//            case IMAGE_DOWNLOAD|STORAGE_PERMISSIONS:
                 // create album
                 File mImageDir = mStorageUtil.getAlbumStorageDir(MALBUMNAME);
                 // create file based on name and album
                 mImageFile = new File(mImageDir, mImageUrlFileName);
-            case IMAGE_SHARE|STORAGE_PERMISSIONS:
-                // create temp cache file
-                try {
-                    // mImageFile = new File(getFilesDir(), mImageUrlFileName);
-                    mImageFile = File.createTempFile(mImageUrlFileName, null, getCacheDir());
-                } catch (IOException e) {
-                    // Error while creating file
-                    Log.e("FILE_SHARE", "Error sharing image");
-                }
-        }
+//            case IMAGE_SHARE|STORAGE_PERMISSIONS:
+//                // create temp cache file
+//                try {
+//                    // mImageFile = new File(getFilesDir(), mImageUrlFileName);
+//                    mImageFile = File.createTempFile(mImageUrlFileName, null, getCacheDir());
+//                } catch (IOException e) {
+//                    // Error while creating file
+//                    Log.e("FILE_SHARE", "Error sharing image");
+//                }
+//        }
         // return image file reference
         return mImageFile;
     }

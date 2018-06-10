@@ -14,6 +14,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 import io.tanners.taggedwallpaper.ImageActivity;
+import io.tanners.taggedwallpaper.MainActivity;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.model.categories.CategoryItem;
 
@@ -100,9 +101,9 @@ public class CategoryImageAdapter extends RecyclerView.Adapter<CategoryImageAdap
                 @Override
                 public void onClick(View view) {
                     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        ImageActivity.openIntentForQuery(mContext, title.getText().toString());
+                        MainActivity.openIntentForQuery(mContext, title.getText().toString());
                     } else {
-                        ImageActivity.openIntentForQuery(mContext, title.getText().toString());
+                        MainActivity.openIntentForQuery(mContext, title.getText().toString());
                     }
                 }
 

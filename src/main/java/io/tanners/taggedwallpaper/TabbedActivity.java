@@ -13,6 +13,8 @@ import io.tanners.taggedwallpaper.animations.ZoomOutPageTransformer;
 import io.tanners.taggedwallpaper.interfaces.IFindFragment;
 
 public class TabbedActivity extends AppCompatActivity implements IFindFragment {
+//public class TabbedActivity extends AppCompatActivity implements IFindFragment {
+//    protected List<FragmentAdapter.FragmentInfo> frags;
     protected List<FragmentAdapter.FragmentInfo> frags;
     protected ViewPager mViewPager;
     protected Toolbar mToolbar;

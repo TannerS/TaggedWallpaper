@@ -23,6 +23,8 @@ import io.tanners.taggedwallpaper.interfaces.IGetTag;
 import io.tanners.taggedwallpaper.network.image.ImageRequest;
 import io.tanners.taggedwallpaper.network.Request;
 
+// TODO live data for image adpaters
+
 public class ImageFragment extends Fragment {
     protected View view;
     protected RecyclerView mRecyclerView;
