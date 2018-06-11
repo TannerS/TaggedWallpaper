@@ -7,7 +7,6 @@
     tools:context="io.tanners.taggedwallpaper.DisplayActivity">
 
     <item
-        android:id="@+id/menu"
         app:showAsAction="always"
         android:icon="@drawable/ic_more_vert_white_48dp"
         android:visible="true"

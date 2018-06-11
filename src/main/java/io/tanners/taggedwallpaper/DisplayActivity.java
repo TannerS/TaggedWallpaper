@@ -126,18 +126,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         setUpUiInteraction();
     }
 
-    private void loadBundle(Bundle savedInstanceState) {
-//        Bundle queryBundle = new Bundle();
-//        -        // TODO (20) Use putString with SEARCH_QUERY_URL_EXTRA as the key and the String value of the URL as the value
-//                +        // COMPLETED (20) Use putString with SEARCH_QUERY_URL_EXTRA as the key and the String value of the URL as the value
-//                        -
-//                                +        queryBundle.putString(SEARCH_QUERY_URL_EXTRA, githubSearchUrl.toString())
-        if (savedInstanceState != null) {
-//            String queryUrl = savedInstanceState.get(String.valueOf(WALLPAPER_SEARCH_LOADER));
-//            mUrlDisplayTextView.setText(queryUrl);
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -340,48 +328,6 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         getSupportActionBar().setTitle("");
 
     }
-
-    /**
-     * http://blog.raffaeu.com/archive/2015/04/11/android-and-the-transparent-status-bar.aspx
-     * for kitkat fix for transparent statusbar
-     */
-//    private void enableStatusBarTransparent()
-//    {
-//
-////         create our manager instance after the content view is set
-////        SystemBarTintManager tintManager = new SystemBarTintManager(this);
-////         enable status bar tint
-////        tintManager.setStatusBarTintEnabled(true);
-////         enable navigation bar tint
-////        tintManager.setNavigationBarTintEnabled(true);
-////         set the transparent color of the status bar, 20% darker
-////        tintManager.setTintColor(Color.parseColor("#20000000"));
-//
-//    }
-
-//    public static void setTranslucentStatusBar(Window window) {
-//        if (window == null) return;
-//        int sdkInt = Build.VERSION.SDK_INT;
-//        if (sdkInt >= Build.VERSION_CODES.LOLLIPOP) {
-//            setTranslucentStatusBarLollipop(window);
-//        } else if (sdkInt >= Build.VERSION_CODES.KITKAT) {
-//            setTranslucentStatusBarKiKat(window);
-//        }
-//    }
-
-//    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-//    private static void setTranslucentStatusBarLollipop(Window window) {
-//        window.setStatusBarColor(
-//                window.getContext()
-//                        .getResources()
-//                        .getColor(R.color.transparent));
-//    }
-//
-//    @TargetApi(Build.VERSION_CODES.KITKAT)
-//    private static void setTranslucentStatusBarKiKat(Window window) {
-//        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//    }
-//
 
     /**
      * Check permission for given permission code.

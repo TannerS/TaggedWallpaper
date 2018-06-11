@@ -10,7 +10,6 @@
     android:animateLayoutChanges="true">
 
     <include
-        android:id="@+id/grid_view_layout_include"
         layout="@layout/grid_view_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
