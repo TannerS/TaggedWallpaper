@@ -194,6 +194,8 @@ public class ImageFragment extends Fragment implements LoaderManager.LoaderCallb
             try {
                 // builder api url and request images
                 photos = mRequest.getResult(mBuilder.getHeaders(), mBuilder.buildHighResImageUrl(), null);
+
+                Log.i("REST", mBuilder.buildHighResImageUrl());
             } catch (IOException e) {
                 e.printStackTrace();
             }

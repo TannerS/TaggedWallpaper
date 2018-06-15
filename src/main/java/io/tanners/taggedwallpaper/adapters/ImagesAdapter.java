@@ -173,7 +173,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ImageViewH
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    TabBuilder.buildAndLaunchCustomTab(mContext, "https://pixabay.com/");
+                    TabBuilder.buildAndLaunchCustomTab(mContext, "https://pixabay.com/", R.color.colorAccent);
                 }
             });
         }
