@@ -11,13 +11,16 @@ import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
 import io.tanners.taggedwallpaper.animations.ZoomOutPageTransformer;
 import io.tanners.taggedwallpaper.interfaces.IFindFragment;
 
+/**
+ * Base class to hold tabbed fragments
+ */
 public class TabbedActivity extends AppCompatActivity implements IFindFragment {
-    protected List<FragmentAdapter.FragmentInfo> frags;
+    protected List<FragmentAdapter.FragmentWrapper> frags;
     protected ViewPager mViewPager;
     protected Toolbar mToolbar;
 
     /**
-     * srt up action bar
+     * set up action bar
      * @param id
      */
     protected void setUpToolBar(int id)
@@ -46,15 +49,18 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
      * load fragments
      * @param frags
      */
-    protected void setUpFragmentAdapters(ArrayList<FragmentAdapter.FragmentInfo> frags)
+    protected void setUpFragmentAdapters(ArrayList<FragmentAdapter.FragmentWrapper> frags)
     {
         this.frags = frags;
+        // set fragments into adapter
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(), this.frags);
+        // set adapter into pageviewer
         mViewPager.setAdapter(adapter);
     }
 
     /**
      * find fragment by title and set viewpager to go there
+     *
      * @param title
      */
     @Override
@@ -62,13 +68,14 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
 
         int pos = 0;
 
-        for(FragmentAdapter.FragmentInfo fragInfo : this.frags)
-        {
-            if(fragInfo.getTitle().equals(title))
+        for(FragmentAdapter.FragmentWrapper fragInfo : this.frags) {
+            if (fragInfo.getTitle().equals(title)) {
                 // set viewpager to go there
                 mViewPager.setCurrentItem(pos);
-            else
-                pos++;
+                return;
+            }
+            // set for next pos
+            pos++;
         }
     }
 
@@ -80,8 +87,8 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
      */
     @Override
     public Fragment findFragmentByTitle(String title) {
-
-        for(FragmentAdapter.FragmentInfo fragInfo : this.frags)
+        // loop fragments to find the correct one
+        for(FragmentAdapter.FragmentWrapper fragInfo : this.frags)
         {
             if(fragInfo.getTitle().equals(title))
                 // return frag
@@ -90,5 +97,4 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
 
         return null;
     }
-
 }

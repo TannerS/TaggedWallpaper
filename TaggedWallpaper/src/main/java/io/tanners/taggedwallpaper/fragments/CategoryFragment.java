@@ -10,23 +10,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.adapters.CategoryImageAdapter;
 import io.tanners.taggedwallpaper.model.categories.CategoryItem;
 
-
+/**
+ * Fragment to hold the categories layout for image categories
+ */
 public class CategoryFragment extends Fragment {
     private ArrayList<CategoryItem> categories;
     private RecyclerView mCategoryList;
@@ -42,7 +41,6 @@ public class CategoryFragment extends Fragment {
     public static CategoryFragment newInstance() {
         return new CategoryFragment();
     }
-
 
     /**
      * @param inflater
@@ -76,12 +74,12 @@ public class CategoryFragment extends Fragment {
     private void loadCategoryList()
     {
         mCategoryList = (RecyclerView) view.findViewById(R.id.universal_grideview);
-        // TODO make value for multiple devices
         mCategoryList.setLayoutManager(new GridLayoutManager(getActivity(), 1));
     }
 
     /**
      * init firebase database connection to load categories
+     *
      * @param listener
      */
     private void initCategoryListener(ValueEventListener listener)
@@ -107,8 +105,6 @@ public class CategoryFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                // uses treemap to make it sorted
-                TreeMap<String, String> categoryItems = new TreeMap<String, String>();
                 // get data from firebase
                 HashMap<String, String> categoryItemsRaw = (HashMap<String, String>) dataSnapshot.getValue();
                 // check new contents
@@ -121,13 +117,16 @@ public class CategoryFragment extends Fragment {
                 }
                 else {
                     // add new data
-                    categoryItems.putAll(categoryItemsRaw);
+                    // uses treemap to make it sorted
+                    TreeMap<String, String> categoryItems = new TreeMap<String, String>(categoryItemsRaw);
                     for (Map.Entry<String, String> entry : categoryItems.entrySet()) {
                         categories.add(new CategoryItem(entry.getKey(), entry.getValue()));
                     }
                     // set new data
-                    mCategoryList.setAdapter(new CategoryImageAdapter(getContext(), categories, R.layout.category_item));
+                    mCategoryList.setAdapter(new CategoryImageAdapter(getContext(), categories));
+                    // hide progress loading bar
                     mProgressBar.setVisibility(View.GONE);
+                    // make gridview visible
                     (view.findViewById(R.id.grid_view_layout)).setVisibility(View.VISIBLE);
                 }
             }

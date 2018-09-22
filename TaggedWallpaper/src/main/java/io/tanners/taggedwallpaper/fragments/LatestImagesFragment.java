@@ -11,7 +11,7 @@ import io.tanners.taggedwallpaper.Util.ApiBuilder;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 
-public class LatestImagesFragment extends ImageFragment implements ErrorCallBack{
+public class LatestImagesFragment extends ImageFragment implements ErrorCallBack {
     public static final String LATEST = "Latest";
     // creates new instance
     public static LatestImagesFragment newInstance() {
@@ -24,7 +24,6 @@ public class LatestImagesFragment extends ImageFragment implements ErrorCallBack
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mBuilder = new ApiBuilder(this.tag, mPerPage, mPage, ApiBuilder.OrderBy.LATEST);
     }
 
     /**
@@ -37,25 +36,6 @@ public class LatestImagesFragment extends ImageFragment implements ErrorCallBack
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_images, container, false);
         loadRecyclerView(view);
-        loadLoader();
         return view;
-    }
-
-    /**
-     * callback for imagerequester
-     */
-    @Override
-    public void displayError() {
-        SimpleSnackBarBuilder.createAndDisplaySnackBar(
-                view.findViewById(R.id.fragment_images_container),
-                "Error loading images",
-                Snackbar.LENGTH_INDEFINITE,
-                "Close");
-    }
-
-
-    @Override
-    public void displayNoError() {
-        // no need for implementation
     }
 }

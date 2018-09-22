@@ -51,10 +51,9 @@ import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 import io.tanners.taggedwallpaper.model.results.photo.PhotoResult;
 import io.tanners.taggedwallpaper.network.image.download.ImageDownloader;
-import io.tanners.taggedwallpaper.interfaces.IImageLoadOptions;
 
 // https://developer.android.com/reference/android/support/v4/app/ActivityCompat.OnRequestPermissionsResultCallback.html
-public class DisplayActivity extends AppCompatActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback, LoaderManager.LoaderCallbacks<Boolean> {
+public class ImageDisplayActivity extends AppCompatActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback, LoaderManager.LoaderCallbacks<Boolean> {
     public final static String RESULT = "RESULT";
     private ImageView mMainImageView;
     private final int IMAGE_DOWNLOAD = 256;
@@ -189,7 +188,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
     }
 
     private void loadImage(String mUrl, final ImageView mView, final IImageLoadOptions mCallback) {
-        Glide.with(DisplayActivity.this)
+        Glide.with(ImageDisplayActivity.this)
                 .load(mUrl)
                 .apply(loadGlideRequestOptions())
                 .transition(loadGlideTransitions())
@@ -198,12 +197,12 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         // on image load error
                         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                            Glide.with(DisplayActivity.this).load(ContextCompat.getDrawable(DisplayActivity.this, R.drawable.ic_error_black_48dp))
+                            Glide.with(ImageDisplayActivity.this).load(ContextCompat.getDrawable(ImageDisplayActivity.this, R.drawable.ic_error_black_48dp))
                                     .apply(loadGlideRequestOptions())
                                     .transition(loadGlideTransitions())
                                     .into(mView);
                         } else {
-                            Glide.with(DisplayActivity.this).load(getResources().getDrawable(R.drawable.ic_error_black_48dp))
+                            Glide.with(ImageDisplayActivity.this).load(getResources().getDrawable(R.drawable.ic_error_black_48dp))
                                     .apply(loadGlideRequestOptions())
                                     .transition(loadGlideTransitions())
                                     .into(mView);
@@ -277,9 +276,10 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         mHideHandler.removeCallbacks(mShowPart2Runnable);
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
 
-        FitSystemWindowsLayout mainLayout = (FitSystemWindowsLayout) findViewById(R.id.display_activity_main_id);
+//        FitSystemWindowsLayout mainLayout = (FitSystemWindowsLayout) findViewById(R.id.display_activity_main_id);
+//        FrameLayout mainLayout = (FitSystemWindowsLayout) findViewById(R.id.display_activity_main_id);
 
-        mainLayout.setFit(false);
+//        mainLayout.setFit(false);
 
     }
 
@@ -299,8 +299,9 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
         mHideHandler.removeCallbacks(mHidePart2Runnable);
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
 
-        FitSystemWindowsLayout mainLayout = (FitSystemWindowsLayout) findViewById(R.id.display_activity_main_id);
-        mainLayout.setFit(true);
+//        FitSystemWindowsLayout mainLayout = (FitSystemWindowsLayout) findViewById(R.id.display_activity_main_id);
+//        FrameLayout mainLayout = (FitSystemWindowsLayout) findViewById(R.id.display_activity_main_id);
+//        mainLayout.setFit(true);
 
     }
 
@@ -601,7 +602,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 try {
                     // set wallpaper based on image stream
-                    WallpaperManager.getInstance(DisplayActivity.this).setStream(
+                    WallpaperManager.getInstance(ImageDisplayActivity.this).setStream(
                             getNetworkConnection(mUrl),
                             null,
                             true,
@@ -616,7 +617,7 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 Bitmap bitmap = BitmapFactory.decodeStream(getNetworkConnection(mUrl));
                 try {
                     // set wallpaper
-                    WallpaperManager.getInstance(DisplayActivity.this).setBitmap(bitmap);
+                    WallpaperManager.getInstance(ImageDisplayActivity.this).setBitmap(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return false;
@@ -652,5 +653,12 @@ public class DisplayActivity extends AppCompatActivity implements android.suppor
                 return null;
             }
         }
+    }
+
+
+    public interface IImageLoadOptions
+    {
+        public void loadingImage();
+        public void errorLoadingImage();
     }
 }

@@ -12,5 +12,4 @@ public class SearchSuggestionProvider extends SearchRecentSuggestionsProvider {
     public SearchSuggestionProvider() {
         setupSuggestions(AUTHORITY, MODE);
     }
-
 }

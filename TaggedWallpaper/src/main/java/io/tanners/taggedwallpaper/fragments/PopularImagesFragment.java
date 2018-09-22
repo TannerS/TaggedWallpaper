@@ -24,7 +24,7 @@ public class PopularImagesFragment extends ImageFragment implements ErrorCallBac
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mBuilder = new ApiBuilder(this.tag, mPerPage, mPage, ApiBuilder.OrderBy.POPULAR);
+//        this.mBuilder = new ApiBuilder(this.tag, mPerPage, mPage, ApiBuilder.OrderBy.POPULAR);
     }
 
     /**
@@ -37,24 +37,6 @@ public class PopularImagesFragment extends ImageFragment implements ErrorCallBac
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_images, container, false);
         loadRecyclerView(view);
-        loadLoader();
         return view;
-    }
-
-    /**
-     * callback for imagerequester
-     */
-    @Override
-    public void displayError() {
-        SimpleSnackBarBuilder.createAndDisplaySnackBar(
-                view.findViewById(R.id.fragment_images_container),
-                "Error loading images",
-                Snackbar.LENGTH_INDEFINITE,
-                "Close");
-    }
-
-    @Override
-    public void displayNoError() {
-        // no need for implementation
     }
 }

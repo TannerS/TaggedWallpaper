@@ -5,11 +5,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.List;
 
+/**
+ * Fragment adapter to hold fragments with built in functionality
+ */
 public class FragmentAdapter extends FragmentStatePagerAdapter
 {
-    private List<FragmentInfo> frags;
+    private List<FragmentWrapper> frags;
 
-    public FragmentAdapter(FragmentManager manager, List<FragmentInfo> frags)
+    public FragmentAdapter(FragmentManager manager, List<FragmentWrapper> frags)
     {
         super(manager);
         this.frags = frags;
@@ -49,12 +52,12 @@ public class FragmentAdapter extends FragmentStatePagerAdapter
     /**
      * wrapper class to hold fragments and their tiles
      */
-    public static class FragmentInfo
+    public static class FragmentWrapper
     {
         private String title;
         private Fragment frag;
 
-        public FragmentInfo(Fragment frag, String title)
+        public FragmentWrapper(Fragment frag, String title)
         {
             this.frag = frag;
             this.title = title;
