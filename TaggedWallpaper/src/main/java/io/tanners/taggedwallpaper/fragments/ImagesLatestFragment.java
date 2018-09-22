@@ -1,21 +1,17 @@
 package io.tanners.taggedwallpaper.fragments;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import io.tanners.taggedwallpaper.R;
-import io.tanners.taggedwallpaper.Util.ApiBuilder;
-import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 
-public class LatestImagesFragment extends ImageFragment implements ErrorCallBack {
+public class ImagesLatestFragment extends ImagesBaseFragment implements ErrorCallBack {
     public static final String LATEST = "Latest";
     // creates new instance
-    public static LatestImagesFragment newInstance() {
-        return new LatestImagesFragment();
+    public static ImagesLatestFragment newInstance() {
+        return new ImagesLatestFragment();
     }
 
     /**

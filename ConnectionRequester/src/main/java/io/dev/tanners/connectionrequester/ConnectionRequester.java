@@ -1,39 +1,24 @@
-package io.tanners.taggedwallpaper.network;
+package io.dev.tanners.connectionrequester;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.util.Log;
-
-import org.apache.commons.io.IOUtils;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-//import java.nio.charset.StandardCharsets;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-public class ConnectionRequest {
+public class ConnectionRequester {
     // type of connection
-    public static enum TYPES {
+    public static enum RequestType {
         POST("POST"),
         GET("GET");
 
         private String type;
 
-        TYPES(String type) {
+        RequestType(String type) {
             this.type = type;
         }
 
@@ -53,18 +38,13 @@ public class ConnectionRequest {
     private String mCharset;
     private final String LINE_BREAK = "\r\n";
 
-    public ConnectionRequest(String mUrl) {
+    public ConnectionRequester(String mUrl, String encoding) {
         mEntries = new HashMap<String, String>();
         mConnectionTimeOut = 5000;
-        mReadTimeOut = 5000;
+        mReadTimeOut = 10000;
         mBody = null;
-        mRequestype = TYPES.GET.toString();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-            mCharset = (StandardCharsets.UTF_8.name().toLowerCase(Locale.getDefault()));
-        else
-            mCharset = "utf-8";
-
+        mRequestype = RequestType.GET.toString();
+        mCharset = encoding;
         this.mUrl = mUrl;
     }
 
@@ -72,42 +52,51 @@ public class ConnectionRequest {
      * set connecton type
      * @param type
      */
-    public void setRequestType(TYPES type) {
+    public ConnectionRequester setRequestType(RequestType type) {
         mRequestype = type.toString();
+
+        return this;
     }
 
     /**
      * charste for data
      * @param charset
      */
-    public void setCharSet(String charset)
+    public ConnectionRequester setCharSet(String charset)
     {
         mCharset = charset;
+
+        return this;
     }
 
     /**
      * timeout
      * @param time
      */
-    public void setConnectionTimeOut(int time)
+    public ConnectionRequester setConnectionTimeOut(int time)
     {
         mConnectionTimeOut = time;
+
+        return this;
     }
 
     /**
      * reading timeout
      * @param time
      */
-    public void setReadTimeOut(int time)
+    public ConnectionRequester setReadTimeOut(int time)
     {
         mReadTimeOut = time;
+
+        return this;
     }
 
     /**
      * add passed in headers to http packet
+     *
      * @param entries
      */
-    public void addRequestHeader(HashMap<String, String> entries)
+    public ConnectionRequester addRequestHeader(HashMap<String, String> entries)
     {
         if(entries != null) {
 
@@ -117,27 +106,35 @@ public class ConnectionRequest {
                 this.mEntries.put(key, value);
             }
         }
+
+        return this;
     }
 
     /**
      * add passed in header to http packet
+     *
      * @param key
      * @param value
      */
-    public void addRequestHeader(String key, String value)
+    public ConnectionRequester addRequestHeader(String key, String value)
     {
         if(mEntries != null) {
             this.mEntries.put(key.trim(), value.trim());
         }
+
+        return this;
     }
 
     /**
      * add body
+     *
      * @param body
      */
-    public void addBasicBody(String body)
+    public ConnectionRequester addBasicBody(String body)
     {
         this.mBody = body;
+
+        return this;
     }
 
     /**
@@ -150,6 +147,7 @@ public class ConnectionRequest {
             for (Map.Entry<String, String> entry : mEntries.entrySet()) {
                 String key = (entry.getKey()).trim();
                 String value = (entry.getValue()).trim();
+
                 connection.setRequestProperty(key, value);
             }
         }
@@ -160,7 +158,7 @@ public class ConnectionRequest {
      */
     private void setBody()
     {
-        if(mBody == null || mBody.length() <= 0)
+        if(mBody == null || mBody.length() == 0)
             // set body length
             connection.setFixedLengthStreamingMode(0);
         else {
@@ -187,9 +185,9 @@ public class ConnectionRequest {
     }
 
     /**
-     * defauly settings
+     * default settings
      */
-    private void setDefaults()
+    private void setConfig()
     {
         if(mBody != null)
             // means we will be sending content
@@ -214,19 +212,27 @@ public class ConnectionRequest {
         connection.setRequestProperty("charset", mCharset);
     }
 
-    /**
-     * connect to url
-     * @return
-     */
-    public boolean connect() throws IOException {
-        // open connect from url object
-        connection = (HttpURLConnection) (new URL(mUrl)).openConnection();
+    public ConnectionRequester build() throws IOException {
         // set options
-        setDefaults();
+        setConfig();
         setHeaders();
         setBody();
 
-        return (connection.getResponseCode() == HttpURLConnection.HTTP_OK);
+        return this;
+    }
+
+    /**
+     * connect to url
+     *
+     * @return
+     */
+    public int connect() throws IOException {
+        // open connect from url object
+        connection = (HttpURLConnection) (new URL(mUrl)).openConnection();
+        // build settings
+        build();
+        // return resposne code
+        return (connection.getResponseCode());
     }
 
     /**
@@ -240,12 +246,14 @@ public class ConnectionRequest {
         }
     }
 
-    /**
-     * get current connection
-     * @return
-     */
-    public HttpURLConnection getConnection()
-    {
-        return this.connection;
+    public boolean isConnectionOk() {
+        return connection != null;
+    }
+
+    public InputStream getStream() throws IOException {
+        if(connection != null) {
+            return connection.getInputStream();
+        }
+        return null;
     }
 }

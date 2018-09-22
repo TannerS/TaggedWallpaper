@@ -26,7 +26,7 @@ import io.tanners.taggedwallpaper.model.categories.CategoryItem;
 /**
  * Fragment to hold the categories layout for image categories
  */
-public class CategoryFragment extends Fragment {
+public class ImagesCategoryFragment extends Fragment {
     private ArrayList<CategoryItem> categories;
     private RecyclerView mCategoryList;
     public static final String CATEGORY = "Category";
@@ -38,8 +38,8 @@ public class CategoryFragment extends Fragment {
      * Create new Instance of class
      * @return
      */
-    public static CategoryFragment newInstance() {
-        return new CategoryFragment();
+    public static ImagesCategoryFragment newInstance() {
+        return new ImagesCategoryFragment();
     }
 
     /**

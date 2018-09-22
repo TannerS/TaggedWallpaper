@@ -16,9 +16,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import io.tanners.taggedwallpaper.fragments.CategoryFragment;
-import io.tanners.taggedwallpaper.fragments.LatestImagesFragment;
-import io.tanners.taggedwallpaper.fragments.PopularImagesFragment;
+import io.tanners.taggedwallpaper.fragments.ImagesCategoryFragment;
+import io.tanners.taggedwallpaper.fragments.ImagesLatestFragment;
+import io.tanners.taggedwallpaper.fragments.ImagesPopularFragment;
 import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
 
 public class MainActivity extends TabbedActivity {
@@ -36,9 +36,9 @@ public class MainActivity extends TabbedActivity {
         setUpTabs(R.id.universal_view_pager, R.id.universal_tab_layout, MAXNUMOFFRAGS);
         // set up fragments into adapter
         setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentWrapper>() {{
-            add(new FragmentAdapter.FragmentWrapper(CategoryFragment.newInstance(), CategoryFragment.CATEGORY));
-            add(new FragmentAdapter.FragmentWrapper(PopularImagesFragment.newInstance(), PopularImagesFragment.POPULAR));
-            add(new FragmentAdapter.FragmentWrapper(LatestImagesFragment.newInstance(), LatestImagesFragment.LATEST));
+            add(new FragmentAdapter.FragmentWrapper(ImagesCategoryFragment.newInstance(), ImagesCategoryFragment.CATEGORY));
+            add(new FragmentAdapter.FragmentWrapper(ImagesPopularFragment.newInstance(), ImagesPopularFragment.POPULAR));
+            add(new FragmentAdapter.FragmentWrapper(ImagesLatestFragment.newInstance(), ImagesLatestFragment.LATEST));
 
         }});
         // handle search queries

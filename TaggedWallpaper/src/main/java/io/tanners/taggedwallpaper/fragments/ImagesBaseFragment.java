@@ -11,9 +11,9 @@ import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 
-public class ImageFragment extends Fragment implements ErrorCallBack
+public class ImagesBaseFragment extends Fragment implements ErrorCallBack
 {
-//public class ImageFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<PhotoResult>> {
+//public class ImagesBaseFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<PhotoResult>> {
     protected View view;
     protected RecyclerView mRecyclerView;
     protected ProgressBar mProgressBar;

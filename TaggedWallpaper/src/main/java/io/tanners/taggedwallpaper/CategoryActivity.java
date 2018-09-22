@@ -6,8 +6,8 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import java.util.ArrayList;
 import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
-import io.tanners.taggedwallpaper.fragments.LatestImagesFragment;
-import io.tanners.taggedwallpaper.fragments.PopularImagesFragment;
+import io.tanners.taggedwallpaper.fragments.ImagesLatestFragment;
+import io.tanners.taggedwallpaper.fragments.ImagesPopularFragment;
 import io.tanners.taggedwallpaper.interfaces. IGetTag;
 
 public class CategoryActivity extends TabbedActivity implements IGetTag {
@@ -30,8 +30,8 @@ public class CategoryActivity extends TabbedActivity implements IGetTag {
         setUpTabs(R.id.universal_view_pager, R.id.universal_tab_layout, MAXNUMOFFRAGS);
         // set up fragments
         setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentWrapper>() {{
-            add(new FragmentAdapter.FragmentWrapper(LatestImagesFragment.newInstance(), LatestImagesFragment.LATEST));
-            add(new FragmentAdapter.FragmentWrapper(PopularImagesFragment.newInstance(), PopularImagesFragment.POPULAR));
+            add(new FragmentAdapter.FragmentWrapper(ImagesLatestFragment.newInstance(), ImagesLatestFragment.LATEST));
+            add(new FragmentAdapter.FragmentWrapper(ImagesPopularFragment.newInstance(), ImagesPopularFragment.POPULAR));
         }});
         // set page to be a child of parent activity, this will show the back arrow to return to back activity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

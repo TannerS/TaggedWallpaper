@@ -655,7 +655,6 @@ public class ImageDisplayActivity extends AppCompatActivity implements android.s
         }
     }
 
-
     public interface IImageLoadOptions
     {
         public void loadingImage();
