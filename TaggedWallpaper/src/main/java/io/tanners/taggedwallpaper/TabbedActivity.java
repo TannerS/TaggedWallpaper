@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import java.util.ArrayList;
 import java.util.List;
-import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
-import io.tanners.taggedwallpaper.animations.ZoomOutPageTransformer;
+import io.tanners.taggedwallpaper.adapters.fragment.FragmentAdapter;
+import io.tanners.taggedwallpaper.support.transformer.fragment.ZoomOutPageTransformer;
 import io.tanners.taggedwallpaper.interfaces.IFindFragment;
 
 /**
@@ -21,6 +21,7 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
 
     /**
      * set up action bar
+     *
      * @param id
      */
     protected void setUpToolBar(int id)
@@ -47,6 +48,7 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
 
     /**
      * load fragments
+     *
      * @param frags
      */
     protected void setUpFragmentAdapters(ArrayList<FragmentAdapter.FragmentWrapper> frags)

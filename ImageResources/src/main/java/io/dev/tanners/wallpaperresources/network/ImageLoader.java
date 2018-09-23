@@ -9,14 +9,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.telecom.ConnectionRequest;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
@@ -37,7 +32,7 @@ public abstract class ImageLoader<T> {
         this.mContext = mContext;
     }
 
-    protected void loadLoader(String mUrl, final ImageRequest mImageCallback, int id)
+    protected void loadLoader(String mUrl, int id,  LoaderManager.LoaderCallbacks<T> mCallback)
     {
         // bundle for loader, but not needed for this but can't be null
         Bundle mBundle = new Bundle();
@@ -47,24 +42,6 @@ public abstract class ImageLoader<T> {
         LoaderManager mLoaderManager = ((AppCompatActivity) mContext).getSupportLoaderManager();
 
         Loader<List<T>> mImageLoader = mLoaderManager.getLoader(id);
-
-        LoaderManager.LoaderCallbacks<T> mCallback = new LoaderManager.LoaderCallbacks<T>() {
-            @NonNull
-            @Override
-            public Loader<T> onCreateLoader(int id, @Nullable Bundle args) {
-                return new RestLoader<T>(mContext, args);
-            }
-
-            @Override
-            public void onLoadFinished(@NonNull Loader<T> loader, T results) {
-                mImageCallback.onResultsPost(results);
-            }
-
-            @Override
-            public void onLoaderReset(@NonNull Loader<T> loader) {
-                // not needed
-            }
-        };
 
         if(mImageLoader != null) {
             mLoaderManager.initLoader(id, mBundle, mCallback).forceLoad();
@@ -121,7 +98,6 @@ public abstract class ImageLoader<T> {
                         throw new Exception("Connection failure");
                     }
                 }
-                // TODO error handling here
             } catch (IOException e1) {
                 e1.printStackTrace();
             } catch (Exception e1) {
@@ -144,9 +120,5 @@ public abstract class ImageLoader<T> {
 
             return gson.create().fromJson(mJson, mType);
         }
-    }
-
-    public interface ImageRequest<T> {
-        public void onResultsPost(T mData);
     }
 }

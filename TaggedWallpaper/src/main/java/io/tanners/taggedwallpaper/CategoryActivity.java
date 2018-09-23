@@ -5,9 +5,10 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import java.util.ArrayList;
-import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
-import io.tanners.taggedwallpaper.fragments.ImagesLatestFragment;
-import io.tanners.taggedwallpaper.fragments.ImagesPopularFragment;
+
+import io.tanners.taggedwallpaper.adapters.fragment.FragmentAdapter;
+import io.tanners.taggedwallpaper.fragments.image.order.latest.ImagesLatestFragment;
+import io.tanners.taggedwallpaper.fragments.image.order.popular.ImagesPopularFragment;
 import io.tanners.taggedwallpaper.interfaces. IGetTag;
 
 public class CategoryActivity extends TabbedActivity implements IGetTag {

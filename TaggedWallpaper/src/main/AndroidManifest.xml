@@ -16,8 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <provider android:name=".SearchSuggestionProvider"
-            android:authorities="io.tanners.taggedwallpaper.SearchSuggestionProvider" />
+        <provider android:name=".support.providers.SearchSuggestionProvider"
+            android:authorities="io.tanners.taggedwallpaper.support.providers.SearchSuggestionProvider" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

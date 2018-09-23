@@ -1,11 +1,10 @@
 package io.tanners.taggedwallpaper.interfaces;
 
 /**
- * Callback for error messages when fragments attempt to populate images
- * This used in the LatestImage and PopulateImages fragments
+ * Callback for error messages for fragments
  */
 public interface ErrorCallBack
 {
-    public void displayError();
-    public void displayNoError();
+    public void displayError(String mMessage);
+    public void displayNoError(String mMessage);
 }

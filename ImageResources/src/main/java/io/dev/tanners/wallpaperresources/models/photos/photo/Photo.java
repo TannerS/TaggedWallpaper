@@ -14,7 +14,57 @@ public class Photo {
     private Links links;
     private User user;
 
-/*
+    public Photo() { }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Urls getUrls() {
+        return urls;
+    }
+
+    public void setUrls(Urls urls) {
+        this.urls = urls;
+    }
+
+    public Links getLinks() {
+        return links;
+    }
+
+    public void setLinks(Links links) {
+        this.links = links;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    /*
  "id": "Dwu85P9SOIk",
   "created_at": "2016-05-03T11:00:28-04:00",
   "updated_at": "2016-07-10T11:00:01-05:00",

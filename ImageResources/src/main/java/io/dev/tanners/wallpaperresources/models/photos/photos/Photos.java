@@ -8,8 +8,7 @@ import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 // just have an List of Photo objects for this model
-public class Photos<Photo> extends ArrayList<io.dev.tanners.wallpaperresources.models.photos.photo.Photo> {
-
+public class Photos extends ArrayList<Photo> {
     /*
     [
   {

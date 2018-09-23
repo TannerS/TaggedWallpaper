@@ -16,11 +16,24 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import io.tanners.taggedwallpaper.fragments.ImagesCategoryFragment;
-import io.tanners.taggedwallpaper.fragments.ImagesLatestFragment;
-import io.tanners.taggedwallpaper.fragments.ImagesPopularFragment;
-import io.tanners.taggedwallpaper.adapters.FragmentAdapter;
 
+import io.tanners.taggedwallpaper.support.providers.SearchSuggestionProvider;
+import io.tanners.taggedwallpaper.fragments.image.category.ImagesCategoryFragment;
+import io.tanners.taggedwallpaper.fragments.image.order.latest.ImagesLatestFragment;
+import io.tanners.taggedwallpaper.fragments.image.order.popular.ImagesPopularFragment;
+import io.tanners.taggedwallpaper.adapters.fragment.FragmentAdapter;
+/*
+TODO
+        1) viewmodel for all fragments
+        2) gridview col num base on screen size
+        3) mateiral design for all screens
+        4) add favroties fragment
+        5) add favorites selection on details activity
+        6) add room for favorites, executor, and etc
+        7) api guidelines for hot linking
+        8) save/restore scroll position (google for guide)
+        9)
+ */
 public class MainActivity extends TabbedActivity {
     private final int MAXNUMOFFRAGS = 3;
 
@@ -56,6 +69,7 @@ public class MainActivity extends TabbedActivity {
         getMenuInflater().inflate(R.menu.search_bar, menu);
         // set up search bar for search functionality
         setUpSearchBar(menu);
+        // return
         return true;
     }
 
@@ -78,9 +92,9 @@ public class MainActivity extends TabbedActivity {
             case R.id.photo_search:
                 /*
                     When menu item (search bar) is hidden due to screen size
-                    must use this hewre to handle it
+                    must use this here to handle it
 
-                    as said on dos
+                    as said on docs
 
                     TODO:
 
@@ -118,7 +132,9 @@ public class MainActivity extends TabbedActivity {
     }
 
     /**
-     *  https://developer.android.com/training/search/setup.html
+     * https://stackoverflow.com/a/8896750
+     *
+     * Loads new intent created by search in same activity
      *
      * @param intent
      */
@@ -139,8 +155,8 @@ public class MainActivity extends TabbedActivity {
      */
     @Override
     public boolean onSearchRequested() {
-        Bundle appData = new Bundle();
-        startSearch(null, false, appData, false);
+        startSearch(null, false, new Bundle(), false);
+        // return true
         return true;
     }
 
@@ -157,7 +173,7 @@ public class MainActivity extends TabbedActivity {
             query = query.trim().toLowerCase();
             // save query into history
             getSearchProvider().saveRecentQuery(query, null);
-            // make sure its safe to be put into url for any reason, including security
+            // make sure its safe to be put into url for any reason
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
                     query = URLEncoder.encode(query, StandardCharsets.UTF_8.name());
@@ -177,8 +193,11 @@ public class MainActivity extends TabbedActivity {
      */
     private SearchRecentSuggestions getSearchProvider()
     {
-       return new SearchRecentSuggestions(this,
-            SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE);
+       return new SearchRecentSuggestions(
+               this,
+            SearchSuggestionProvider.AUTHORITY,
+               SearchSuggestionProvider.MODE
+       );
     }
 
     /**

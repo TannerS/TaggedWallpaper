@@ -5,6 +5,8 @@ package io.tanners.taggedwallpaper.model.categories;
  */
 public class CategoryItem
 {
+    private String mUrl;
+    private String mTitle;
     public String getmUrl() {
         return mUrl;
     }
@@ -25,7 +27,4 @@ public class CategoryItem
         this.mUrl = mUrl;
         this.mTitle = mTitle;
     }
-
-    private String mUrl;
-    private String mTitle;
 }

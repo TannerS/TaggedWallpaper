@@ -44,13 +44,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import io.tanners.taggedwallpaper.Util.ExternalFileStorageUtil;
-import io.tanners.taggedwallpaper.Util.FitSystemWindowsLayout;
-import io.tanners.taggedwallpaper.Util.PermissionRequester;
-import io.tanners.taggedwallpaper.Util.SimpleSnackBarBuilder;
-import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
+import io.tanners.taggedwallpaper.support.file.ExternalFileStorageUtil;
+import io.tanners.taggedwallpaper.support.permissions.PermissionRequester;
+import io.tanners.taggedwallpaper.support.builder.snackbar.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.model.results.photo.PhotoResult;
-import io.tanners.taggedwallpaper.network.image.download.ImageDownloader;
 
 // https://developer.android.com/reference/android/support/v4/app/ActivityCompat.OnRequestPermissionsResultCallback.html
 public class ImageDisplayActivity extends AppCompatActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback, LoaderManager.LoaderCallbacks<Boolean> {
@@ -437,53 +434,53 @@ public class ImageDisplayActivity extends AppCompatActivity implements android.s
      * Do something with image
      */
     private void downloadImage() {
-        ExternalFileStorageUtil mStorageUtil = new ExternalFileStorageUtil();
-        // check if external storage is writable
-        if (mStorageUtil.isExternalStorageWritable()) {
-            // use that newly created image file to share or download
-            // you need to download before sharing
-            new ImageDownloader(this,
-                    getNewFile(mStorageUtil),
-                    new ErrorCallBack() {
-                        @Override
-                        public void displayError() {
-                            final Snackbar mFailSnackbar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
-                                    "ERROR: Image Cannot Be Downloaded",
-                                    Snackbar.LENGTH_INDEFINITE);
-
-                            mFailSnackbar.setAction("Close", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    mFailSnackbar.dismiss();
-                                }
-                            });
-
-                            mFailSnackbar.show();
-                        }
-
-                        @Override
-                        public void displayNoError() {
-                            final Snackbar mSnackbar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
-                                    "Image downloaded",
-                                    Snackbar.LENGTH_INDEFINITE);
-
-                            mSnackbar.setAction("Close", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    mSnackbar.dismiss();
-                                }
-                            });
-
-                            mSnackbar.show();
-                        }
-                    }
-            ).execute(mPhotoInfo.getImageURL());
-        }
-        // cant read, connected to pc, ejected, etc
-        else {
-            // display error as snackbar
-            displayStorageErrorSnackBar();
-        }
+//        ExternalFileStorageUtil mStorageUtil = new ExternalFileStorageUtil();
+//        // check if external storage is writable
+//        if (mStorageUtil.isExternalStorageWritable()) {
+//            // use that newly created image file to share or download
+//            // you need to download before sharing
+//            new ImageDownloader(this,
+//                    getNewFile(mStorageUtil),
+//                    new ErrorCallBack() {
+//                        @Override
+//                        public void displayError(String mMessage) {
+//                            final Snackbar mFailSnackbar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
+//                                    mMessage,
+//                                    Snackbar.LENGTH_INDEFINITE);
+//
+//                            mFailSnackbar.setAction("Close", new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//                                    mFailSnackbar.dismiss();
+//                                }
+//                            });
+//
+//                            mFailSnackbar.show();
+//                        }
+//
+//                        @Override
+//                        public void displayNoError(String mMessage) {
+//                            final Snackbar mSnackbar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_activity_main_id),
+//                                    mMessage,
+//                                    Snackbar.LENGTH_INDEFINITE);
+//
+//                            mSnackbar.setAction("Close", new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//                                    mSnackbar.dismiss();
+//                                }
+//                            });
+//
+//                            mSnackbar.show();
+//                        }
+//                    }
+//            ).execute(mPhotoInfo.getImageURL());
+//        }
+//        // cant read, connected to pc, ejected, etc
+//        else {
+//            // display error as snackbar
+//            displayStorageErrorSnackBar();
+//        }
     }
 
     private void shareImage() {
