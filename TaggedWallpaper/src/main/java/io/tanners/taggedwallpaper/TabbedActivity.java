@@ -14,7 +14,7 @@ import io.tanners.taggedwallpaper.interfaces.IFindFragment;
 /**
  * Base class to hold tabbed fragments
  */
-public class TabbedActivity extends AppCompatActivity implements IFindFragment {
+public class TabbedActivity extends NetworkActivity implements IFindFragment {
     protected List<FragmentAdapter.FragmentWrapper> frags;
     protected ViewPager mViewPager;
     protected Toolbar mToolbar;
@@ -28,6 +28,10 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
     {
         mToolbar = (Toolbar) findViewById(id);
         setSupportActionBar(mToolbar);
+    }
+
+    protected int getSize() {
+        return frags == null ? 0 : frags.size();
     }
 
     /**
@@ -98,5 +102,22 @@ public class TabbedActivity extends AppCompatActivity implements IFindFragment {
         }
 
         return null;
+    }
+
+
+    /**
+     * when use clicks back, back on tabs first before activity then closing app (at end)
+     */
+    @Override
+    public void onBackPressed() {
+        // cycle fragments to first one
+        if (mViewPager.getCurrentItem() == 0) {
+            // If the user is currently looking at the first step, allow the system to handle the
+            // Back button. This calls finish() on this activity and pops the back stack.
+            super.onBackPressed();
+        } else {
+            // Otherwise, select the previous step.
+            mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+        }
     }
 }

@@ -5,9 +5,12 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
@@ -17,6 +20,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+import io.tanners.taggedwallpaper.support.builder.snackbar.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.support.providers.SearchSuggestionProvider;
 import io.tanners.taggedwallpaper.fragments.image.category.ImagesCategoryFragment;
 import io.tanners.taggedwallpaper.fragments.image.order.latest.ImagesLatestFragment;
@@ -32,7 +36,7 @@ TODO
         6) add room for favorites, executor, and etc
         7) api guidelines for hot linking
         8) save/restore scroll position (google for guide)
-        9)
+        9) use acc repo + dagger for the image lib dependency toi be used into rep to give to view model, and can also use injector for
  */
 public class MainActivity extends TabbedActivity {
     private final int MAXNUMOFFRAGS = 3;
@@ -47,16 +51,40 @@ public class MainActivity extends TabbedActivity {
         setUpToolBar(R.id.universal_toolbar);
         // set up fragment tabs
         setUpTabs(R.id.universal_view_pager, R.id.universal_tab_layout, MAXNUMOFFRAGS);
-        // set up fragments into adapter
-        setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentWrapper>() {{
-            add(new FragmentAdapter.FragmentWrapper(ImagesCategoryFragment.newInstance(), ImagesCategoryFragment.CATEGORY));
-            add(new FragmentAdapter.FragmentWrapper(ImagesPopularFragment.newInstance(), ImagesPopularFragment.POPULAR));
-            add(new FragmentAdapter.FragmentWrapper(ImagesLatestFragment.newInstance(), ImagesLatestFragment.LATEST));
-
-        }});
+        // check for network and/or load fragments
+        onNetworkChange(isNetworkAvailable());
         // handle search queries
         // used for start, may not be needed
         handleSearch(getIntent());
+    }
+
+    /**
+     * check for network functionality
+     *
+     * @param isOn
+     */
+    @Override
+    protected void onNetworkChange(boolean isOn) {
+        // network connection, load fragments
+        if(isOn) {
+            // make sure not to reload the fragments
+            // since this is acted upon a broadcast receiver
+            if(getSize() > 0) {
+                // set up fragments into adapter
+                setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentWrapper>() {{
+                    add(new FragmentAdapter.FragmentWrapper(ImagesCategoryFragment.newInstance(), ImagesCategoryFragment.CATEGORY));
+                    add(new FragmentAdapter.FragmentWrapper(ImagesPopularFragment.newInstance(), ImagesPopularFragment.POPULAR));
+                    add(new FragmentAdapter.FragmentWrapper(ImagesLatestFragment.newInstance(), ImagesLatestFragment.LATEST));
+
+                }});
+            }
+            // no network connection, warn user
+        } else {
+            SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.app_main),
+                    "No network connection",
+                    Snackbar.LENGTH_INDEFINITE,
+                    "Close");
+        }
     }
 
     /**
@@ -219,21 +247,5 @@ public class MainActivity extends TabbedActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         // start intent
         context.startActivity(intent);
-    }
-
-    /**
-     * when use clicks back, back on tabs first before activity then closing app (at end)
-     */
-    @Override
-    public void onBackPressed() {
-        // cycle fragments to first one
-        if (mViewPager.getCurrentItem() == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed();
-        } else {
-            // Otherwise, select the previous step.
-            mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
-        }
     }
 }
