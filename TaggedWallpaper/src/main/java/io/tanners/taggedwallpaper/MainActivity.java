@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import io.tanners.taggedwallpaper.support.builder.snackbar.SimpleSnackBarBuilder;
+import io.tanners.taggedwallpaper.support.network.NetworkUtil;
 import io.tanners.taggedwallpaper.support.providers.SearchSuggestionProvider;
 import io.tanners.taggedwallpaper.fragments.image.category.ImagesCategoryFragment;
 import io.tanners.taggedwallpaper.fragments.image.order.latest.ImagesLatestFragment;
@@ -29,14 +30,15 @@ import io.tanners.taggedwallpaper.adapters.fragment.FragmentAdapter;
 /*
 TODO
         1) viewmodel for all fragments
+        - need to check when to load api call and when to load existing data, which life cycle method
         2) gridview col num base on screen size
-        3) mateiral design for all screens
-        4) add favroties fragment
+        3) material design for all screens
+        4) add favorites fragment
         5) add favorites selection on details activity
         6) add room for favorites, executor, and etc
         7) api guidelines for hot linking
         8) save/restore scroll position (google for guide)
-        9) use acc repo + dagger for the image lib dependency toi be used into rep to give to view model, and can also use injector for
+        9) use acc repo + dagger for the image lib dependency toi be used into rep to give to view model, and can also use injector for, this can come at a later time
  */
 public class MainActivity extends TabbedActivity {
     private final int MAXNUMOFFRAGS = 3;
@@ -51,8 +53,14 @@ public class MainActivity extends TabbedActivity {
         setUpToolBar(R.id.universal_toolbar);
         // set up fragment tabs
         setUpTabs(R.id.universal_view_pager, R.id.universal_tab_layout, MAXNUMOFFRAGS);
+
+
+
         // check for network and/or load fragments
-        onNetworkChange(isNetworkAvailable());
+        onNetworkChange(NetworkUtil.isNetworkAvailable(this));
+
+
+
         // handle search queries
         // used for start, may not be needed
         handleSearch(getIntent());
@@ -69,14 +77,11 @@ public class MainActivity extends TabbedActivity {
         if(isOn) {
             // make sure not to reload the fragments
             // since this is acted upon a broadcast receiver
-            if(getSize() > 0) {
+            if(getSize() == 0) {
                 // set up fragments into adapter
-                setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentWrapper>() {{
-                    add(new FragmentAdapter.FragmentWrapper(ImagesCategoryFragment.newInstance(), ImagesCategoryFragment.CATEGORY));
-                    add(new FragmentAdapter.FragmentWrapper(ImagesPopularFragment.newInstance(), ImagesPopularFragment.POPULAR));
-                    add(new FragmentAdapter.FragmentWrapper(ImagesLatestFragment.newInstance(), ImagesLatestFragment.LATEST));
-
-                }});
+                loadFragments();
+            } else {
+                // dont need to load fragments, they are already there!
             }
             // no network connection, warn user
         } else {
@@ -85,6 +90,15 @@ public class MainActivity extends TabbedActivity {
                     Snackbar.LENGTH_INDEFINITE,
                     "Close");
         }
+    }
+
+    protected void loadFragments() {
+        setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentWrapper>() {{
+            add(new FragmentAdapter.FragmentWrapper(ImagesCategoryFragment.newInstance(), ImagesCategoryFragment.CATEGORY));
+            add(new FragmentAdapter.FragmentWrapper(ImagesPopularFragment.newInstance(), ImagesPopularFragment.POPULAR));
+            add(new FragmentAdapter.FragmentWrapper(ImagesLatestFragment.newInstance(), ImagesLatestFragment.LATEST));
+
+        }});
     }
 
     /**

@@ -22,6 +22,10 @@ public class ImageOrderAdapter extends ImageAdapter<Photo> {
         super(mContext, mItems);
     }
 
+    public ImageOrderAdapter(Context mContext) {
+        this(mContext, null);
+    }
+
     /**
      * @param holder
      * @param position
@@ -56,10 +60,10 @@ public class ImageOrderAdapter extends ImageAdapter<Photo> {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Object result = mItems.get(getAdapterPosition());
-                    Intent intent = new Intent(mContext, ImageDisplayActivity.class);
-                    intent.putExtra(ImageDisplayActivity.RESULT, (Parcelable) result);
-                    mContext.startActivity(intent);
+//                    Object result = mItems.get(getAdapterPosition());
+//                    Intent intent = new Intent(mContext, ImageDisplayActivity.class);
+//                    intent.putExtra(ImageDisplayActivity.RESULT, (Parcelable) result);
+//                    mContext.startActivity(intent);
                 }
             });
         }

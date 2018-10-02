@@ -14,8 +14,8 @@ import io.tanners.taggedwallpaper.support.network.NetworkUtil;
 /**
  * https://stackoverflow.com/a/51019783/2449314
  */
-public abstract class NetworkActivity extends AppCompatActivity {
-    NetworkChangeReceiver mNetworkChangeReceiver;
+public class NetworkActivity extends AppCompatActivity {
+    private NetworkChangeReceiver mNetworkChangeReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

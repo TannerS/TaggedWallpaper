@@ -11,7 +11,7 @@ public class ImageUriBuilder {
     private static Uri.Builder getBaseUri() {
         return (new Uri.Builder())
                 .scheme(
-                        ConfigBase.Protocol.HTTPS.toString()
+                        ConfigBase.Protocol.HTTPS.protocol()
                 )
                 .authority(ConfigBase.BASE_URL);
     }

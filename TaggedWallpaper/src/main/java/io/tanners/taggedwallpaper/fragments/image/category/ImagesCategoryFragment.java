@@ -28,7 +28,7 @@ import io.tanners.taggedwallpaper.model.categories.CategoryItem;
 public class ImagesCategoryFragment extends ImagesFragment {
     private ArrayList<CategoryItem> mCategories;
     public static final String CATEGORY = "Category";
-    private final String FIREBASE_ID = "Categories";
+    private final String FIREBASE_ID = "categories";
 
     /**
      * Create new Instance of class
@@ -48,6 +48,8 @@ public class ImagesCategoryFragment extends ImagesFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = super.onCreateView(inflater, container, savedInstanceState);
+        // load recyclerview
+        loadRecyclerView();
         // load categories
         LoadCategories();
         // return view
@@ -89,13 +91,17 @@ public class ImagesCategoryFragment extends ImagesFragment {
                 HashMap<String, String> categoryItemsRaw = (HashMap<String, String>) dataSnapshot.getValue();
                 // add new data
                 // uses treemap to make it sorted
-                TreeMap<String, String> categoryItems = new TreeMap<String, String>(categoryItemsRaw);
-                // lop and add to new data sourcew ot organize by name
-                for (Map.Entry<String, String> entry : categoryItems.entrySet()) {
-                    mCategories.add(new CategoryItem(entry.getKey(), entry.getValue()));
+                if(categoryItemsRaw != null) {
+                    TreeMap<String, String> categoryItems = new TreeMap<String, String>(categoryItemsRaw);
+                    // reset
+                    categoryItemsRaw = null;
+                    // lop and add to new data sourcew ot organize by name
+                    for (Map.Entry<String, String> entry : categoryItems.entrySet()) {
+                        mCategories.add(new CategoryItem(entry.getKey(), entry.getValue()));
+                    }
+                    // set new data
+                    mRecyclerView.setAdapter(new ImageCategoryAdapter(getContext(), mCategories));
                 }
-                // set new data
-                mRecyclerView.setAdapter(new ImageCategoryAdapter(getContext(), mCategories));
             }
         });
     }

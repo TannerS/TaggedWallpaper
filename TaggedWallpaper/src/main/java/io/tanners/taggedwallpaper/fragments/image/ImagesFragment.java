@@ -10,8 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-
-import io.dev.tanners.wallpaperresources.models.photos.photos.Photos;
+//import io.dev.tanners.wallpaperresources.models.photos.photos.Photos;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.adapters.image.order.ImageOrderAdapter;
 import io.tanners.taggedwallpaper.support.builder.snackbar.SimpleSnackBarBuilder;
@@ -23,7 +22,7 @@ public class ImagesFragment extends Fragment implements ErrorCallBack
     protected View view;
     protected RecyclerView mRecyclerView;
     protected ProgressBar mProgressBar;
-    protected ImageOrderAdapter mAdapter;
+//    protected ImageAdapter mAdapter;
     protected GridLayoutManager mRecyclerViewLayoutManager;
     protected boolean loading;
     protected Context mContext;
@@ -32,6 +31,7 @@ public class ImagesFragment extends Fragment implements ErrorCallBack
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_images, container, false);
+        // return view
         return view;
     }
 
@@ -42,9 +42,9 @@ public class ImagesFragment extends Fragment implements ErrorCallBack
     }
 
     /**
-     * @param view
+     *
      */
-    protected void loadRecyclerView(View view)
+    protected void loadRecyclerView()
     {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.universal_grideview);
         mProgressBar = (ProgressBar) view.findViewById(R.id.universal_progressbar);
@@ -52,14 +52,6 @@ public class ImagesFragment extends Fragment implements ErrorCallBack
         mRecyclerViewLayoutManager.setSmoothScrollbarEnabled(true);
         mRecyclerViewLayoutManager.setAutoMeasureEnabled(false);
         mRecyclerView.setLayoutManager(mRecyclerViewLayoutManager);
-//         depending on the version of the OS, add listener to the recycler view
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
-//            mRecyclerView.addOnScrollListener(getListener());
-//        }
-//        else
-//        {
-//            mRecyclerView.setOnScrollListener(getListener());
-//        }
     }
 
     @Override
@@ -75,6 +67,4 @@ public class ImagesFragment extends Fragment implements ErrorCallBack
     public void displayNoError(String mMessage) {
         // no need for implementation
     }
-
-
 }

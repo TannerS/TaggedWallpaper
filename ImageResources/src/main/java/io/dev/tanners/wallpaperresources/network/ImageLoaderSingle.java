@@ -6,10 +6,18 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
 import io.dev.tanners.wallpaperresources.callbacks.post.single.OnPostSingle;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
+import io.dev.tanners.wallpaperresources.models.photos.search.PhotoSearch;
 
-public class ImageLoaderSingle extends ImageLoader<Photo> {
+public class ImageLoaderSingle extends ImageLoader {
     protected final int IMAGE_SINGLE_LOADER = 34532;
 
     public ImageLoaderSingle(Context mContext) {
@@ -18,20 +26,30 @@ public class ImageLoaderSingle extends ImageLoader<Photo> {
 
     public void loadLoader(String mUrl, final OnPostSingle OnPost)
     {
-        super.loadLoader(mUrl, IMAGE_SINGLE_LOADER, new LoaderManager.LoaderCallbacks<Photo>() {
+        super.loadLoader(mUrl, IMAGE_SINGLE_LOADER, new LoaderManager.LoaderCallbacks<String>() {
             @NonNull
             @Override
-            public Loader<Photo> onCreateLoader(int id, @Nullable Bundle args) {
-                return new RestLoader<Photo>(mContext, args);
+            public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {
+                return new RestLoader(mContext, args);
             }
 
             @Override
-            public void onLoadFinished(@NonNull Loader<Photo> loader, Photo results) {
-                OnPost.onPostCall(results);
+            public void onLoadFinished(@NonNull Loader<String> loader, String results) {
+                ObjectMapper objectMapper = new ObjectMapper();
+
+                Photo photo = null;
+
+                try {
+                    photo = objectMapper.readValue(results, Photo.class);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                OnPost.onPostCall(photo);
             }
 
             @Override
-            public void onLoaderReset(@NonNull Loader<Photo> loader) {
+            public void onLoaderReset(@NonNull Loader<String> loader) {
                 // not needed
             }
         });

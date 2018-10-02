@@ -9,6 +9,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.io.IOUtils;
@@ -23,17 +25,16 @@ import static io.dev.tanners.wallpaperresources.config.ConfigBase.HEADER_AUTH_KE
 import static io.dev.tanners.wallpaperresources.config.ConfigBase.HEADER_AUTH_VALUE;
 import static io.dev.tanners.wallpaperresources.config.ConfigBase.HEADER_VERSION_KEY;
 import static io.dev.tanners.wallpaperresources.config.ConfigBase.HEADER_VERSION_VALUE;
-import static io.dev.tanners.wallpaperresources.network.ImageLoader.RestLoader.REST_URL;
+import static io.dev.tanners.wallpaperresources.network.RestLoader.REST_URL;
 
-public abstract class ImageLoader<T> {
+public abstract class ImageLoader {
     protected Context mContext;
 
     public ImageLoader(Context mContext) {
         this.mContext = mContext;
     }
 
-    protected void loadLoader(String mUrl, int id,  LoaderManager.LoaderCallbacks<T> mCallback)
-    {
+    protected void loadLoader(String mUrl, int id,  LoaderManager.LoaderCallbacks<String> mCallback) {
         // bundle for loader, but not needed for this but can't be null
         Bundle mBundle = new Bundle();
 
@@ -41,84 +42,12 @@ public abstract class ImageLoader<T> {
 
         LoaderManager mLoaderManager = ((AppCompatActivity) mContext).getSupportLoaderManager();
 
-        Loader<List<T>> mImageLoader = mLoaderManager.getLoader(id);
+        Loader<List<String>> mImageLoader = mLoaderManager.getLoader(id);
 
-        if(mImageLoader != null) {
+        if (mImageLoader != null) {
             mLoaderManager.initLoader(id, mBundle, mCallback).forceLoad();
         } else {
             mLoaderManager.restartLoader(id, mBundle, mCallback).forceLoad();
-        }
-    }
-
-    public static class RestLoader<T> extends AsyncTaskLoader<T> {
-        private String mUrl = null;
-        public final static String REST_URL = "REST_URL_TO_GET_IMAGE_OR_MORE";
-
-        public RestLoader(@NonNull Context context, Bundle mBundle) {
-            super(context);
-            if (mBundle == null)
-                return;
-            mUrl = mBundle.getString(REST_URL);
-        }
-
-        @Nullable
-        @Override
-        public T loadInBackground() {
-            ConnectionRequester mRequest = null;
-            String mEncoding = "utf-8";
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                mEncoding = StandardCharsets.UTF_8.name().toLowerCase(Locale.getDefault());
-            }
-
-            mRequest = new ConnectionRequester(mUrl, mEncoding);
-
-            try {
-                mRequest = mRequest.addBasicBody(null)
-                        .addRequestHeader(HEADER_VERSION_KEY, HEADER_VERSION_VALUE)
-                        .addRequestHeader(HEADER_AUTH_KEY, HEADER_AUTH_VALUE)
-                        .setRequestType(ConnectionRequester.RequestType.GET)
-                        .setConnectionTimeOut(5000)
-                        .setReadTimeOut(15000)
-                        .build();
-
-                if(mRequest.connect() == HttpURLConnection.HTTP_OK) {
-                    if(mRequest.isConnectionOk()) {
-                        T response = getObjectFromJsonType(
-                                IOUtils.toString(
-                                        mRequest.getStream(),
-                                        mEncoding
-                                )
-                        );
-
-                        mRequest.closeConnection();
-
-                        return response;
-                    } else {
-                        throw new Exception("Connection failure");
-                    }
-                }
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            } finally {
-                mRequest.closeConnection();
-            }
-
-            return null;
-        }
-
-        /**
-         * Credit: https://stackoverflow.com/a/18397672
-         *
-         * @return
-         */
-        public T getObjectFromJsonType(String mJson) {
-            GsonBuilder gson = new GsonBuilder();
-            Type mType = new TypeToken<T>(){}.getType();
-
-            return gson.create().fromJson(mJson, mType);
         }
     }
 }

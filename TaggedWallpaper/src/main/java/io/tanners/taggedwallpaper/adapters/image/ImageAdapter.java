@@ -3,7 +3,9 @@ package io.tanners.taggedwallpaper.adapters.image;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompatSideChannelService;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,7 +24,17 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<ImageAdapter<
     public ImageAdapter(Context mContext, ArrayList<T> mItems)
     {
         this.mContext = mContext;
-        this.mItems = mItems;
+
+        if(mItems == null)
+            this.mItems = new ArrayList<T>();
+        else
+            this.mItems = mItems;
+
+    }
+
+    public ImageAdapter(Context mContext)
+    {
+        this(mContext, null);
     }
 
     /**
@@ -31,8 +43,11 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<ImageAdapter<
      * @param mItems
      */
     public void updateAdapter(ArrayList<T> mItems) {
+        if(mItems == null)
+            return;
+
         this.mItems.addAll(mItems);
-        notifyItemRangeInserted(this.mItems.size() + 1, mItems.size());
+        notifyItemRangeInserted(this.mItems.size() + 1, this.mItems.size());
     }
 
     /**

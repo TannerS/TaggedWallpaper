@@ -212,13 +212,11 @@ public class ConnectionRequester {
         connection.setRequestProperty("charset", mCharset);
     }
 
-    public ConnectionRequester build() throws IOException {
+    public void build() throws IOException {
         // set options
         setConfig();
         setHeaders();
         setBody();
-
-        return this;
     }
 
     /**
@@ -231,7 +229,7 @@ public class ConnectionRequester {
         connection = (HttpURLConnection) (new URL(mUrl)).openConnection();
         // build settings
         build();
-        // return resposne code
+        // return response code
         return (connection.getResponseCode());
     }
 

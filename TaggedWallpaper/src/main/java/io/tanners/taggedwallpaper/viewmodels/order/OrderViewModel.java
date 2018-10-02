@@ -4,34 +4,42 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
+import android.util.Log;
+//import io.dev.tanners.wallpaperresources.models.photos.photos.Photos;
+import java.util.ArrayList;
 
-import io.dev.tanners.wallpaperresources.models.photos.photos.Photos;
+import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.viewmodels.ViewModel;
 
 public class OrderViewModel extends ViewModel {
-    private MutableLiveData<Photos> mPhotos;
+    private MutableLiveData<ArrayList<Photo>> mPhotos;
     private int currentRestCallPage;
 
     public OrderViewModel(@NonNull Application application) {
         super(application);
         // default page
         currentRestCallPage = 1;
+        mPhotos = new MutableLiveData<ArrayList<Photo>>();
     }
 
-    public MutableLiveData<Photos> getmPhotos() {
+    public MutableLiveData<ArrayList<Photo>> getmPhotos() {
         return mPhotos;
     }
 
-    public void setmPhotos(MutableLiveData<Photos> mPhotos) {
+    public void setmPhotos(MutableLiveData<ArrayList<Photo>> mPhotos) {
         this.mPhotos = mPhotos;
     }
 
-    public Photos getmPhotosData() {
+    public ArrayList<Photo> getmPhotosValue() {
         return mPhotos.getValue();
     }
 
-    public void setmPhotosData(Photos mPhotos) {
+    public void setmPhotosValue(ArrayList<Photo> mPhotos) {
         this.mPhotos.setValue(mPhotos);
+
+        Log.d("DATA_LOAD", "AFTER LOAD TO VIEW MODEL SIZE: " + String.valueOf(mPhotos.size()));
+
+
     }
 
     public int getCurrentRestCallPage() {
@@ -45,5 +53,7 @@ public class OrderViewModel extends ViewModel {
     public void incrementPage()
     {
         this.currentRestCallPage++;
+
+        Log.d("COUNTER", String.valueOf(this.currentRestCallPage));
     }
 }

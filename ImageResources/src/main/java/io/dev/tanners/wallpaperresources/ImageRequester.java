@@ -2,6 +2,8 @@ package io.dev.tanners.wallpaperresources;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
+
 import io.dev.tanners.wallpaperresources.builder.ImageUriBuilder;
 import io.dev.tanners.wallpaperresources.callbacks.post.download.OnPostDownload;
 import io.dev.tanners.wallpaperresources.callbacks.post.order.OnPostAll;
@@ -9,6 +11,8 @@ import io.dev.tanners.wallpaperresources.callbacks.post.search.OnPostSearch;
 import io.dev.tanners.wallpaperresources.callbacks.post.single.OnPostSingle;
 import io.dev.tanners.wallpaperresources.config.ConfigPhotosAll;
 import io.dev.tanners.wallpaperresources.network.ImageLoaderAll;
+import io.dev.tanners.wallpaperresources.network.ImageLoaderAllLatest;
+import io.dev.tanners.wallpaperresources.network.ImageLoaderAllPopular;
 import io.dev.tanners.wallpaperresources.network.ImageLoaderDownload;
 import io.dev.tanners.wallpaperresources.network.ImageLoaderSearch;
 import io.dev.tanners.wallpaperresources.network.ImageLoaderSingle;
@@ -22,8 +26,18 @@ public class ImageRequester {
 
     public void getPhotos(String page, String perPage, ConfigPhotosAll.Order order, OnPostAll mCallback) {
         Uri.Builder mBuilder = ImageUriBuilder.getPhotosAllBuilder(perPage, page, order);
-        ImageLoaderAll mImageLoader = new ImageLoaderAll(mContext);
-        mImageLoader.loadLoader(mBuilder.build().toString(), mCallback);
+
+        Log.d("URL", mBuilder.build().toString());
+
+        // need to break up due to load ids have to be unique
+        switch(order) {
+            case LATEST:
+                (new ImageLoaderAllLatest(mContext)).loadLoader(mBuilder.build().toString(), mCallback);
+                break;
+            case POPULAR:
+                (new ImageLoaderAllPopular(mContext)).loadLoader(mBuilder.build().toString(), mCallback);
+                break;
+        }
     }
 
     public void getPhoto(String id, OnPostSingle mCallback) {
