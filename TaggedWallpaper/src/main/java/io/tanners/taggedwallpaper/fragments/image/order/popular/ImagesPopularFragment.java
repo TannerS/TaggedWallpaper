@@ -30,8 +30,6 @@ public class ImagesPopularFragment extends ImagesOrderFragment {
 
     @Override
     protected PopularOrderViewModel getViewModel() {
-        Log.i("DATAINCOMING", "LOADING popular vieew model" );
-
         return ViewModelProviders.of(this).get(PopularOrderViewModel.class);
     }
 
@@ -61,27 +59,21 @@ public class ImagesPopularFragment extends ImagesOrderFragment {
                 if ((mPastCount + mVisibleCount >= mTotalCount) && !loading) {
                     if(NetworkUtil.isNetworkAvailable(mContext)) {
                         mProgressBar.setVisibility(View.VISIBLE);
+                        loading = true;
+
                         // call api for images
-//                        loadImageDataByType(ConfigPhotosAll.Order.POPULAR);
+                        loadImageDataByType(ConfigPhotosAll.Order.POPULAR);
                     }
                 }
             }
         });
         // set view model to update adapter on data changes
+        // runnable to https://stackoverflow.com/questions/39445330/cannot-call-notifyiteminserted-from-recyclerview-onscrolllistener
         loadViewModelListener(photos -> {
-
-            Log.d("POPULAR", "RESULT SIOZE: " + String.valueOf(photos.size()));
-
-
-
-            mRecyclerView.post(new Runnable() {
-                public void run() {
-                    mAdapter.updateAdapter(photos);
-                }
-            });
-
-//            mAdapter.updateAdapter(photos)
+            mRecyclerView.post(() -> mAdapter.updateAdapter(photos));
+//            mAdapter.updateAdapter(photos);
         });
+        loading = true;
         // load init data
         loadImageDataByType(ConfigPhotosAll.Order.POPULAR);
         // return view

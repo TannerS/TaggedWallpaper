@@ -24,7 +24,9 @@ public class ImagesFragment extends Fragment implements ErrorCallBack
     protected ProgressBar mProgressBar;
 //    protected ImageAdapter mAdapter;
     protected GridLayoutManager mRecyclerViewLayoutManager;
-    protected boolean loading;
+    // TODO fix this somehow
+    // kinda of a hack but we need this in multiple areas for endless scrolling
+    protected static boolean loading;
     protected Context mContext;
 
     @Override

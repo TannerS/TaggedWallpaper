@@ -3,10 +3,8 @@ package io.tanners.taggedwallpaper.adapters.image;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompatSideChannelService;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
@@ -15,14 +13,18 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
+
+import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.R;
 
-public abstract class ImageAdapter<T> extends RecyclerView.Adapter<ImageAdapter<T>.ImageViewHolder> {
+//public abstract class ImageAdapter<T> extends RecyclerView.Adapter<ImageAdapter<T>.ImageViewHolder> {
+public abstract class ImageAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     protected Context mContext;
     protected ArrayList<T> mItems;
 
     public ImageAdapter(Context mContext, ArrayList<T> mItems)
     {
+
         this.mContext = mContext;
 
         if(mItems == null)
@@ -30,6 +32,7 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<ImageAdapter<
         else
             this.mItems = mItems;
 
+        setHasStableIds(true);
     }
 
     public ImageAdapter(Context mContext)
@@ -43,11 +46,35 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<ImageAdapter<
      * @param mItems
      */
     public void updateAdapter(ArrayList<T> mItems) {
-        if(mItems == null)
-            return;
+//        Log.i("ADAPTER", "UPDATING");
+//        debugList(mItems);
+//
+//        int pos = this.mItems.size() + 1;
+//
+//        if(mItems == null)
+//            return;
+//
+//        this.mItems.addAll(mItems);
+//        notifyItemRangeInserted(pos, mItems.size());
+//
+//        debugList();
+//        Log.i("ADAPTER", "SIZE: " + this.mItems.size());
 
+        this.mItems.clear();
         this.mItems.addAll(mItems);
-        notifyItemRangeInserted(this.mItems.size() + 1, this.mItems.size());
+
+
+        notifyDataSetChanged();
+    }
+
+    public void debugList(ArrayList<T> mItems) {
+        for(int i = 0; i < mItems.size(); i++)
+            Log.i("ADAPTER", "NEW DATA: " + ((Photo)mItems.get(i)).getId());
+    }
+
+    public void debugList() {
+        for(int i = 0; i < mItems.size(); i++)
+            Log.i("ADAPTER", "CURRENT DATA: " + ((Photo)mItems.get(i)).getId());
     }
 
     /**
@@ -98,19 +125,29 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<ImageAdapter<
     }
 
     @Override
-    public abstract ImageAdapter.ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType);
+    public abstract RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType);
 
     @Override
-    public abstract void onBindViewHolder(@NonNull ImageViewHolder holder, int position) ;
+    public abstract void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) ;
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return 1;
+    }
 
     /**
      * View holder for images in list
      */
-    public class ImageViewHolder extends RecyclerView.ViewHolder {
-        public ImageViewHolder(View view) {
-            super(view);
-        }
-    }
+//    public abstract class ImageViewHolder extends RecyclerView.ViewHolder {
+//        public ImageViewHolder(View view) {
+//            super(view);
+//        }
+//    }
 }
 
 

@@ -23,7 +23,7 @@ public class ConfigBase {
     public static final String HEADER_VERSION_VALUE = "v1";
 
     public static final String HEADER_AUTH_KEY = "Authorization";
-    public static final String HEADER_AUTH_VALUE = "Client-ID";
+    public static final String HEADER_AUTH_VALUE = "Client-ID 53bec55730b75b73e5f615222f83e498e7645300c2b10949e6f8e25442a2fccc";
 
     public static final String QUERY_AUTH_KEY = "client_id";
     public static final String QUERY_AUTH_VALUE = "YOUR_ACCESS_KEY";

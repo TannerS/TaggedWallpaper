@@ -30,8 +30,6 @@ public class ImagesLatestFragment extends ImagesOrderFragment {
 
     @Override
     protected LatestOrderViewModel getViewModel() {
-        Log.i("DATAINCOMING", "LOADING latest vieew model" );
-
         return ViewModelProviders.of(this).get(LatestOrderViewModel.class);
     }
 
@@ -59,34 +57,29 @@ public class ImagesLatestFragment extends ImagesOrderFragment {
                 // if at bottom of list, and there is not an already network call updating the adatper,
                 // and all those results are updated, update the list with next set of results
                 if ((mPastCount + mVisibleCount >= mTotalCount) && !loading) {
-                    if(NetworkUtil.isNetworkAvailable(mContext)) {
+//                    if(NetworkUtil.isNetworkAvailable(mContext)) {
                         mProgressBar.setVisibility(View.VISIBLE);
+
+                        loading = true;
+
                         // call api for images
-                        //loadImageDataByType(ConfigPhotosAll.Order.LATEST);
-                    }
+                        loadImageDataByType(ConfigPhotosAll.Order.LATEST);
+
+//                    }
                 }
             }
         });
         // set view model to update adapter on data changes
+        // runnable to https://stackoverflow.com/questions/39445330/cannot-call-notifyiteminserted-from-recyclerview-onscrolllistener
         loadViewModelListener(photos -> {
+            mRecyclerView.post(() -> {
 
-            Log.d("DATA_LOAD", "LATEST: " + String.valueOf(photos.size()));
-
-
-            mRecyclerView.post(new Runnable() {
-                public void run() {
-                    mAdapter.updateAdapter(photos);
-                }
+                mAdapter.updateAdapter(photos);
             });
 
-
-//            mAdapter.updateAdapter(photos);
-
         });
-
-
-
         // load init data
+        // runnable to https://stackoverflow.com/questions/39445330/cannot-call-notifyiteminserted-from-recyclerview-onscrolllistener
         loadImageDataByType(ConfigPhotosAll.Order.LATEST);
         // return view
         return view;

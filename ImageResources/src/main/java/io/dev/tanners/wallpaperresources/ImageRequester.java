@@ -2,6 +2,7 @@ package io.dev.tanners.wallpaperresources;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.app.LoaderManager;
 import android.util.Log;
 
 import io.dev.tanners.wallpaperresources.builder.ImageUriBuilder;
@@ -25,10 +26,8 @@ public class ImageRequester {
     }
 
     public void getPhotos(String page, String perPage, ConfigPhotosAll.Order order, OnPostAll mCallback) {
+        // build base url
         Uri.Builder mBuilder = ImageUriBuilder.getPhotosAllBuilder(perPage, page, order);
-
-        Log.d("URL", mBuilder.build().toString());
-
         // need to break up due to load ids have to be unique
         switch(order) {
             case LATEST:

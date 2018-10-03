@@ -9,6 +9,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.GsonBuilder;
@@ -34,7 +35,7 @@ public abstract class ImageLoader {
         this.mContext = mContext;
     }
 
-    protected void loadLoader(String mUrl, int id,  LoaderManager.LoaderCallbacks<String> mCallback) {
+    protected void loadLoader(String mUrl, int id, LoaderManager.LoaderCallbacks<String> mCallback) {
         // bundle for loader, but not needed for this but can't be null
         Bundle mBundle = new Bundle();
 
@@ -42,9 +43,11 @@ public abstract class ImageLoader {
 
         LoaderManager mLoaderManager = ((AppCompatActivity) mContext).getSupportLoaderManager();
 
+
+
         Loader<List<String>> mImageLoader = mLoaderManager.getLoader(id);
 
-        if (mImageLoader != null) {
+        if (mImageLoader == null) {
             mLoaderManager.initLoader(id, mBundle, mCallback).forceLoad();
         } else {
             mLoaderManager.restartLoader(id, mBundle, mCallback).forceLoad();

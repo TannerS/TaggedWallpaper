@@ -27,6 +27,7 @@ import static io.dev.tanners.wallpaperresources.config.ConfigBase.HEADER_VERSION
 
 public class RestLoader extends AsyncTaskLoader<String> {
     private String mUrl = null;
+
     public final static String REST_URL = "REST_URL_TO_GET_IMAGE_OR_MORE";
     private Context mContext;
 
@@ -35,9 +36,17 @@ public class RestLoader extends AsyncTaskLoader<String> {
 
         if (mBundle == null)
             return;
-
         mUrl = mBundle.getString(REST_URL);
-        this.mContext = context;;
+
+        this.mContext = context;
+    }
+
+    @Override
+    protected void onStartLoading() {
+        super.onStartLoading();
+
+
+
     }
 
     @Nullable
@@ -46,11 +55,19 @@ public class RestLoader extends AsyncTaskLoader<String> {
         ConnectionRequester mRequest = null;
         String mEncoding = "utf-8";
 
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mEncoding = StandardCharsets.UTF_8.name().toLowerCase(Locale.getDefault());
         }
 
+        Log.i("ADAPTER", "LOADING URL: " + mUrl);
+
+
+//        mUrl = .getString(REST_URL);
+
         mRequest = new ConnectionRequester(mUrl, mEncoding);
+
 
         try {
             mRequest = mRequest.addBasicBody(null)
@@ -60,18 +77,12 @@ public class RestLoader extends AsyncTaskLoader<String> {
                     .setConnectionTimeOut(5000)
                     .setReadTimeOut(15000);
 
-
-            Log.d("POPULAR", "BREAK 1: ");
-
-
             if(mRequest.connect() == HttpURLConnection.HTTP_OK) {
                 if(mRequest.isConnectionOk()) {
                     String response = IOUtils.toString(
                             mRequest.getStream(),
                             mEncoding
                     );
-
-                    Log.d("POPULAR", "BREAK 2: "+ response);
 
 
                     mRequest.closeConnection();
@@ -90,5 +101,14 @@ public class RestLoader extends AsyncTaskLoader<String> {
         }
 
         return null;
+    }
+
+    // used to update bundle since loader will use existing instance with old data
+    public String getmUrl() {
+        return mUrl;
+    }
+
+    public void setmUrl(String mUrl) {
+        this.mUrl = mUrl;
     }
 }

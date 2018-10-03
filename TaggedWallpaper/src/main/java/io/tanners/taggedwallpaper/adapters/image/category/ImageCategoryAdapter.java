@@ -2,6 +2,7 @@ package io.tanners.taggedwallpaper.adapters.image.category;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class ImageCategoryAdapter extends ImageAdapter<CategoryItem> {
      * @return
      */
     @Override
+//    public ImageAdapter<T>.ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_item, parent, false);
         return new CategoryViewHolder(mContext, view);
@@ -41,7 +43,7 @@ public class ImageCategoryAdapter extends ImageAdapter<CategoryItem> {
      * @param position
      */
     @Override
-    public void onBindViewHolder(ImageViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         CategoryViewHolder mHolder = (CategoryViewHolder) holder;
         // get category item
         CategoryItem mItem = mItems.get(position);
@@ -54,7 +56,8 @@ public class ImageCategoryAdapter extends ImageAdapter<CategoryItem> {
     /**
      * recycled views to handle images and text for the images category
      */
-    public class CategoryViewHolder extends ImageAdapter.ImageViewHolder {
+//    public class CategoryViewHolder extends ImageAdapter.ImageViewHolder {
+    public class CategoryViewHolder extends RecyclerView.ViewHolder{
         public TextView title;
         public ImageView image;
 

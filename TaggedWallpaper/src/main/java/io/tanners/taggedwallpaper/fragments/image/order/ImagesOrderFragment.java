@@ -46,7 +46,6 @@ public class ImagesOrderFragment extends ImagesFragment
         mRequester = new ImageRequester(getContext());
     }
 
-//    protected void loadViewModelListener(Observer<Photos> mObserver)
     protected void loadViewModelListener(Observer<ArrayList<Photo>> mObserver)
     {
         // load view model
@@ -79,41 +78,51 @@ public class ImagesOrderFragment extends ImagesFragment
     }
 
     protected void loadImageDataByType(ConfigPhotosAll.Order mOrder) {
-
         mRequester.getPhotos(String.valueOf(getViewModel().getCurrentRestCallPage()), "5", mOrder, mData -> {
-
-
-            Log.i("DATAINCOMING", "OF TYPE: " + mOrder.order()+ " " + String.valueOf(mData.size()));
-
             // check for response data
             if(mData == null)
                 return;
             // get view model
             OrderViewModel mViewModel = getViewModel();
+
+            mViewModel.addData(mData);
+
             // get photos from view model
-//            Photos mCurrentPhotos = mViewModel.getmPhotosValue();
-            ArrayList<Photo> mCurrentPhotos = mViewModel.getmPhotosValue();
-
-
-
-
+//            ArrayList<Photo> mCurrentPhotos = mViewModel.getmPhotosValue();
             // check for start when app opens
-            if(mCurrentPhotos == null) {
-                mCurrentPhotos = new ArrayList<Photo>();
-//                mCurrentPhotos = new Photos();
-            }
+//            if(mCurrentPhotos == null) {
+//                mCurrentPhotos = new ArrayList<Photo>();
+//                // update it with new images
+//                mCurrentPhotos.addAll(mData);
+//                // set the new data back into the view model
+//                // TODO since this is updated and reference, we may not need to re set it
+//                mViewModel.setmPhotosValue(mCurrentPhotos);
+//
+//            } else {
+//                mViewModel.getmPhotos().setValue(mViewModel.getmPhotosValue().addAll(mData));
+//            }
+
+//            for(Photo photo : mData)
+//                Log.i("DATA", photo.getId());
 
 
-            // update it with new images
-            mCurrentPhotos.addAll(mData);
-            // set the new data back into the view model
-            // TODO since this is updated and reference, we may not need to re set it
-            mViewModel.setmPhotosValue(mCurrentPhotos);
+
+
+
+//            mViewModel.getmPhotosValue().clear();
+
+
+
             // increment for next call
             mViewModel.incrementPage();
             // since the data is in a background thread, you need to restore the state in that thread
             // this was mentioned in here: https://stackoverflow.com/questions/27816217/how-to-save-recyclerviews-scroll-position-using-recyclerview-state
 //            mMovieRecyclerView.getLayoutManager().onRestoreInstanceState(mRecyclerviewLayoutSavedState);
+            mProgressBar.setVisibility(View.GONE);
+
+
+            loading = false;
+
         });
     }
 }
