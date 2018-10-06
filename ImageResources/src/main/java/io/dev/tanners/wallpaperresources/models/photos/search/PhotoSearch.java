@@ -2,6 +2,7 @@ package io.dev.tanners.wallpaperresources.models.photos.search;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
@@ -10,7 +11,7 @@ import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 public class PhotoSearch {
     private int total;
     private int total_pages;
-    private List<Photo> results;
+    private ArrayList<Photo> results;
 
     public PhotoSearch() { }
 
@@ -30,14 +31,15 @@ public class PhotoSearch {
         this.total_pages = total_pages;
     }
 
-    public List<Photo> getResults() {
+    public ArrayList<Photo> getResults() {
         return results;
     }
 
-    public void setResults(List<Photo> results) {
+    public void setResults(ArrayList<Photo> results) {
         this.results = results;
     }
 
+    // TODO take into account limit of pages, maybe if no results dont hit null and thorw exception?
     /*
     {
   "total": 133,

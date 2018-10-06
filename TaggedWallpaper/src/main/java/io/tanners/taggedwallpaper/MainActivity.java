@@ -39,6 +39,9 @@ TODO
         7) api guidelines for hot linking
         8) save/restore scroll position (google for guide)
         9) use acc repo + dagger for the image lib dependency toi be used into rep to give to view model, and can also use injector for, this can come at a later time
+        10) multiple screen sizes
+        11) widgets
+        TODO 12) FIND OUT IF FRAGMENTS SHARE THE SAME VIEW MODEL ***
  */
 public class MainActivity extends TabbedActivity {
     private final int MAXNUMOFFRAGS = 3;
@@ -94,10 +97,9 @@ public class MainActivity extends TabbedActivity {
 
     protected void loadFragments() {
         setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentWrapper>() {{
-//            add(new FragmentAdapter.FragmentWrapper(ImagesCategoryFragment.newInstance(), ImagesCategoryFragment.CATEGORY));
+            add(new FragmentAdapter.FragmentWrapper(ImagesCategoryFragment.newInstance(), ImagesCategoryFragment.CATEGORY));
             add(new FragmentAdapter.FragmentWrapper(ImagesPopularFragment.newInstance(), ImagesPopularFragment.POPULAR));
-//            add(new FragmentAdapter.FragmentWrapper(ImagesLatestFragment.newInstance(), ImagesLatestFragment.LATEST));
-
+            add(new FragmentAdapter.FragmentWrapper(ImagesLatestFragment.newInstance(), ImagesLatestFragment.LATEST));
         }});
     }
 

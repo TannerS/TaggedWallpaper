@@ -10,12 +10,14 @@ import io.tanners.taggedwallpaper.viewmodels.ViewModel;
 
 public class OrderViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Photo>> mPhotos;
-    private int currentRestCallPage;
+    private int allImagePageCount;
+    private int searchImagePageCount;
 
     public OrderViewModel(@NonNull Application application) {
         super(application);
         // default page
-        currentRestCallPage = 1;
+        allImagePageCount = 1;
+        searchImagePageCount = 1;
         mPhotos = new MutableLiveData<ArrayList<Photo>>();
         mPhotos.setValue(new ArrayList<Photo>());
     }
@@ -54,16 +56,29 @@ public class OrderViewModel extends ViewModel {
         this.mPhotos.setValue(mPhotos);
     }
 
-    public int getCurrentRestCallPage() {
-        return currentRestCallPage;
+    public int getAllImagePageCount() {
+        return allImagePageCount;
     }
 
-    public void setCurrentRestCallPage(int currentRestCallPage) {
-        this.currentRestCallPage = currentRestCallPage;
+    public void setAllImagePageCount(int allImagePageCount) {
+        this.allImagePageCount = allImagePageCount;
     }
 
-    public void incrementPage()
+    public void incrementImagePage()
     {
-        this.currentRestCallPage++;
+        this.allImagePageCount++;
+    }
+
+    public void incrementImageSearchPage()
+    {
+        this.searchImagePageCount++;
+    }
+
+    public int getSearchImagePageCount() {
+        return searchImagePageCount;
+    }
+
+    public void setSearchImagePageCount(int searchImagePageCount) {
+        this.searchImagePageCount = searchImagePageCount;
     }
 }

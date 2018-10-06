@@ -9,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import io.dev.tanners.wallpaperresources.callbacks.post.search.OnPostSearch;
 import io.dev.tanners.wallpaperresources.config.ConfigPhotosAll;
+import io.dev.tanners.wallpaperresources.models.photos.search.PhotoSearch;
 import io.tanners.taggedwallpaper.fragments.image.order.ImagesOrderFragment;
 import io.tanners.taggedwallpaper.support.network.NetworkUtil;
 import io.tanners.taggedwallpaper.viewmodels.order.OrderViewModel;
@@ -18,20 +20,53 @@ import io.tanners.taggedwallpaper.viewmodels.order.popular.PopularOrderViewModel
 public class ImagesPopularFragment extends ImagesOrderFragment {
     // fragment title
     public static final String POPULAR = "Popular";
-    // creates new instance
-    public static ImagesPopularFragment newInstance() {
-        return new ImagesPopularFragment();
-    }
+    public final static String TAG = "SEARCH_QUERY";
+    protected String mQuery;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mQuery = getArguments().getString(TAG);
+        }
+    }
+
+    @Override
+    protected void loadEntryPointData() {
+        if(mQuery != null && mQuery.length() > 0) {
+            mRequester.getSearchPhoto(mQuery, String.valueOf(getViewModel().getSearchImagePageCount()), "5", new OnPostSearch() {
+                @Override
+                public void onPostCall(PhotoSearch mData) {
+                    // get view model
+                    OrderViewModel mViewModel = getViewModel();
+                    // set data into view model
+                    mViewModel.addData(mData.getResults());
+                }
+            });
+        } else {
+            // load init data
+            loadImageDataByType(ConfigPhotosAll.Order.POPULAR);
+        }
+    }
+
+    // creates new instance
+    public static ImagesPopularFragment newInstance(String mQuery) {
+        ImagesPopularFragment mFragment = new ImagesPopularFragment();
+        Bundle args = new Bundle();
+        args.putString(TAG, mQuery);
+        return mFragment;
+    }
+
+    public static ImagesPopularFragment newInstance() {
+        return new ImagesPopularFragment();
     }
 
     @Override
     protected PopularOrderViewModel getViewModel() {
         return ViewModelProviders.of(this).get(PopularOrderViewModel.class);
     }
+
+
 
     /**
      * @param inflater
@@ -42,42 +77,7 @@ public class ImagesPopularFragment extends ImagesOrderFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = super.onCreateView(inflater, container, savedInstanceState);
-        // set listener for list
-        // TODO turn into callback for for base class later to not recreate
-        loadRecyclerView(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (loading) {
-                    return;
-                }
-                int mVisibleCount = mRecyclerViewLayoutManager.getChildCount();
-                int mTotalCount = mRecyclerViewLayoutManager.getItemCount();
-                int mPastCount = mRecyclerViewLayoutManager.findFirstVisibleItemPosition();
-                // if at bottom of list, and there is not an already network call updating the adatper,
-                // and all those results are updated, update the list with next set of results
-                if ((mPastCount + mVisibleCount >= mTotalCount) && !loading) {
-                    if(NetworkUtil.isNetworkAvailable(mContext)) {
-                        mProgressBar.setVisibility(View.VISIBLE);
-                        loading = true;
-
-                        // call api for images
-                        loadImageDataByType(ConfigPhotosAll.Order.POPULAR);
-                    }
-                }
-            }
-        });
-        // set view model to update adapter on data changes
-        // runnable to https://stackoverflow.com/questions/39445330/cannot-call-notifyiteminserted-from-recyclerview-onscrolllistener
-        loadViewModelListener(photos -> {
-            mRecyclerView.post(() -> mAdapter.updateAdapter(photos));
-//            mAdapter.updateAdapter(photos);
-        });
-        loading = true;
-        // load init data
-        loadImageDataByType(ConfigPhotosAll.Order.POPULAR);
-        // return view
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     /**

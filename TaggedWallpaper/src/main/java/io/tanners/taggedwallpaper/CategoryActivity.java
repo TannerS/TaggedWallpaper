@@ -17,7 +17,7 @@ import io.tanners.taggedwallpaper.support.network.NetworkUtil;
 
 public class CategoryActivity extends TabbedActivity implements IGetTag {
     private final int MAXNUMOFFRAGS = 2;
-    public final static String TAG = "TAG";
+    public final static String TAG = "SEARCH_QUERY";
     private String tag;
 
     /**
@@ -29,7 +29,10 @@ public class CategoryActivity extends TabbedActivity implements IGetTag {
         // load ui
         setContentView(R.layout.activity_image);
         // other activities pass tag of category or search query using the intent and passed into class as a tag
-        tag = getIntent().getStringExtra(TAG);
+        // to be fair it should only load this with a tag
+        if(getIntent().hasExtra(TAG)) {
+            tag = getIntent().getStringExtra(TAG);
+        }
         setUpToolBar(R.id.universal_toolbar);
         // set up fragment tabs
         setUpTabs(R.id.universal_view_pager, R.id.universal_tab_layout, MAXNUMOFFRAGS);
@@ -43,7 +46,7 @@ public class CategoryActivity extends TabbedActivity implements IGetTag {
 
     /**
      * check for network functionality
-     *
+     * TODO prob remove this in main act and here
      * @param isOn
      */
     @Override
@@ -53,11 +56,7 @@ public class CategoryActivity extends TabbedActivity implements IGetTag {
             // make sure not to reload the fragments
             // since this is acted upon a broadcast receiver
             if(getSize() > 0) {
-                // set up fragments into adapter
-                setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentWrapper>() {{
-                    add(new FragmentAdapter.FragmentWrapper(ImagesLatestFragment.newInstance(), ImagesLatestFragment.LATEST));
-                    add(new FragmentAdapter.FragmentWrapper(ImagesPopularFragment.newInstance(), ImagesPopularFragment.POPULAR));
-                }});
+                loadFragments();
             }
             // no network connection, warn user
         } else {
@@ -67,6 +66,15 @@ public class CategoryActivity extends TabbedActivity implements IGetTag {
                     "Close");
         }
     }
+
+    protected void loadFragments() {
+        // set up fragments into adapter
+        setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentWrapper>() {{
+            add(new FragmentAdapter.FragmentWrapper(ImagesLatestFragment.newInstance(), ImagesLatestFragment.LATEST));
+            add(new FragmentAdapter.FragmentWrapper(ImagesPopularFragment.newInstance(), ImagesPopularFragment.POPULAR));
+        }});
+    }
+
 
     /**
      * @param item

@@ -64,16 +64,12 @@ public class ImageCategoryAdapter extends ImageAdapter<CategoryItem> {
         public CategoryViewHolder(final Context mContext, View view) {
             super(view);
             // each category gets handled as a search to the next activity
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        MainActivity.openIntentForQuery(mContext, title.getText().toString());
-                    } else {
-                        MainActivity.openIntentForQuery(mContext, title.getText().toString());
-                    }
+            view.setOnClickListener(view1 -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    MainActivity.openIntentForQuery(mContext, title.getText().toString());
+                } else {
+                    MainActivity.openIntentForQuery(mContext, title.getText().toString());
                 }
-
             });
             // load resources
             this.title = (TextView) view.findViewById(R.id.row_item_text);
