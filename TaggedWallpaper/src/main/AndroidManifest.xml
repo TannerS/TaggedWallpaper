@@ -48,7 +48,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".CategoryActivity"
+            android:name=".SearchActivity"
             android:label="@string/title_activity_image"
             android:launchMode="singleTop"
             android:parentActivityName=".MainActivity"
@@ -56,11 +56,11 @@
         <activity
             android:name=".ImageDisplayActivity"
             android:label="@string/title_activity_display"
-            android:parentActivityName=".CategoryActivity"
+            android:parentActivityName=".SearchActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="io.tanners.taggedwallpaper.CategoryActivity" />
+                android:value="io.tanners.taggedwallpaper.SearchActivity" />
         </activity>
         <activity
             android:name=".SplashActivity"

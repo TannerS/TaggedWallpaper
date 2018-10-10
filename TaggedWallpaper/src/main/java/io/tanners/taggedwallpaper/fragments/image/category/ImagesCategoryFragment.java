@@ -1,5 +1,6 @@
 package io.tanners.taggedwallpaper.fragments.image.category;
 
+import android.arch.lifecycle.Observer;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,9 +19,11 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.adapters.image.category.ImageCategoryAdapter;
 import io.tanners.taggedwallpaper.fragments.image.ImagesFragment;
 import io.tanners.taggedwallpaper.model.categories.CategoryItem;
+import io.tanners.taggedwallpaper.viewmodels.ImageViewModel;
 
 /**
  * Fragment to hold the Categories layout for image Categories
@@ -36,6 +39,11 @@ public class ImagesCategoryFragment extends ImagesFragment {
      */
     public static ImagesCategoryFragment newInstance() {
         return new ImagesCategoryFragment();
+    }
+
+    @Override
+    protected void onScroll() {
+        // not needed
     }
 
     /**
@@ -54,6 +62,17 @@ public class ImagesCategoryFragment extends ImagesFragment {
         LoadCategories();
         // return view
         return view;
+    }
+
+    @Override
+    protected void loadViewModelListener(Observer<ArrayList<Photo>> mObserver) {
+        // not used due to dynamic changes
+    }
+
+    @Override
+    protected ImageViewModel getViewModel() {
+        // not needed
+        return null;
     }
 
     /**

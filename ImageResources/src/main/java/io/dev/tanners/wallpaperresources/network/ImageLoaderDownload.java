@@ -19,15 +19,18 @@ import io.dev.tanners.wallpaperresources.models.photos.download.Download;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 
 public class ImageLoaderDownload extends ImageLoader {
-    protected final int IMAGE_DOWNLOAD_LOADER = 46190;
-
     public ImageLoaderDownload(Context mContext) {
         super(mContext);
     }
 
+    @Override
+    protected int getLoaderId() {
+        return -2;
+    }
+
     public void loadLoader(String mUrl, final OnPostDownload OnPost)
     {
-        super.loadLoader(mUrl, IMAGE_DOWNLOAD_LOADER, new LoaderManager.LoaderCallbacks<String>() {
+        super.loadLoader(mUrl, getLoaderId(), new LoaderManager.LoaderCallbacks<String>() {
             @NonNull
             @Override
             public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {

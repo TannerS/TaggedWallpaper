@@ -3,20 +3,26 @@ package io.tanners.taggedwallpaper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.MenuItem;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import io.tanners.taggedwallpaper.adapters.fragment.FragmentAdapter;
 import io.tanners.taggedwallpaper.fragments.image.category.ImagesCategoryFragment;
 import io.tanners.taggedwallpaper.fragments.image.order.latest.ImagesLatestFragment;
 import io.tanners.taggedwallpaper.fragments.image.order.popular.ImagesPopularFragment;
+import io.tanners.taggedwallpaper.fragments.image.search.ImagesSearchFragment;
 import io.tanners.taggedwallpaper.interfaces. IGetTag;
 import io.tanners.taggedwallpaper.support.builder.snackbar.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.support.network.NetworkUtil;
+import io.tanners.taggedwallpaper.support.network.encoder.EncoderUtil;
 
-public class CategoryActivity extends TabbedActivity implements IGetTag {
-    private final int MAXNUMOFFRAGS = 2;
+public class SearchActivity extends SupportActivity implements IGetTag {
     public final static String TAG = "SEARCH_QUERY";
     private String tag;
 
@@ -27,17 +33,21 @@ public class CategoryActivity extends TabbedActivity implements IGetTag {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // load ui
-        setContentView(R.layout.activity_image);
+        setContentView(R.layout.activity_search);
         // other activities pass tag of category or search query using the intent and passed into class as a tag
         // to be fair it should only load this with a tag
         if(getIntent().hasExtra(TAG)) {
-            tag = getIntent().getStringExtra(TAG);
+            try {
+                tag = getIntent().getStringExtra(TAG);
+                tag = EncoderUtil.encode(tag);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
         setUpToolBar(R.id.universal_toolbar);
-        // set up fragment tabs
-        setUpTabs(R.id.universal_view_pager, R.id.universal_tab_layout, MAXNUMOFFRAGS);
         // check for network and/or load fragments
-        onNetworkChange(NetworkUtil.isNetworkAvailable(this));
+//        onNetworkChange(NetworkUtil.isNetworkAvailable(this));
+        loadFragments();
         // set page to be a child of parent activity, this will show the back arrow to return to back activity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // change title
@@ -51,30 +61,16 @@ public class CategoryActivity extends TabbedActivity implements IGetTag {
      */
     @Override
     protected void onNetworkChange(boolean isOn) {
-        // network connection, load fragments
-        if(isOn) {
-            // make sure not to reload the fragments
-            // since this is acted upon a broadcast receiver
-            if(getSize() > 0) {
-                loadFragments();
-            }
-            // no network connection, warn user
-        } else {
-            SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.image_main),
-                    "No network connection",
-                    Snackbar.LENGTH_INDEFINITE,
-                    "Close");
-        }
+        // not used here
     }
 
     protected void loadFragments() {
-        // set up fragments into adapter
-        setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentWrapper>() {{
-            add(new FragmentAdapter.FragmentWrapper(ImagesLatestFragment.newInstance(), ImagesLatestFragment.LATEST));
-            add(new FragmentAdapter.FragmentWrapper(ImagesPopularFragment.newInstance(), ImagesPopularFragment.POPULAR));
-        }});
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        ImagesSearchFragment mFragment = ImagesSearchFragment.newInstance(tag);
+        fragmentTransaction.add(R.id.search_fragment_container, mFragment);
+        fragmentTransaction.commit();
     }
-
 
     /**
      * @param item

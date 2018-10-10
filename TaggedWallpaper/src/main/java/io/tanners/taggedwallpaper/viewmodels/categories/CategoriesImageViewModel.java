@@ -1,17 +1,16 @@
 package io.tanners.taggedwallpaper.viewmodels.categories;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import java.util.List;
 import io.tanners.taggedwallpaper.model.categories.CategoryItem;
-import io.tanners.taggedwallpaper.viewmodels.ViewModel;
+import io.tanners.taggedwallpaper.viewmodels.ImageViewModel;
 
-public class CategoriesViewModel extends ViewModel {
+public class CategoriesImageViewModel extends ImageViewModel {
     private LiveData<List<CategoryItem>> mCategories;
 
-    public CategoriesViewModel(@NonNull Application application) {
+    public CategoriesImageViewModel(@NonNull Application application) {
         super(application);
     }
 

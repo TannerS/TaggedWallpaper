@@ -1,6 +1,8 @@
 package io.dev.tanners.wallpaperresources.builder;
 
 import android.net.Uri;
+import android.util.Log;
+
 import io.dev.tanners.wallpaperresources.config.ConfigBase;
 import io.dev.tanners.wallpaperresources.config.ConfigPhotoById;
 import io.dev.tanners.wallpaperresources.config.ConfigPhotoDownload;
@@ -45,7 +47,8 @@ public class ImageUriBuilder {
 
     public static Uri.Builder getPhotoSearchBuilder(String query, String perPage, String page) {
         return getBaseUri()
-                .appendPath(ConfigPhotoSearch.GET_SEARCH_PHOTOS_METHOD)
+                .appendPath(ConfigPhotoSearch.GET_SEARCH_PHOTOS_METHOD_P1)
+                .appendPath(ConfigPhotoSearch.GET_SEARCH_PHOTOS_METHOD_P2)
                 .appendQueryParameter(ConfigPhotoSearch.QUERY_QUERY_KEY, query)
                 .appendQueryParameter(ConfigPhotoSearch.QUERY_PER_PAGE_KEY, perPage)
                 .appendQueryParameter(ConfigPhotoSearch.QUERY_PAGE_KEY, page);

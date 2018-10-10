@@ -14,7 +14,7 @@ import io.tanners.taggedwallpaper.interfaces.IFindFragment;
 /**
  * Base class to hold tabbed fragments
  */
-public class TabbedActivity extends NetworkActivity implements IFindFragment {
+public class TabbedActivity extends SupportActivity implements IFindFragment {
     protected List<FragmentAdapter.FragmentWrapper> frags;
     protected ViewPager mViewPager;
     protected Toolbar mToolbar;

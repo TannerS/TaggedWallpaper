@@ -55,8 +55,8 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
-    implementation 'com.google.firebase:firebase-database:16.0.2'
-    implementation 'com.google.firebase:firebase-core:16.0.3'
+    implementation 'com.google.firebase:firebase-database:16.0.3'
+    implementation 'com.google.firebase:firebase-core:16.0.4'
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
     implementation 'com.github.bumptech.glide:glide:4.7.1'
@@ -67,9 +67,31 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.intuit.sdp:sdp-android:1.0.5'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
-    // ViewModel and LiveData
+    // ImageViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation "android.arch.lifecycle:common-java8:1.1.1"
     implementation "android.arch.lifecycle:reactivestreams:1.1.1"
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.5'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.5'
+    implementation group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
+
+    implementation('com.google.api-client:google-api-client:1.23.0') {
+        exclude module: 'guava-jdk5'
+    }
+
+    implementation('com.google.http-client:google-http-client-android:1.23.0') {
+        exclude module: 'guava-jdk5'
+    }
+
+//    freeImplementation('com.google.android.gms:play-services-ads:15.0.1') {
+//        exclude group: 'com.android.support', module: 'customtabs'
+//        exclude group: 'com.android.support', module:'support-annotations'
+//        exclude group: 'com.android.support', module: 'support-compat'
+//        exclude group: 'com.android.support', module: 'support-v4'
+//        exclude group: 'com.android.support', module: 'support-media-compat'
+//    }
+
     implementation project(":ImageResources")
 }

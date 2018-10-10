@@ -18,15 +18,18 @@ import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.dev.tanners.wallpaperresources.models.photos.search.PhotoSearch;
 
 public class ImageLoaderSingle extends ImageLoader {
-    protected final int IMAGE_SINGLE_LOADER = 34532;
-
     public ImageLoaderSingle(Context mContext) {
         super(mContext);
     }
 
+    @Override
+    protected int getLoaderId() {
+        return 457853;
+    }
+
     public void loadLoader(String mUrl, final OnPostSingle OnPost)
     {
-        super.loadLoader(mUrl, IMAGE_SINGLE_LOADER, new LoaderManager.LoaderCallbacks<String>() {
+        super.loadLoader(mUrl, getLoaderId(), new LoaderManager.LoaderCallbacks<String>() {
             @NonNull
             @Override
             public Loader<String> onCreateLoader(int id, @Nullable Bundle args) {

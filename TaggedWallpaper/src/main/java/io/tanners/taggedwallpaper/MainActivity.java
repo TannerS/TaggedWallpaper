@@ -5,9 +5,6 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.design.widget.Snackbar;
@@ -16,17 +13,20 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import io.tanners.taggedwallpaper.support.builder.snackbar.SimpleSnackBarBuilder;
+import io.tanners.taggedwallpaper.support.exceptions.MaxLimitException;
+import io.tanners.taggedwallpaper.support.exceptions.MinLimitException;
 import io.tanners.taggedwallpaper.support.network.NetworkUtil;
+import io.tanners.taggedwallpaper.support.network.encoder.EncoderUtil;
 import io.tanners.taggedwallpaper.support.providers.SearchSuggestionProvider;
 import io.tanners.taggedwallpaper.fragments.image.category.ImagesCategoryFragment;
 import io.tanners.taggedwallpaper.fragments.image.order.latest.ImagesLatestFragment;
 import io.tanners.taggedwallpaper.fragments.image.order.popular.ImagesPopularFragment;
 import io.tanners.taggedwallpaper.adapters.fragment.FragmentAdapter;
+import io.tanners.taggedwallpaper.support.validation.UrlSearchValidation;
+
 /*
 TODO
         1) viewmodel for all fragments
@@ -56,14 +56,8 @@ public class MainActivity extends TabbedActivity {
         setUpToolBar(R.id.universal_toolbar);
         // set up fragment tabs
         setUpTabs(R.id.universal_view_pager, R.id.universal_tab_layout, MAXNUMOFFRAGS);
-
-
-
         // check for network and/or load fragments
         onNetworkChange(NetworkUtil.isNetworkAvailable(this));
-
-
-
         // handle search queries
         // used for start, may not be needed
         handleSearch(getIntent());
@@ -215,20 +209,32 @@ public class MainActivity extends TabbedActivity {
             // get search query
             String query = intent.getStringExtra(SearchManager.QUERY);
             query = query.trim().toLowerCase();
+
+            try {
+                // check for proper
+                UrlSearchValidation.UrlQueryValidation(query);
+                query = UrlSearchValidation.UrlQueryFormatter(query);
+                query = EncoderUtil.encode(query);
+            } catch (MinLimitException | MaxLimitException e) {
+                e.printStackTrace();
+                // display to user the error
+                SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.app_main),
+                        e.getMessage(),
+                        Snackbar.LENGTH_INDEFINITE,
+                        "Close");
+                return;
+            } catch (UnsupportedEncodingException e){
+                e.printStackTrace();
+                return;
+            }
             // save query into history
             getSearchProvider().saveRecentQuery(query, null);
             // make sure its safe to be put into url for any reason
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-                    query = URLEncoder.encode(query, StandardCharsets.UTF_8.name());
-                else
-                    query = URLEncoder.encode(query, "utf-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
             openIntentForQuery(this, query);
         }
     }
+
+
 
     /**
      * Get search provider
@@ -252,9 +258,9 @@ public class MainActivity extends TabbedActivity {
      */
     public static void openIntentForQuery(Context context, String query)
     {
-        Intent intent = new Intent(context, CategoryActivity.class);
+        Intent intent = new Intent(context, SearchActivity.class);
         // pass tag (search query) into activity to load results
-        intent.putExtra(CategoryActivity.TAG, query);
+        intent.putExtra(SearchActivity.TAG, query);
         /*
             If set in an Intent passed to Context.startActivity(),
             this flag will cause the launched activity to be brought

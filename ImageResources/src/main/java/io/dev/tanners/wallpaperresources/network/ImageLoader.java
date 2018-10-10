@@ -53,4 +53,7 @@ public abstract class ImageLoader {
             mLoaderManager.restartLoader(id, mBundle, mCallback).forceLoad();
         }
     }
+
+    // for each loader must have it's own unique id, this method is over loaded with the child class having the id for its own loader
+    protected abstract int getLoaderId();
 }

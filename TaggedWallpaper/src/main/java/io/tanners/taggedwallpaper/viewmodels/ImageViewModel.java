@@ -8,9 +8,9 @@ import android.support.annotation.NonNull;
 /**
  * Used if needed for any sub class functionality and to separate logic
  */
-public class ViewModel extends AndroidViewModel {
+public class ImageViewModel extends AndroidViewModel {
 
-    public ViewModel(@NonNull Application application) {
+    public ImageViewModel(@NonNull Application application) {
         super(application);
     }
 }
