@@ -1,9 +1,12 @@
 package io.dev.tanners.wallpaperresources.models.Urls;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Urls {
+public class Urls  implements Parcelable {
     private String raw;
     private String full;
     private String regular;
@@ -51,6 +54,42 @@ public class Urls {
     public void setThumb(String thumb) {
         this.thumb = thumb;
     }
+
+
+    protected Urls(Parcel in) {
+        raw = in.readString();
+        full = in.readString();
+        regular = in.readString();
+        small = in.readString();
+        thumb = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(raw);
+        dest.writeString(full);
+        dest.writeString(regular);
+        dest.writeString(small);
+        dest.writeString(thumb);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Urls> CREATOR = new Parcelable.Creator<Urls>() {
+        @Override
+        public Urls createFromParcel(Parcel in) {
+            return new Urls(in);
+        }
+
+        @Override
+        public Urls[] newArray(int size) {
+            return new Urls[size];
+        }
+    };
 
     /*
 "urls":{

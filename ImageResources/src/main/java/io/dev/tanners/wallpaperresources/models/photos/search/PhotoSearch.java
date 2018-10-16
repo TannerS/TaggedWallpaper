@@ -1,5 +1,8 @@
 package io.dev.tanners.wallpaperresources.models.photos.search;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.ArrayList;
@@ -8,7 +11,7 @@ import java.util.List;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PhotoSearch {
+public class PhotoSearch implements Parcelable {
     private int total;
     private int total_pages;
     private ArrayList<Photo> results;
@@ -38,6 +41,49 @@ public class PhotoSearch {
     public void setResults(ArrayList<Photo> results) {
         this.results = results;
     }
+
+    protected PhotoSearch(Parcel in) {
+        total = in.readInt();
+        total_pages = in.readInt();
+        if (in.readByte() == 0x01) {
+            results = new ArrayList<Photo>();
+            in.readList(results, Photo.class.getClassLoader());
+        } else {
+            results = null;
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(total);
+        dest.writeInt(total_pages);
+        if (results == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(results);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<PhotoSearch> CREATOR = new Parcelable.Creator<PhotoSearch>() {
+        @Override
+        public PhotoSearch createFromParcel(Parcel in) {
+            return new PhotoSearch(in);
+        }
+
+        @Override
+        public PhotoSearch[] newArray(int size) {
+            return new PhotoSearch[size];
+        }
+    };
+
+
 
     // TODO take into account limit of pages, maybe if no results dont hit null and thorw exception?
     /*

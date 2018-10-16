@@ -26,6 +26,7 @@ public class SupportActivity extends NetworkActivity {
     protected void setUpToolBar(int id)
     {
         mToolbar = (Toolbar) findViewById(id);
+
         setSupportActionBar(mToolbar);
     }
 }

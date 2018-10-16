@@ -24,7 +24,6 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<RecyclerView.
 
     public ImageAdapter(Context mContext, ArrayList<T> mItems)
     {
-
         this.mContext = mContext;
 
         if(mItems == null)
@@ -46,36 +45,21 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<RecyclerView.
      * @param mItems
      */
     public void updateAdapter(ArrayList<T> mItems) {
-//        Log.i("ADAPTER", "UPDATING");
-//        debugList(mItems);
-//
-//        int pos = this.mItems.size() + 1;
-//
-//        if(mItems == null)
-//            return;
-//
-//        this.mItems.addAll(mItems);
-//        notifyItemRangeInserted(pos, mItems.size());
-//
-//        debugList();
-//        Log.i("ADAPTER", "SIZE: " + this.mItems.size());
-
         this.mItems.clear();
         this.mItems.addAll(mItems);
-
 
         notifyDataSetChanged();
     }
 
-    public void debugList(ArrayList<T> mItems) {
-        for(int i = 0; i < mItems.size(); i++)
-            Log.i("ADAPTER", "NEW DATA: " + ((Photo)mItems.get(i)).getId());
-    }
-
-    public void debugList() {
-        for(int i = 0; i < mItems.size(); i++)
-            Log.i("ADAPTER", "CURRENT DATA: " + ((Photo)mItems.get(i)).getId());
-    }
+//    public void debugList(ArrayList<T> mItems) {
+//        for(int i = 0; i < mItems.size(); i++)
+//            Log.i("ADAPTER", "NEW DATA: " + ((Photo)mItems.get(i)).getId());
+//    }
+//
+//    public void debugList() {
+//        for(int i = 0; i < mItems.size(); i++)
+//            Log.i("ADAPTER", "CURRENT DATA: " + ((Photo)mItems.get(i)).getId());
+//    }
 
     /**
      * set image to be loaded into current view
@@ -139,15 +123,6 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<RecyclerView.
     public int getItemViewType(int position) {
         return 1;
     }
-
-    /**
-     * View holder for images in list
-     */
-//    public abstract class ImageViewHolder extends RecyclerView.ViewHolder {
-//        public ImageViewHolder(View view) {
-//            super(view);
-//        }
-//    }
 }
 
 

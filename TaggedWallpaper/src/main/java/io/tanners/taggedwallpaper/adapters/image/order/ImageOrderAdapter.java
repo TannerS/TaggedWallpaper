@@ -1,6 +1,8 @@
 package io.tanners.taggedwallpaper.adapters.image.order;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
+import io.tanners.taggedwallpaper.ImageDisplayActivity;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.adapters.image.ImageAdapter;
 
@@ -40,9 +43,6 @@ public class ImageOrderAdapter extends ImageAdapter<Photo> {
         Photo mItem = mItems.get(position);
         // set up image
         setUpImage(mItem.getUrls().getRegular(), mHolder.image);
-
-
-
     }
 
     /**
@@ -57,7 +57,6 @@ public class ImageOrderAdapter extends ImageAdapter<Photo> {
         return new ResultImageViewHolder(mContext, view);
     }
 
-    //    public class ResultImageViewHolder extends ImageAdapter.ImageViewHolder {
     public class ResultImageViewHolder extends RecyclerView.ViewHolder {
         public ImageView image;
 
@@ -69,22 +68,15 @@ public class ImageOrderAdapter extends ImageAdapter<Photo> {
                 @Override
                 public void onClick(View view) {
                     Photo result = mItems.get(getAdapterPosition());
-//                    Toast.makeText(mContext, result.getId(),
-//                            Toast.LENGTH_LONG).show();
 
-                    Toast.makeText(mContext, String.valueOf(getAdapterPosition()),
-                            Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(mContext, ImageDisplayActivity.class);
+                    intent.putExtra(ImageDisplayActivity.RESULT, (Parcelable) result);
 
-
-
-//                    Intent intent = new Intent(mContext, ImageDisplayActivity.class);
-//                    intent.putExtra(ImageDisplayActivity.RESULT, (Parcelable) result);
-//                    mContext.startActivity(intent);
+                    mContext.startActivity(intent);
                 }
             });
         }
     }
-
 }
 
 

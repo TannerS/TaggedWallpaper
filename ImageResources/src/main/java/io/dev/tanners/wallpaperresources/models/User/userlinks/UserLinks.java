@@ -1,11 +1,14 @@
 package io.dev.tanners.wallpaperresources.models.User.userlinks;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.dev.tanners.wallpaperresources.models.links.Links;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserLinks extends Links {
+public class UserLinks extends Links implements Parcelable {
     private String portfolio;
     private String photos;
 
@@ -27,6 +30,34 @@ public class UserLinks extends Links {
         this.photos = photos;
     }
 
+    protected UserLinks(Parcel in) {
+        portfolio = in.readString();
+        photos = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(portfolio);
+        dest.writeString(photos);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<UserLinks> CREATOR = new Parcelable.Creator<UserLinks>() {
+        @Override
+        public UserLinks createFromParcel(Parcel in) {
+            return new UserLinks(in);
+        }
+
+        @Override
+        public UserLinks[] newArray(int size) {
+            return new UserLinks[size];
+        }
+    };
     /*
     "links":{
    "self":"https://api.unsplash.com/users/exampleuser",

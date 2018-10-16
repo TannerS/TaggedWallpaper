@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -29,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
@@ -42,18 +45,27 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.support.file.ExternalFileStorageUtil;
 import io.tanners.taggedwallpaper.support.permissions.PermissionRequester;
 import io.tanners.taggedwallpaper.support.builder.snackbar.SimpleSnackBarBuilder;
 
-// https://developer.android.com/reference/android/support/v4/app/ActivityCompat.OnRequestPermissionsResultCallback.html
-public class ImageDisplayActivity extends FullScreenActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback {
-//    public final static String RESULT = "RESULT";
-//    private ImageView mMainImageView;
+public class ImageDisplayActivity extends SupportActivity implements android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback {
+    public final static String RESULT = "RESULT";
+    private Photo mPhoto;
+    private ImageView mainImage;
+    private ImageView profileImage;
+    private TextView imageTitle;
+    private TextView userName;
+    private TextView userUsername;
+    private View bottomBorder;
+
+
+    //    private ImageView mMainImageView;
 //    private final int IMAGE_DOWNLOAD = 256;
 //    private final String ALBUMNAME = "Wallpaper";
 //    private ProgressBar mProgressBar;
-//    private Toolbar mToolbar;
 //    private boolean mVisible;
 //
 //    /*
@@ -62,60 +74,115 @@ public class ImageDisplayActivity extends FullScreenActivity implements android.
 //     */
 //    private final int WALLPAPER_SEARCH_LOADER = 2;
 //
-//    /**
-//     * When activity is created
-//     *
-//     * @param savedInstanceState
-//     */
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_display);
+    /**
+     * When activity is created
+     *
+     * @param savedInstanceState
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_display);
+        getPhotoData();
+        setUpToolBar(R.id.display_toolbar, Color.parseColor(mPhoto.getColor()));
+        loadResources();
+        setResources();
+    }
 //
-//        loadToolBar();
-//        loadResources();
-//        loadSelectedPhoto();
-//        loadUserProfilePhoto();
-//        setUpUiInteraction();
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.display_act_menu, menu);
+        return true;
+    }
 //
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.display_act_menu, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle item selection
-//        switch (item.getItemId()) {
-//            case R.id.homescreen_menu_item:
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.homescreen_menu_item:
 //                setImageWithLoader(WallpaperSetter.WALLPAPER);
-//                return true;
-//            case R.id.lockscreen_menu_item:
+                return true;
+            case R.id.lockscreen_menu_item:
 //                setImageWithLoader(WallpaperSetter.LOCK_SCREEN);
-//                return true;
-//            case R.id.download_menu_item:
+                return true;
+            case R.id.download_menu_item:
 //                downloadImage(IMAGE_DOWNLOAD);
-//                return true;
-//            case R.id.share_menu_item:
+                return true;
+            case R.id.share_menu_item:
 //                shareImage();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
-//
-//    /**
-//     * Load resources for activity
-//     */
-//    private void loadResources() {
-//        mPhotoInfo = getIntent().getParcelableExtra(RESULT);
-//        mMainImageView = (ImageView) findViewById(R.id.main_image_id);
-//        mProgressBar = (ProgressBar) findViewById(R.id.display_progress_bar);
-//        ((TextView) findViewById(R.id.user_name)).setText(mPhotoInfo.getUser());
-//    }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    protected void onNetworkChange(boolean isOn) {
+        if(isOn) {
+            // nothing needed to do
+        } else {
+            // TODO throw error, where click ok closes activity
+        }
+    }
+
+    private void getPhotoData() {
+        mPhoto = getIntent().getParcelableExtra(RESULT);
+    }
+
+    /**
+     * Load resources for activity
+     */
+    private void loadResources() {
+        mainImage = findViewById(R.id.main_image);
+        profileImage = findViewById(R.id.profile_image);
+        imageTitle = findViewById(R.id.image_title);
+        userName = findViewById(R.id.user_name);
+        userUsername = findViewById(R.id.user_username);
+        bottomBorder = findViewById(R.id.bottom_border);
+    }
+
+    private void setResources() {
+        loadMainImage();
+        loadProfileImage();
+        imageTitle.setText(mPhoto.getDescription());
+        userName.setText(mPhoto.getUser().getName());
+        userUsername.setText(mPhoto.getUser().getUsername());
+        bottomBorder.setBackgroundColor(Color.parseColor(mPhoto.getColor()));
+    }
+
+    private void loadMainImage() {
+        // set up transition
+        DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
+        // load image view using glide
+       Glide.with(this)
+                .load(mPhoto.getUrls().getRegular()).apply(new RequestOptions()
+                        .centerCrop()
+                        .error(R.drawable.ic_error_black_48dp)
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                )
+                .transition(transitionOptions)
+                .into(mainImage);
+    }
+
+    private void loadProfileImage() {
+        // set up transition
+        DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
+        // load image view using glide
+        Glide.with(this)
+                .load(
+                        mPhoto.getUser()
+                                .getProfile_image()
+                                .getMedium()
+                ).apply(new RequestOptions()
+                .centerCrop()
+                .error(R.drawable.ic_error_black_48dp)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+        )
+                .transition(transitionOptions)
+                .into(profileImage);
+    }
+
+
 //
 //    private void loadSelectedPhoto() {
 //        loadImage(mPhotoInfo.getLargeImageURL(), mMainImageView, new IImageLoadOptions() {
@@ -180,20 +247,32 @@ public class ImageDisplayActivity extends FullScreenActivity implements android.
 //                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).fitCenter();
 //    }
 //
-//    /**
-//     * Load Actionbar
-//     */
-//    private void loadToolBar() {
-//        mToolbar = (Toolbar) findViewById(R.id.display_toolbar);
+
+    /**
+     * Load Actionbar
+     */
+    protected void setUpToolBar(int id)
+    {
 //        setSupportActionBar(mToolbar);
-//        //setTranslucentStatusBar(getWindow());
-//        // mToolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        // change icon to be a x not arrow
-//        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_navigation_close);
-//        getSupportActionBar().setTitle("");
-//
-//    }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // change icon to be a x not arrow
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_navigation_close);
+        getSupportActionBar().setTitle("");
+    }
+
+    /**
+     * Load Actionbar
+     */
+    protected void setUpToolBar(int id, int color)
+    {
+        super.setUpToolBar(id);
+        AppBarLayout appBar = findViewById(R.id.appBarLayout);
+//        appBar.setBackgroundColor(color);
+        mToolbar.setBackgroundColor(color);
+//        mToolbar.setBackgroundColor(Color.parseColor("#80000000"));
+//        mToolbar.setBackgroundColor(Color.parseColor("#ffffff"));
+        setUpToolBar(id);
+    }
 //
 //    /**
 //     * Check permission for given permission code.

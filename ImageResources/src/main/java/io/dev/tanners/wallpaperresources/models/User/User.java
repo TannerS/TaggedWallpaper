@@ -1,12 +1,15 @@
 package io.dev.tanners.wallpaperresources.models.User;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.dev.tanners.wallpaperresources.models.User.profile_image.ProfileImage;
 import io.dev.tanners.wallpaperresources.models.User.userlinks.UserLinks;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
+public class User implements Parcelable {
     private String id;
     private String username;
     private String name;
@@ -72,6 +75,45 @@ public class User {
     public void setTwitter_username(String twitter_username) {
         this.twitter_username = twitter_username;
     }
+
+    protected User(Parcel in) {
+        id = in.readString();
+        username = in.readString();
+        name = in.readString();
+        links = (UserLinks) in.readValue(UserLinks.class.getClassLoader());
+        profile_image = (ProfileImage) in.readValue(ProfileImage.class.getClassLoader());
+        instagram_username = in.readString();
+        twitter_username = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(username);
+        dest.writeString(name);
+        dest.writeValue(links);
+        dest.writeValue(profile_image);
+        dest.writeString(instagram_username);
+        dest.writeString(twitter_username);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     /*
  "user": {

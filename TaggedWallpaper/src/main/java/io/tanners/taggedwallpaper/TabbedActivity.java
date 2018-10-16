@@ -17,18 +17,6 @@ import io.tanners.taggedwallpaper.interfaces.IFindFragment;
 public class TabbedActivity extends SupportActivity implements IFindFragment {
     protected List<FragmentAdapter.FragmentWrapper> frags;
     protected ViewPager mViewPager;
-    protected Toolbar mToolbar;
-
-    /**
-     * set up action bar
-     *
-     * @param id
-     */
-    protected void setUpToolBar(int id)
-    {
-        mToolbar = (Toolbar) findViewById(id);
-        setSupportActionBar(mToolbar);
-    }
 
     protected int getSize() {
         return frags == null ? 0 : frags.size();
