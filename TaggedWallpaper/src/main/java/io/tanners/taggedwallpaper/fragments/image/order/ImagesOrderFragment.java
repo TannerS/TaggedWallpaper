@@ -17,11 +17,12 @@ import io.dev.tanners.wallpaperresources.config.ConfigPhotosAll;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.adapters.image.order.ImageOrderAdapter;
 import io.tanners.taggedwallpaper.fragments.image.ImagesFragment;
+import io.tanners.taggedwallpaper.fragments.image.ImagesHelperFragment;
 import io.tanners.taggedwallpaper.support.network.NetworkUtil;
 import io.tanners.taggedwallpaper.viewmodels.ImageViewModel;
 import io.tanners.taggedwallpaper.viewmodels.order.OrderImageViewModel;
 
-public abstract class ImagesOrderFragment extends ImagesFragment
+public abstract class ImagesOrderFragment extends ImagesHelperFragment
 {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -55,5 +56,9 @@ public abstract class ImagesOrderFragment extends ImagesFragment
 
             loading = false;
         });
+    }
+
+    protected void loadAdapter() {
+        mAdapter = new ImageOrderAdapter(mContext);
     }
 }

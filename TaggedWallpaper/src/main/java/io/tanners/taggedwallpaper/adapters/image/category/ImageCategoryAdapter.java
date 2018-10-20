@@ -23,6 +23,10 @@ public class ImageCategoryAdapter extends ImageAdapter<CategoryItem> {
         super(mContext, mItems);
     }
 
+    public ImageCategoryAdapter(Context mContext) {
+        super(mContext);
+    }
+
     /**
      * Inflate row's layout
      *

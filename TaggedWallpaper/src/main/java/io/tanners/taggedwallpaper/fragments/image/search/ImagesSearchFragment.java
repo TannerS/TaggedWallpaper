@@ -13,12 +13,14 @@ import java.util.ArrayList;
 import io.dev.tanners.wallpaperresources.callbacks.post.search.OnPostSearch;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.dev.tanners.wallpaperresources.models.photos.search.PhotoSearch;
+import io.tanners.taggedwallpaper.adapters.image.order.ImageOrderAdapter;
 import io.tanners.taggedwallpaper.fragments.image.ImagesFragment;
+import io.tanners.taggedwallpaper.fragments.image.ImagesHelperFragment;
 import io.tanners.taggedwallpaper.fragments.image.order.ImagesOrderFragment;
 import io.tanners.taggedwallpaper.viewmodels.order.OrderImageViewModel;
 import io.tanners.taggedwallpaper.viewmodels.search.SearchImageViewModel;
 
-public class ImagesSearchFragment extends ImagesFragment {
+public class ImagesSearchFragment extends ImagesHelperFragment {
     public final static String TAG = "SEARCH_QUERY";
     protected String mQuery;
 
@@ -33,6 +35,7 @@ public class ImagesSearchFragment extends ImagesFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        // init load
         loadData();
     }
 
@@ -91,15 +94,7 @@ public class ImagesSearchFragment extends ImagesFragment {
         getViewModel().getmPhotos().observe(this, mObserver);
     }
 
-    /**
-     *
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        // reload adapter with view model's cached movie data
-//        if(mAdapter != null) {
-//            mAdapter.updateAdapter(getViewModel().getmPhotosValue());
-//        }
+    protected void loadAdapter() {
+        mAdapter = new ImageOrderAdapter(mContext);
     }
 }

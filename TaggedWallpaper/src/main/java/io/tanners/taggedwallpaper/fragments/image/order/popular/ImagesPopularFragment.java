@@ -48,16 +48,4 @@ public class ImagesPopularFragment extends ImagesOrderFragment {
     protected PopularOrderImageViewModel getViewModel() {
         return ViewModelProviders.of(this).get(PopularOrderImageViewModel.class);
     }
-
-    /**
-     *
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        // reload adapter with view model's cached movie data
-//        if(mAdapter != null) {
-//            mAdapter.updateAdapter(getViewModel().getmPhotosValue());
-//        }
-    }
 }

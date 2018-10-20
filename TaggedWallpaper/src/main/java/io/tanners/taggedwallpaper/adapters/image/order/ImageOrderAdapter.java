@@ -63,7 +63,6 @@ public class ImageOrderAdapter extends ImageAdapter<Photo> {
         public ResultImageViewHolder(final Context mContext, View view) {
             super(view);
             image = view.findViewById(R.id.image_background);
-            // set onclick per image to load new activity to display full screen image
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

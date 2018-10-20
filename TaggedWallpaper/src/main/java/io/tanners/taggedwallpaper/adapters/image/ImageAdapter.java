@@ -51,16 +51,6 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<RecyclerView.
         notifyDataSetChanged();
     }
 
-//    public void debugList(ArrayList<T> mItems) {
-//        for(int i = 0; i < mItems.size(); i++)
-//            Log.i("ADAPTER", "NEW DATA: " + ((Photo)mItems.get(i)).getId());
-//    }
-//
-//    public void debugList() {
-//        for(int i = 0; i < mItems.size(); i++)
-//            Log.i("ADAPTER", "CURRENT DATA: " + ((Photo)mItems.get(i)).getId());
-//    }
-
     /**
      * set image to be loaded into current view
      * @param mUrl

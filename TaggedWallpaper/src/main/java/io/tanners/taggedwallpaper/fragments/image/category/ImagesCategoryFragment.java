@@ -1,7 +1,6 @@
 package io.tanners.taggedwallpaper.fragments.image.category;
 
 import android.arch.lifecycle.Observer;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,21 +13,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.adapters.image.category.ImageCategoryAdapter;
+import io.tanners.taggedwallpaper.adapters.image.order.ImageOrderAdapter;
 import io.tanners.taggedwallpaper.fragments.image.ImagesFragment;
+import io.tanners.taggedwallpaper.fragments.image.ImagesHelperFragment;
 import io.tanners.taggedwallpaper.model.categories.CategoryItem;
 import io.tanners.taggedwallpaper.viewmodels.ImageViewModel;
 
 /**
  * Fragment to hold the Categories layout for image Categories
  */
-public class ImagesCategoryFragment extends ImagesFragment {
+public class ImagesCategoryFragment extends ImagesHelperFragment {
     private ArrayList<CategoryItem> mCategories;
     public static final String CATEGORY = "Category";
     private final String FIREBASE_ID = "categories";
@@ -57,7 +56,7 @@ public class ImagesCategoryFragment extends ImagesFragment {
         // Inflate the layout for this fragment
         view = super.onCreateView(inflater, container, savedInstanceState);
         // load recyclerview
-        loadRecyclerView();
+        loadRecycler();
         // load categories
         LoadCategories();
         // return view
@@ -67,6 +66,10 @@ public class ImagesCategoryFragment extends ImagesFragment {
     @Override
     protected void loadViewModelListener(Observer<ArrayList<Photo>> mObserver) {
         // not used due to dynamic changes
+    }
+
+    protected void loadAdapter() {
+        mAdapter = new ImageCategoryAdapter(mContext);
     }
 
     @Override

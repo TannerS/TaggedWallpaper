@@ -28,16 +28,6 @@ public class ImagesLatestFragment extends ImagesOrderFragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        // set view model to update adapter on data changes
-        // runnable to https://stackoverflow.com/questions/39445330/cannot-call-notifyiteminserted-from-recyclerview-onscrolllistener
-        loadViewModelListener(photos -> {
-            mRecyclerView.post(() -> mAdapter.updateAdapter(photos));
-        });
-    }
-
-    @Override
     protected void loadViewModelListener(Observer<ArrayList<Photo>> mObserver) {
         getViewModel().getmPhotos().observe(this, mObserver);
     }
@@ -58,17 +48,5 @@ public class ImagesLatestFragment extends ImagesOrderFragment {
     @Override
     protected LatestOrderImageViewModel getViewModel() {
         return ViewModelProviders.of(this).get(LatestOrderImageViewModel.class);
-    }
-
-    /**
-     * 
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        // reload adapter with view model's cached movie data
-//        if(mAdapter != null) {
-//            mAdapter.updateAdapter(getViewModel().getmPhotosValue());
-//        }
     }
 }

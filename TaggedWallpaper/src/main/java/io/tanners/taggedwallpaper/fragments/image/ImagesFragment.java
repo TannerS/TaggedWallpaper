@@ -1,7 +1,6 @@
 package io.tanners.taggedwallpaper.fragments.image;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,29 +18,22 @@ import java.util.ArrayList;
 import io.dev.tanners.wallpaperresources.ImageRequester;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.R;
+import io.tanners.taggedwallpaper.adapters.image.ImageAdapter;
 import io.tanners.taggedwallpaper.adapters.image.order.ImageOrderAdapter;
 import io.tanners.taggedwallpaper.support.builder.snackbar.SimpleSnackBarBuilder;
-import io.tanners.taggedwallpaper.adapters.image.ImageAdapter;
 import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
-import io.tanners.taggedwallpaper.support.network.NetworkUtil;
 import io.tanners.taggedwallpaper.viewmodels.ImageViewModel;
-import io.tanners.taggedwallpaper.viewmodels.order.OrderImageViewModel;
 
 public abstract class ImagesFragment extends Fragment implements ErrorCallBack
 {
     protected View view;
     protected RecyclerView mRecyclerView;
     protected ProgressBar mProgressBar;
-//    protected ImageAdapter mAdapter;
     protected GridLayoutManager mRecyclerViewLayoutManager;
-    // TODO fix this somehow
-    // kinda of a hack but we need this in multiple areas for endless scrolling
-    // this should be improved but for now..
-//    protected static boolean loading;
     protected boolean loading;
     protected Context mContext;
     protected ImageRequester mRequester;
-    protected ImageOrderAdapter mAdapter;
+    protected ImageAdapter mAdapter;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -51,29 +43,6 @@ public abstract class ImagesFragment extends Fragment implements ErrorCallBack
         loadViewModelListener(photos -> {
             mRecyclerView.post(() -> mAdapter.updateAdapter(photos));
         });
-        // set listener for list
-        // TODO turn into callback for for base class later to not recreate
-        loadRecyclerView(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (loading) {
-                    return;
-                }
-                int mVisibleCount = mRecyclerViewLayoutManager.getChildCount();
-                int mTotalCount = mRecyclerViewLayoutManager.getItemCount();
-                int mPastCount = mRecyclerViewLayoutManager.findFirstVisibleItemPosition();
-                // if at bottom of list, and there is not an already network call updating the adatper,
-                // and all those results are updated, update the list with next set of results
-                if ((mPastCount + mVisibleCount >= mTotalCount) && !loading) {
-                    if(NetworkUtil.isNetworkAvailable(mContext)) {
-                        mProgressBar.setVisibility(View.VISIBLE);
-                        loading = true;
-                        // call proper requested functionality
-                        onScroll();
-                    }
-                }
-            }
-        });
     }
 
     @Override
@@ -81,8 +50,6 @@ public abstract class ImagesFragment extends Fragment implements ErrorCallBack
         super.onCreate(savedInstanceState);
         loadImageRequester();
     }
-
-    protected abstract void onScroll();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -104,28 +71,18 @@ public abstract class ImagesFragment extends Fragment implements ErrorCallBack
         mRequester = new ImageRequester(getContext());
     }
 
-    protected void loadAdapter() {
-        mAdapter = new ImageOrderAdapter(mContext);
-    }
+    protected abstract void loadAdapter();
 
     protected abstract ImageViewModel getViewModel();
 
     /**
      *
      */
-    protected void loadRecyclerView(RecyclerView.OnScrollListener mListener)
+    protected void loadRecycler()
     {
         loadRecyclerView();
         // load adapter
         loadAdapter();
-        // attach adapter to lsit
-        mRecyclerView.setAdapter(mAdapter);
-        // depending on the version of the OS, add listener to the recycler view
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
-            mRecyclerView.addOnScrollListener(mListener);
-        } else {
-            mRecyclerView.setOnScrollListener(mListener);
-        }
     }
 
     /**
