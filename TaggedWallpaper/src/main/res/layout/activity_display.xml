@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    android:id="@+id/display_actvity_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -32,93 +34,91 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <ImageView
-            android:id="@+id/main_image"
+        <FrameLayout
+            android:id="@+id/main_image_container"
             android:layout_width="match_parent"
-            android:layout_height="305dp"
-            android:layout_gravity="center"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_error_outline_white_48dp"
-            app:layout_constraintDimensionRatio="16:9"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image_title" />
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
+
+            <ImageView
+                android:id="@+id/main_image"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_error_outline_white_48dp" />
+
+            <TextView
+                android:id="@+id/main_image_title"
+                android:background="@drawable/background_gradient_transparency"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:gravity="bottom|center_horizontal"
+                android:text="PLACE HOLDER DESC"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_16sdp" />
+
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/profile_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="start"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_error_outline_white_48dp"
             app:layout_constraintDimensionRatio="4:3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_username" />
-
-        <TextView
-            android:id="@+id/image_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="PLACE HOLDER DESC"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_16sdp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/main_image_container" />
 
         <TextView
             android:id="@+id/user_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="start"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:gravity="center"
+            android:gravity="start"
             android:text="PLACE HOLDER NAME"
             android:textColor="@color/white"
             android:textSize="@dimen/_16sdp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_image" />
+            app:layout_constraintStart_toEndOf="@+id/profile_image"
+            app:layout_constraintTop_toBottomOf="@+id/main_image_container" />
 
         <TextView
             android:id="@+id/user_username"
             android:layout_width="0dp"
             android:layout_height="28dp"
-            android:layout_gravity="center"
+            android:layout_gravity="start"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:gravity="center"
+            android:gravity="start"
             android:text="PLACE HOLDER_USERNAME"
             android:textColor="@color/white"
             android:textSize="@dimen/_10sdp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/profile_image"
             app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
         <View
             android:id="@+id/bottom_border"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

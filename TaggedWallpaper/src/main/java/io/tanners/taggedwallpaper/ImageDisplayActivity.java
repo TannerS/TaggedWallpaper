@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -38,14 +40,16 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.support.file.ExternalFileStorageUtil;
 import io.tanners.taggedwallpaper.support.permissions.PermissionRequester;
@@ -60,6 +64,7 @@ public class ImageDisplayActivity extends SupportActivity implements android.sup
     private TextView userName;
     private TextView userUsername;
     private View bottomBorder;
+    private ScrollView mContainer;
 
 
     //    private ImageView mMainImageView;
@@ -88,7 +93,7 @@ public class ImageDisplayActivity extends SupportActivity implements android.sup
         loadResources();
         setResources();
     }
-//
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -135,10 +140,11 @@ public class ImageDisplayActivity extends SupportActivity implements android.sup
     private void loadResources() {
         mainImage = findViewById(R.id.main_image);
         profileImage = findViewById(R.id.profile_image);
-        imageTitle = findViewById(R.id.image_title);
+        imageTitle = findViewById(R.id.main_image_title);
         userName = findViewById(R.id.user_name);
         userUsername = findViewById(R.id.user_username);
         bottomBorder = findViewById(R.id.bottom_border);
+        mContainer = findViewById(R.id.display_actvity_container);
     }
 
     private void setResources() {
@@ -148,6 +154,7 @@ public class ImageDisplayActivity extends SupportActivity implements android.sup
         userName.setText(mPhoto.getUser().getName());
         userUsername.setText(mPhoto.getUser().getUsername());
         bottomBorder.setBackgroundColor(Color.parseColor(mPhoto.getColor()));
+        mContainer.setBackgroundColor(Color.parseColor(mPhoto.getColor()));
     }
 
     private void loadMainImage() {
@@ -155,13 +162,39 @@ public class ImageDisplayActivity extends SupportActivity implements android.sup
         DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
         // load image view using glide
        Glide.with(this)
-                .load(mPhoto.getUrls().getRegular()).apply(new RequestOptions()
+               .load(mPhoto.getUrls().getRegular())
+//               .listener(new RequestListener<Drawable>() {
+//                   @Override
+//                   public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+//                       return false;
+//                   }
+//
+//                   @Override
+//                   public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+//                       mainImage.setBackgroundColor(R.drawable.background_gradient_transparency);
+//
+//
+//
+//                       return false;
+//                   }
+//               })
+//               .into(new SimpleTarget<Drawable>() {
+//                   @Override
+//                   public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+//                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//                           yourRelativeLayout.setBackground(resource);
+//                       }
+//                   }
+//               })
+               .apply(new RequestOptions()
                         .centerCrop()
                         .error(R.drawable.ic_error_black_48dp)
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 )
                 .transition(transitionOptions)
                 .into(mainImage);
+//        mainImage.setBackgroundColor(R.drawable.background_gradient_transparency);
+
     }
 
     private void loadProfileImage() {
@@ -181,7 +214,6 @@ public class ImageDisplayActivity extends SupportActivity implements android.sup
                 .transition(transitionOptions)
                 .into(profileImage);
     }
-
 
 //
 //    private void loadSelectedPhoto() {
@@ -253,7 +285,6 @@ public class ImageDisplayActivity extends SupportActivity implements android.sup
      */
     protected void setUpToolBar(int id)
     {
-//        setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // change icon to be a x not arrow
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_navigation_close);
@@ -266,13 +297,31 @@ public class ImageDisplayActivity extends SupportActivity implements android.sup
     protected void setUpToolBar(int id, int color)
     {
         super.setUpToolBar(id);
-        AppBarLayout appBar = findViewById(R.id.appBarLayout);
-//        appBar.setBackgroundColor(color);
         mToolbar.setBackgroundColor(color);
-//        mToolbar.setBackgroundColor(Color.parseColor("#80000000"));
-//        mToolbar.setBackgroundColor(Color.parseColor("#ffffff"));
         setUpToolBar(id);
     }
+
+    private void setBackgroundGradientTransparency()
+    {
+
+//        // https://stackoverflow.com/questions/5248583/how-to-get-a-color-from-hexadecimal-color-string
+//        // https://stackoverflow.com/questions/13929877/how-to-make-gradient-background-in-android
+//        String startingColorStr = "#000";
+//        int adjustedColor = Integer.parseInt(startingColorStr.replaceFirst("^#",""), 16);
+//
+//        int[] colors = {adjustedColor, mMutedColor};
+//        //create a new gradient color
+//        GradientDrawable gd = new GradientDrawable(
+//                GradientDrawable.Orientation.TOP_BOTTOM, colors);
+//
+//        gd.setCornerRadius(0f);
+//        gd.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+//        gd.setGradientRadius(90f);
+//        //apply the button background to newly created drawable gradient
+//        mRootView.findViewById(R.id.meta_bar).setBackground(gd);
+    }
+
+
 //
 //    /**
 //     * Check permission for given permission code.
