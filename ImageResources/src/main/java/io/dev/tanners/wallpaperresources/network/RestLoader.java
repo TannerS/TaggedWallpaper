@@ -7,15 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
 import org.apache.commons.io.IOUtils;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
@@ -41,33 +34,17 @@ public class RestLoader extends AsyncTaskLoader<String> {
         this.mContext = context;
     }
 
-    @Override
-    protected void onStartLoading() {
-        super.onStartLoading();
-
-
-
-    }
-
     @Nullable
     @Override
     public String loadInBackground() {
         ConnectionRequester mRequest = null;
         String mEncoding = "utf-8";
 
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mEncoding = StandardCharsets.UTF_8.name().toLowerCase(Locale.getDefault());
         }
 
-        Log.i("ADAPTER", "LOADING URL: " + mUrl);
-
-
-//        mUrl = .getString(REST_URL);
-
         mRequest = new ConnectionRequester(mUrl, mEncoding);
-
 
         try {
             mRequest = mRequest.addBasicBody(null)

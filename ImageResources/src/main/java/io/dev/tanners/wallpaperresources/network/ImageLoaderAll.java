@@ -8,19 +8,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
-
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import io.dev.tanners.wallpaperresources.callbacks.post.order.OnPostAll;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
-//import io.dev.tanners.wallpaperresources.models.photos.photos.Photos;
 
-//public class ImageLoaderAll extends ImageLoader<Photos> {
 public abstract class ImageLoaderAll extends ImageLoader {
     public ImageLoaderAll(Context mContext) {
         super(mContext);
@@ -35,7 +29,6 @@ public abstract class ImageLoaderAll extends ImageLoader {
                 return new RestLoader(mContext, args);
             }
 
-
             @Override
             public void onLoadFinished(@NonNull Loader<String> loader, String results) {
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -49,23 +42,12 @@ public abstract class ImageLoaderAll extends ImageLoader {
                     e.printStackTrace();
                 }
 
-
-
-
                 OnPost.onPostCall(new ArrayList<Photo>(Arrays.asList(photos)));
-
-
                 ((Activity)mContext).getLoaderManager().destroyLoader(getLoaderId());
-
-
-
             }
 
             @Override
-            public void onLoaderReset(@NonNull Loader<String> loader) {
-                Log.i("LOADER", "RESTARTED");
-            }
-
+            public void onLoaderReset(@NonNull Loader<String> loader) { }
         });
     }
 }

@@ -2,16 +2,12 @@ package io.dev.tanners.wallpaperresources;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v4.app.LoaderManager;
-import android.util.Log;
-
 import io.dev.tanners.wallpaperresources.builder.ImageUriBuilder;
 import io.dev.tanners.wallpaperresources.callbacks.post.download.OnPostDownload;
 import io.dev.tanners.wallpaperresources.callbacks.post.order.OnPostAll;
 import io.dev.tanners.wallpaperresources.callbacks.post.search.OnPostSearch;
 import io.dev.tanners.wallpaperresources.callbacks.post.single.OnPostSingle;
 import io.dev.tanners.wallpaperresources.config.ConfigPhotosAll;
-import io.dev.tanners.wallpaperresources.network.ImageLoaderAll;
 import io.dev.tanners.wallpaperresources.network.ImageLoaderAllLatest;
 import io.dev.tanners.wallpaperresources.network.ImageLoaderAllPopular;
 import io.dev.tanners.wallpaperresources.network.ImageLoaderDownload;

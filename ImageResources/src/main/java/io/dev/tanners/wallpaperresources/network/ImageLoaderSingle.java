@@ -6,16 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
-import java.util.ArrayList;
-
 import io.dev.tanners.wallpaperresources.callbacks.post.single.OnPostSingle;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
-import io.dev.tanners.wallpaperresources.models.photos.search.PhotoSearch;
 
 public class ImageLoaderSingle extends ImageLoader {
     public ImageLoaderSingle(Context mContext) {
@@ -52,9 +46,7 @@ public class ImageLoaderSingle extends ImageLoader {
             }
 
             @Override
-            public void onLoaderReset(@NonNull Loader<String> loader) {
-                // not needed
-            }
+            public void onLoaderReset(@NonNull Loader<String> loader) { }
         });
     }
 }
