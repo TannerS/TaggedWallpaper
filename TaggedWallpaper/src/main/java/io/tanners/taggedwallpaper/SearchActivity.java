@@ -2,23 +2,13 @@ package io.tanners.taggedwallpaper;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.MenuItem;
-
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-
-import io.tanners.taggedwallpaper.adapters.fragment.FragmentAdapter;
-import io.tanners.taggedwallpaper.fragments.image.category.ImagesCategoryFragment;
-import io.tanners.taggedwallpaper.fragments.image.order.latest.ImagesLatestFragment;
-import io.tanners.taggedwallpaper.fragments.image.order.popular.ImagesPopularFragment;
 import io.tanners.taggedwallpaper.fragments.image.search.ImagesSearchFragment;
 import io.tanners.taggedwallpaper.interfaces. IGetTag;
-import io.tanners.taggedwallpaper.support.builder.snackbar.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.support.network.NetworkUtil;
 import io.tanners.taggedwallpaper.support.network.encoder.EncoderUtil;
 
@@ -46,7 +36,7 @@ public class SearchActivity extends SupportActivity implements IGetTag {
         }
         setUpToolBar(R.id.universal_toolbar);
         // check for network and/or load fragments
-//        onNetworkChange(NetworkUtil.isNetworkAvailable(this));
+        onNetworkChange(NetworkUtil.isNetworkAvailable(this));
         loadFragments();
         // set page to be a child of parent activity, this will show the back arrow to return to back activity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -61,7 +51,7 @@ public class SearchActivity extends SupportActivity implements IGetTag {
      */
     @Override
     protected void onNetworkChange(boolean isOn) {
-        // not used here
+        // TODO based on result, load results
     }
 
     protected void loadFragments() {

@@ -1,11 +1,6 @@
 package io.tanners.taggedwallpaper.support.validation;
 
-import android.os.Build;
-
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 import io.tanners.taggedwallpaper.support.exceptions.MaxLimitException;
 import io.tanners.taggedwallpaper.support.exceptions.MinLimitException;
 import io.tanners.taggedwallpaper.support.network.encoder.EncoderUtil;

@@ -1,7 +1,11 @@
 package io.dev.tanners.connectionrequester;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
@@ -210,6 +214,24 @@ public class ConnectionRequester {
         }
         // set charset
         connection.setRequestProperty("charset", mCharset);
+    }
+
+    public void fileDownloader(File mFile) throws FileNotFoundException, IOException
+    {
+        // set stream to write to passed in file
+        OutputStream os = null;
+        // open stream
+        os = new FileOutputStream(mFile);
+        // write buffer size at 1024 bytes at a time
+        byte[] bytes = new byte[1024];
+        int length;
+        // write to file until end
+        while ((length = getStream().read(bytes)) != -1) {
+            os.write(bytes, 0, length);
+        }
+        // close streams
+        getStream().close();
+        os.close();
     }
 
     public void build() throws IOException {

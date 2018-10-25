@@ -1,65 +1,35 @@
 package io.tanners.taggedwallpaper;
 
-import android.annotation.SuppressLint;
-import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+
+import java.util.UUID;
 
 import io.dev.tanners.backgroundsetter.BackgroundSet;
 import io.dev.tanners.backgroundsetter.BackgroundSetter;
+import io.dev.tanners.downloader.Downloader;
+import io.dev.tanners.downloader.network.DownloaderConnection;
+import io.dev.tanners.snackbarbuilder.SimpleSnackBarBuilder;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
-import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
-import io.tanners.taggedwallpaper.network.image.download.ImageDownloader;
-import io.tanners.taggedwallpaper.support.file.ExternalFileStorageUtil;
 import io.tanners.taggedwallpaper.support.permissions.PermissionRequester;
-import io.tanners.taggedwallpaper.support.builder.snackbar.SimpleSnackBarBuilder;
 
-// TODO refactor the class to handle the permissions and background decoupled from the activity
 public class ImageDisplayActivity extends SupportActivity {
     public final static String RESULT = "RESULT";
     private Photo mPhoto;
@@ -71,7 +41,6 @@ public class ImageDisplayActivity extends SupportActivity {
     private View bottomBorder;
     private ScrollView mContainer;
     private final int IMAGE_DOWNLOAD = 256;
-    private final String ALBUMNAME = "Wallpaper";
 
     /**
      * When activity is created
@@ -126,48 +95,40 @@ public class ImageDisplayActivity extends SupportActivity {
 
     private BackgroundSetter.BackgroundCallback getBackgroundCallBack()
     {
-        return new BackgroundSetter.BackgroundCallback() {
-            @Override
-            public void OnCompletedCallback(Boolean results) {
-                if(results)
-                {
-                    final Snackbar mGoodSnackbar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_actvity_container),
-                            "Image set.",
-                            Snackbar.LENGTH_INDEFINITE);
+        return results -> {
 
-                    mGoodSnackbar.setAction("Close", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mGoodSnackbar.dismiss();
-                        }
-                    });
-                    // show message
-                    mGoodSnackbar.show();
-                }
-                else
-                {
-                    final Snackbar mBadSnackbar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_actvity_container),
-                            "Error has occurred, image not set.",
-                            Snackbar.LENGTH_INDEFINITE);
+            String mMessage = "";
 
-                    mBadSnackbar.setAction("Close", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mBadSnackbar.dismiss();
-                        }
-                    });
-                    // show message
-                    mBadSnackbar.show();
-                }
+            if(results) {
+                mMessage = "Image set.";
+            } else {
+                mMessage = "Error has occurred, image not set.";
             }
+
+            final Snackbar mResultMessageSnackBar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_actvity_container),
+                    mMessage,
+                    Snackbar.LENGTH_INDEFINITE);
+
+            mResultMessageSnackBar.setAction("Close", v -> mResultMessageSnackBar.dismiss());
+            // show message
+            mResultMessageSnackBar.show();
         };
     }
 
     protected void onNetworkChange(boolean isOn) {
-        if(isOn) {
-            // nothing needed to do
-        } else {
-            // TODO throw error, where click ok closes activity
+        if(!isOn) {
+            final Snackbar mSnackbar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_actvity_container),
+                    "NO NETWORK CONNECTION, CLOSING...",
+                    Snackbar.LENGTH_INDEFINITE);
+
+            mSnackbar.setAction("Close", (View.OnClickListener) v -> {
+                // close snackbar
+                mSnackbar.dismiss();
+                // close activity
+                finish();
+            });
+
+            mSnackbar.show();
         }
     }
 
@@ -248,7 +209,9 @@ public class ImageDisplayActivity extends SupportActivity {
     protected void setUpToolBar(int id, int color)
     {
         super.setUpToolBar(id);
+
         mToolbar.setBackgroundColor(color);
+
         setUpToolBar(id);
     }
 
@@ -301,8 +264,6 @@ public class ImageDisplayActivity extends SupportActivity {
         }
     }
 
-
-
     /**
      * Recycle same code permissions for download and sharing image
      *
@@ -314,68 +275,39 @@ public class ImageDisplayActivity extends SupportActivity {
             // no permissions needed, call code
             downloadImage();
         }
-        // permissions denied for some reason
-        else {
-            // runtime permissions came in at sdk 23
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                // set wallpaper based on image stream
-                downloadImage();
-            }
-            // no permissions, do nothing
-        }
+    }
+
+    private String generateUUID()
+    {
+        return UUID.randomUUID().toString();
     }
 
     /**
-     * Do something with image
+     * Download image
      */
     private void downloadImage() {
-//        ExternalFileStorageUtil mStorageUtil = new ExternalFileStorageUtil();
-//        // check if external storage is writable
-//        if (mStorageUtil.isExternalStorageWritable()) {
-//            // use that newly created image file to share or download
-//            // you need to download before sharing
-//            new ImageDownloader(this,
-//                    getNewFile(mStorageUtil),
-//                    new ErrorCallBack() {
-//                        @Override
-//                        public void displayError(String mMessage) {
-//                            final Snackbar mFailSnackbar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_actvity_container),
-//                                    mMessage,
-//                                    Snackbar.LENGTH_INDEFINITE);
-//
-//                            mFailSnackbar.setAction("Close", new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-//                                    mFailSnackbar.dismiss();
-//                                }
-//                            });
-//
-//                            mFailSnackbar.show();
-//                        }
-//
-//                        @Override
-//                        public void displayNoError(String mMessage) {
-//                            final Snackbar mSnackbar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_actvity_container),
-//                                    mMessage,
-//                                    Snackbar.LENGTH_INDEFINITE);
-//
-//                            mSnackbar.setAction("Close", new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View v) {
-//                                    mSnackbar.dismiss();
-//                                }
-//                            });
-//
-//                            mSnackbar.show();
-//                        }
-//                    }
-//            ).execute(mPhotoInfo.getImageURL());
-//        }
-//        // cant read, connected to pc, ejected, etc
-//        else {
-//            // display error as snackbar
-//            displayStorageErrorSnackBar();
-//        }
+
+        Downloader mImageDownloader = new Downloader(this);
+        mImageDownloader.downloadFile(
+                generateUUID(),
+                mPhoto.getLinks().getDownload_location(),
+                new DownloaderConnection.ErrorCallBack() {
+                    @Override
+                    public void displayError(String message) {
+                        displayCustomSnackbar(message);
+                    }
+
+                    @Override
+                    public void displayNoError(String message) {
+                        displayCustomSnackbar("Image " + message);
+                    }
+                }
+        );
+    }
+
+    private String getShareMessage(String mData)
+    {
+        return "Please enjoy this wallpaper image!: " + mData;
     }
 
     private void shareImage() {
@@ -384,25 +316,17 @@ public class ImageDisplayActivity extends SupportActivity {
         shareIntent.setAction(Intent.ACTION_SEND);
         // at this point, this is uri to file but actually writing to file is done
         // in the background task in the parent class
-//        shareIntent.putExtra(Intent.EXTRA_TEXT, mPhotoInfo.getImageURL());
+        shareIntent.putExtra(
+                Intent.EXTRA_TEXT,
+                getShareMessage(
+                        mPhoto.getLinks().getDownload_location()
+                )
+        );
         shareIntent.setType("text/plain");
         startActivity(Intent.createChooser(shareIntent, "Share too..."));
     }
 
-//    private File getNewFile(ExternalFileStorageUtil mStorageUtil) {
-//        // get filename
-//        String[] mImageUrlSplit = mPhotoInfo.getImageURL().split("/");
-//        String mImageUrlFileName = mImageUrlSplit[mImageUrlSplit.length - 1];
-//        File mImageFile = null;
-//        // create album
-//        File mImageDir = mStorageUtil.getAlbumStorageDir(ALBUMNAME);
-//        // create file based on name and album
-//        mImageFile = new File(mImageDir, mImageUrlFileName);
-//        // return image file reference
-//        return mImageFile;
-//    }
-
-    private void displayStorageErrorSnackBar() {
+    private void displayCustomSnackbar(String mMessage) {
         SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.display_actvity_container),
                 "ERROR: Cannot Access External Storage",
                 Snackbar.LENGTH_INDEFINITE,

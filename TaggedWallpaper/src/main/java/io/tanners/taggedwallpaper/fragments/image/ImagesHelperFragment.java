@@ -1,28 +1,12 @@
 package io.tanners.taggedwallpaper.fragments.image;
 
-import android.arch.lifecycle.Observer;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
-import java.util.ArrayList;
-
-import io.dev.tanners.wallpaperresources.ImageRequester;
-import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
-import io.tanners.taggedwallpaper.R;
-import io.tanners.taggedwallpaper.adapters.image.order.ImageOrderAdapter;
-import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 import io.tanners.taggedwallpaper.support.builder.snackbar.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.support.network.NetworkUtil;
-import io.tanners.taggedwallpaper.viewmodels.ImageViewModel;
 
 public abstract class ImagesHelperFragment extends ImagesFragment
 {

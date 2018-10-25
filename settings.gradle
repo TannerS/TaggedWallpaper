@@ -1,1 +1,1 @@
-include ':TaggedWallpaper', ':ImageResources', ':ConnectionRequester', ':BackgroundSetter'
+include ':TaggedWallpaper', ':ImageResources', ':ConnectionRequester', ':BackgroundSetter', ':Downloader', ':SnackbarBuilder'

@@ -19,7 +19,6 @@ import io.dev.tanners.wallpaperresources.ImageRequester;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.adapters.image.ImageAdapter;
-import io.tanners.taggedwallpaper.adapters.image.order.ImageOrderAdapter;
 import io.tanners.taggedwallpaper.support.builder.snackbar.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 import io.tanners.taggedwallpaper.viewmodels.ImageViewModel;

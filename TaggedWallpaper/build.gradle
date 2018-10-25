@@ -97,4 +97,6 @@ dependencies {
 
     implementation project(":ImageResources")
     implementation project(path: ':BackgroundSetter')
+    implementation project(path: ':SnackbarBuilder')
+    implementation project(path: ':Downloader')
 }

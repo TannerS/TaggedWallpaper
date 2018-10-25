@@ -14,8 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-
-import io.tanners.taggedwallpaper.support.builder.snackbar.SimpleSnackBarBuilder;
+import io.dev.tanners.snackbarbuilder.SimpleSnackBarBuilder;
+import io.tanners.taggedwallpaper.fragments.image.favorites.ImagesFavoriteFragment;
 import io.tanners.taggedwallpaper.support.exceptions.MaxLimitException;
 import io.tanners.taggedwallpaper.support.exceptions.MinLimitException;
 import io.tanners.taggedwallpaper.support.network.NetworkUtil;
@@ -33,12 +33,10 @@ TODO
         - need to check when to load api call and when to load existing data, which life cycle method
         2) gridview col num base on screen size
         3) material design for all screens
-        4) add favorites fragment
         5) add favorites selection on details activity
         6) add room for favorites, executor, and etc
         7) api guidelines for hot linking
         8) save/restore scroll position (google for guide)
-        9) use acc repo + dagger for the image lib dependency toi be used into rep to give to view model, and can also use injector for, this can come at a later time
         10) multiple screen sizes
         11) widgets
         TODO 12) FIND OUT IF FRAGMENTS SHARE THE SAME VIEW MODEL ***
@@ -94,6 +92,7 @@ public class MainActivity extends TabbedActivity {
             add(new FragmentAdapter.FragmentWrapper(ImagesCategoryFragment.newInstance(), ImagesCategoryFragment.CATEGORY));
             add(new FragmentAdapter.FragmentWrapper(ImagesPopularFragment.newInstance(), ImagesPopularFragment.POPULAR));
             add(new FragmentAdapter.FragmentWrapper(ImagesLatestFragment.newInstance(), ImagesLatestFragment.LATEST));
+            add(new FragmentAdapter.FragmentWrapper(ImagesFavoriteFragment.newInstance(), ImagesFavoriteFragment.FAVORITE));
         }});
     }
 
@@ -118,7 +117,6 @@ public class MainActivity extends TabbedActivity {
     {
         getSearchProvider().clearHistory();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -233,8 +231,6 @@ public class MainActivity extends TabbedActivity {
             openIntentForQuery(this, query);
         }
     }
-
-
 
     /**
      * Get search provider
