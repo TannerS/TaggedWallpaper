@@ -9,7 +9,6 @@ import android.support.v4.content.Loader;
 
 public class LockScreen extends BackgroundSetter {
 
-
     public LockScreen(Context mContext) {
         super(mContext);
     }

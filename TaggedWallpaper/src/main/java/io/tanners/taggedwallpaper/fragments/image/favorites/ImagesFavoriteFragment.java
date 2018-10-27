@@ -19,7 +19,7 @@ public class ImagesFavoriteFragment extends ImagesFragment {
 
     @Override
     protected void loadViewModelListener(Observer<ArrayList<Photo>> mObserver) {
-        getViewModel().getmFavorites().observe(this, mObserver);
+        getViewModel().getmPhotos().observe(this, mObserver);
     }
 
     @Override

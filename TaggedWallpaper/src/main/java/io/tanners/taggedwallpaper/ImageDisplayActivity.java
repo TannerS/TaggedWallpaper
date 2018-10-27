@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -299,7 +300,16 @@ public class ImageDisplayActivity extends SupportActivity {
 
                     @Override
                     public void displayNoError(String message) {
-                        displayCustomSnackbar("Image " + message);
+                        displayCustomSnackbar(message);
+                    }
+
+                    @Override
+                    public void displayError() {
+                    }
+
+                    @Override
+                    public void displayNoError() {
+                        displayCustomSnackbar("Image downloaded");
                     }
                 }
         );
@@ -307,7 +317,7 @@ public class ImageDisplayActivity extends SupportActivity {
 
     private String getShareMessage(String mData)
     {
-        return "Please enjoy this wallpaper image!: " + mData;
+        return "Please enjoy this wallpaper!: " + mData;
     }
 
     private void shareImage() {
@@ -328,7 +338,7 @@ public class ImageDisplayActivity extends SupportActivity {
 
     private void displayCustomSnackbar(String mMessage) {
         SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.display_actvity_container),
-                "ERROR: Cannot Access External Storage",
+                mMessage,
                 Snackbar.LENGTH_INDEFINITE,
                 "Close");
     }

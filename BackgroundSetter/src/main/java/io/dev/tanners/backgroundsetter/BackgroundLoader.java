@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -65,17 +67,17 @@ public class BackgroundLoader extends AsyncTaskLoader<Boolean> {
                         mType
                 );
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.i("IMAGE_SET_LOAD_BK", "Error with stream");
                 return false;
             }
         } else {
-            // get bitmap from stream
-            Bitmap bitmap = BitmapFactory.decodeStream(getNetworkConnection(mUrl));
             try {
+                // get bitmap from stream
+                Bitmap bitmap = BitmapFactory.decodeStream(getNetworkConnection(mUrl));
                 // set wallpaper
                 WallpaperManager.getInstance(mContext).setBitmap(bitmap);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.i("IMAGE_SET_LOAD_BK", "Error with stream");
                 return false;
             }
         }
@@ -91,11 +93,10 @@ public class BackgroundLoader extends AsyncTaskLoader<Boolean> {
      * @param strUrl
      * @return
      */
-    private InputStream getNetworkConnection(String strUrl)
-    {
+    private InputStream getNetworkConnection(String strUrl) throws IOException {
         java.net.URL url = null;
 
-        try {
+//        try {
             url = new  java.net.URL(strUrl);
             // connect to image url
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -104,12 +105,11 @@ public class BackgroundLoader extends AsyncTaskLoader<Boolean> {
             connection.connect();
             // return stream
             return connection.getInputStream();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+            // TODO throw back exception to caller
+//        } catch (MalformedURLException e) {
+//            return null;
+//        } catch (IOException e) {
+//            return null;
+//        }
     }
 }

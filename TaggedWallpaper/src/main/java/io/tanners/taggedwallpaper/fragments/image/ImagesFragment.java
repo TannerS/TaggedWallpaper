@@ -12,14 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-//import io.dev.tanners.wallpaperresources.models.photos.photos.Photos;
 import java.util.ArrayList;
 
+import io.dev.tanners.snackbarbuilder.SimpleSnackBarBuilder;
 import io.dev.tanners.wallpaperresources.ImageRequester;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.adapters.image.ImageAdapter;
-import io.tanners.taggedwallpaper.support.builder.snackbar.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 import io.tanners.taggedwallpaper.viewmodels.ImageViewModel;
 
@@ -37,6 +36,7 @@ public abstract class ImagesFragment extends Fragment implements ErrorCallBack
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        loadRecycler();
         // set view model to update adapter on data changes
         // runnable to https://stackoverflow.com/questions/39445330/cannot-call-notifyiteminserted-from-recyclerview-onscrolllistener
         loadViewModelListener(photos -> {

@@ -12,16 +12,19 @@ import java.util.Locale;
 import io.dev.tanners.connectionrequester.ConnectionRequester;
 import static io.dev.tanners.downloader.Downloader.callMediaScanner;
 
+// TODO convert to asyncloader
 public class DownloaderConnection extends AsyncTask<String, Void, Boolean> {
     private ErrorCallBack mErrorCallBack;
     private File mFile;
     private Context mContext;
+    private String errorMessage;
 
     public DownloaderConnection(Context mContext, File mFile, ErrorCallBack mErrorCallBack)
     {
         this.mFile = mFile;
         this.mContext = mContext;
         this.mErrorCallBack = mErrorCallBack;
+        this.errorMessage = null;
     }
 
     /**
@@ -45,20 +48,24 @@ public class DownloaderConnection extends AsyncTask<String, Void, Boolean> {
                     .setConnectionTimeOut(5000)
                     .setReadTimeOut(15000);
 
-            if (mRequest.connect() == HttpURLConnection.HTTP_OK) {
+            int httpStatus = mRequest.connect();
+
+            if (httpStatus == HttpURLConnection.HTTP_OK) {
                 if (mRequest.isConnectionOk()) {
                     try {
                         mRequest.fileDownloader(mFile);
                     } catch (FileNotFoundException e) {
-                        mErrorCallBack.displayError("Error has occurred: " + e.getLocalizedMessage());
-                        e.printStackTrace();
+                        errorMessage = "Error has occurred: " + e.getLocalizedMessage();
                         return false;
                     }
                 }
+            } else {
+                // some other http code was returned
+                errorMessage = "Error has occurred -> HTTP: " + httpStatus;
+                return false;
             }
         } catch (IOException e) {
-            mErrorCallBack.displayError("Error has occurred: " + e.getLocalizedMessage());
-            e.printStackTrace();
+            errorMessage = "Error has occurred: " + e.getLocalizedMessage();
             return false;
         } finally {
             mRequest.closeConnection();
@@ -79,9 +86,9 @@ public class DownloaderConnection extends AsyncTask<String, Void, Boolean> {
             // call media scanner
             callMediaScanner(mContext, mFile);
             //
-            mErrorCallBack.displayNoError("Downloaded");
+            mErrorCallBack.displayNoError();
         } else {
-            // error handled in doInBackground
+            mErrorCallBack.displayError(errorMessage);
         }
     }
 
@@ -93,5 +100,7 @@ public class DownloaderConnection extends AsyncTask<String, Void, Boolean> {
     {
         public void displayError(String message);
         public void displayNoError(String message);
+        public void displayError();
+        public void displayNoError();
     }
 }
