@@ -360,7 +360,7 @@ public class ImageDisplayActivity extends SupportActivity {
         shareIntent.putExtra(
                 Intent.EXTRA_TEXT,
                 getShareMessage(
-                        mPhoto.getLinks().getDownload_location()
+                        mPhoto.getUrls().getFull()
                 )
         );
         shareIntent.setType("text/plain");
