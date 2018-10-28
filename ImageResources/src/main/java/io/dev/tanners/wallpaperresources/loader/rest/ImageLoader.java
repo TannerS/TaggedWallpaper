@@ -6,22 +6,19 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import java.util.List;
-
-import io.dev.tanners.wallpaperresources.loader.rest.download.RestDownloadLoader;
-
 import static io.dev.tanners.wallpaperresources.loader.BaseRestLoader.URL_KEY;
 
 public abstract class ImageLoader<T> {
     protected Context mContext;
+    protected Bundle mBundle;
 
     public ImageLoader(Context mContext) {
         this.mContext = mContext;
+        // bundle for loader, but not needed for this but can't be null
+        mBundle = new Bundle();
     }
 
     protected void loadLoader(String mUrl, int id, LoaderManager.LoaderCallbacks<T> mCallback) {
-        // bundle for loader, but not needed for this but can't be null
-        Bundle mBundle = new Bundle();
-
         mBundle.putString(URL_KEY, mUrl);
 
         LoaderManager mLoaderManager = ((AppCompatActivity) mContext).getSupportLoaderManager();

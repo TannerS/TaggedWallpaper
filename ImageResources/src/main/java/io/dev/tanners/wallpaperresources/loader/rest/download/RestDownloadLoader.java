@@ -23,7 +23,6 @@ import static io.dev.tanners.wallpaperresources.config.ConfigBase.HEADER_VERSION
 
 public class RestDownloadLoader extends BaseRestLoader<RestDownloadLoader.RestDownloadLoaderReturn> {
     public static final String DOWNLOAD_ALBUM_KEY = "DOWNLOAD_ALBUM_KEY";
-    private String errorMessage;
     private String mAlbumName = null;
 
     public RestDownloadLoader(@NonNull Context context, Bundle mBundle) {
@@ -66,13 +65,13 @@ public class RestDownloadLoader extends BaseRestLoader<RestDownloadLoader.RestDo
                     try {
                         mFile = getNewFile(this.getUUID());
                         mRequest.fileDownloader(mFile);
-                        // TODO does this work?
-
                     } catch (FileNotFoundException e) {
                         return new RestDownloadLoaderReturn("Error has occurred: " + e.getLocalizedMessage(), false);
                     }
                 }
             } else {
+                Log.i("HTTP_CODE", String.valueOf(mUrl));
+                Log.i("HTTP_CODE", String.valueOf(httpStatus));
                 return new RestDownloadLoaderReturn("Error has occurred -> HTTP: " + httpStatus, false);
             }
         } catch (IOException e) {
@@ -86,7 +85,7 @@ public class RestDownloadLoader extends BaseRestLoader<RestDownloadLoader.RestDo
 
     private String getUUID()
     {
-        return UUID.randomUUID().toString();
+        return UUID.randomUUID().toString() + ".jpg";
     }
 
     private File getNewFile(String mFileName) {

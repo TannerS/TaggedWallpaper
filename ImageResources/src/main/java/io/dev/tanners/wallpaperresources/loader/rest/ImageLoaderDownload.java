@@ -17,6 +17,9 @@ import java.io.IOException;
 import io.dev.tanners.wallpaperresources.callbacks.post.download.OnPostDownload;
 import io.dev.tanners.wallpaperresources.loader.rest.download.RestDownloadLoader;
 
+import static io.dev.tanners.wallpaperresources.loader.BaseRestLoader.URL_KEY;
+import static io.dev.tanners.wallpaperresources.loader.rest.download.RestDownloadLoader.DOWNLOAD_ALBUM_KEY;
+
 public class ImageLoaderDownload extends ImageLoader<RestDownloadLoader.RestDownloadLoaderReturn> {
     public ImageLoaderDownload(Context mContext) {
         super(mContext);
@@ -27,8 +30,14 @@ public class ImageLoaderDownload extends ImageLoader<RestDownloadLoader.RestDown
         return -2;
     }
 
-    public void loadLoader(String mUrl, final OnPostDownload OnPost)
+    // TODO make third request https://unsplash.com/documentation#track-a-photo-download
+    public void loadLoader(String mUrl, String mAlbumName, final OnPostDownload OnPost)
     {
+        if(mBundle == null)
+            return;
+
+        mBundle.putString(DOWNLOAD_ALBUM_KEY, mAlbumName);
+
         try {
             super.loadLoader(mUrl, getLoaderId(), new LoaderManager.LoaderCallbacks<RestDownloadLoader.RestDownloadLoaderReturn>() {
                 @NonNull
@@ -39,15 +48,7 @@ public class ImageLoaderDownload extends ImageLoader<RestDownloadLoader.RestDown
 
                 @Override
                 public void onLoadFinished(@NonNull Loader<RestDownloadLoader.RestDownloadLoaderReturn> loader, RestDownloadLoader.RestDownloadLoaderReturn results) {
-//                    if (results.isGood && results.errorMessage == null && results.mFile != null) {
-                        // call media scanner
                     OnPost.onPostCall(results);
-//                    mErrorCallBack.displayNoError();
-//                    } else if (results.errorMessage != null) {
-//                        throw new Exception(results.errorMessage);
-//                    } else {
-//                    mErrorCallBack.displayError(errorMessage);
-//                    }
                 }
 
                 @Override
@@ -57,16 +58,4 @@ public class ImageLoaderDownload extends ImageLoader<RestDownloadLoader.RestDown
             e.printStackTrace();
         }
     }
-
-    /**
-     * Callback for error messages when fragments attempt to populate images
-     * This used in the LatestImage and PopulateImages fragments
-     */
-//    public interface ErrorCallBack
-//    {
-//        public void displayError(String message);
-//        public void displayNoError(String message);
-//        public void displayError();
-//        public void displayNoError();
-//    }
 }

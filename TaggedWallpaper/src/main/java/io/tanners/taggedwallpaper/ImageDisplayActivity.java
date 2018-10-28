@@ -290,8 +290,10 @@ public class ImageDisplayActivity extends SupportActivity {
      * Download image
      */
     private void downloadImage() {
+        Log.i("DOWNLOAD", mPhoto.getLinks().getDownload_location());
         ImageRequester mImageRequester = new ImageRequester(this);
         mImageRequester.getDownloadPhoto(
+                mPhoto.getId(),
                 mPhoto.getLinks().getDownload_location(),
                 "wallpaper",
                 new OnPostDownload() {
@@ -303,6 +305,7 @@ public class ImageDisplayActivity extends SupportActivity {
                     @Override
                     public void onPostCall(RestDownloadLoader.RestDownloadLoaderReturn mData) {
                         if(mData.isGood && mData.mFile != null) {
+                            displayCustomSnackbar("Image downloaded");
                             callMediaScanner(ImageDisplayActivity.this, mData.mFile);
                         } else if(mData.errorMessage != null) {
                             try {
@@ -315,41 +318,14 @@ public class ImageDisplayActivity extends SupportActivity {
                     }
                 }
         );
-
-//        public void getDownloadPhoto(String query, String albumName, OnPostDownload mCallback) {
-
-//        mImageDownloader.downloadFile(
-//                generateUUID(),
-//                mPhoto.getLinks().getDownload_location(),
-//                new DownloaderConnection.ErrorCallBack() {
-//                    @Override
-//                    public void displayError(String message) {
-//                        displayCustomSnackbar(message);
-//                    }
-//
-//                    @Override
-//                    public void displayNoError(String message) {
-//                        displayCustomSnackbar(message);
-//                    }
-//
-//                    @Override
-//                    public void displayError() {
-//                    }
-//
-//                    @Override
-//                    public void displayNoError() {
-//                        displayCustomSnackbar("Image downloaded");
-//                    }
-//                }
-//        );
-
-
     }
 
     /**
      * updates gallery by scanner the newly added image
      */
     public void callMediaScanner(Context mContext, File mFile) {
+        Log.i("DOWNLOAD", "FILE LOCATION: " + mFile.getAbsolutePath());
+
         // https://stackoverflow.com/questions/9414955/trigger-mediascanner-on-specific-path-folder-how-to
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             MediaScannerConnection.scanFile(
