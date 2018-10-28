@@ -1,26 +1,27 @@
-package io.dev.tanners.wallpaperresources.network;
+package io.dev.tanners.wallpaperresources.loader.rest;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import io.dev.tanners.wallpaperresources.callbacks.post.order.OnPostAll;
-import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
+import io.dev.tanners.wallpaperresources.callbacks.post.search.OnPostSearch;
+import io.dev.tanners.wallpaperresources.models.photos.search.PhotoSearch;
 
-public abstract class ImageLoaderAll extends ImageLoader {
-    public ImageLoaderAll(Context mContext) {
+public class ImageLoaderSearch extends ImageLoader<String> {
+    public ImageLoaderSearch(Context mContext) {
         super(mContext);
     }
 
-    public void loadLoader(final String mUrl, final OnPostAll OnPost)
+    @Override
+    protected int getLoaderId() {
+        return 653456;
+    }
+
+    public void loadLoader(String mUrl, final OnPostSearch OnPost)
     {
         super.loadLoader(mUrl, getLoaderId(), new LoaderManager.LoaderCallbacks<String>() {
             @NonNull
@@ -32,18 +33,19 @@ public abstract class ImageLoaderAll extends ImageLoader {
             @Override
             public void onLoadFinished(@NonNull Loader<String> loader, String results) {
                 ObjectMapper objectMapper = new ObjectMapper();
-                Photo[] photos = null;
+
+                PhotoSearch photoSearch = null;
+
+                if(results == null || results.length() == 0)
+                    return;
 
                 try {
-                    if(results == null || results.length() == 0)
-                        return;
-                    photos = objectMapper.readValue(results, Photo[].class);
+                    photoSearch = objectMapper.readValue(results, PhotoSearch.class);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                OnPost.onPostCall(new ArrayList<Photo>(Arrays.asList(photos)));
-                ((Activity)mContext).getLoaderManager().destroyLoader(getLoaderId());
+                OnPost.onPostCall(photoSearch);
             }
 
             @Override

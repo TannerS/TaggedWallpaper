@@ -1,36 +1,31 @@
-package io.dev.tanners.wallpaperresources.network;
+package io.dev.tanners.wallpaperresources.loader.rest;
 
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.AsyncTaskLoader;
+
 import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import io.dev.tanners.connectionrequester.ConnectionRequester;
+import io.dev.tanners.wallpaperresources.loader.BaseRestLoader;
+
 import static io.dev.tanners.wallpaperresources.config.ConfigBase.HEADER_AUTH_KEY;
 import static io.dev.tanners.wallpaperresources.config.ConfigBase.HEADER_AUTH_VALUE;
 import static io.dev.tanners.wallpaperresources.config.ConfigBase.HEADER_VERSION_KEY;
 import static io.dev.tanners.wallpaperresources.config.ConfigBase.HEADER_VERSION_VALUE;
 
-public class RestLoader extends AsyncTaskLoader<String> {
-    private String mUrl = null;
-
-    public final static String REST_URL = "REST_URL_TO_GET_IMAGE_OR_MORE";
-    private Context mContext;
-
+public class RestLoader extends BaseRestLoader<String> {
     public RestLoader(@NonNull Context context, Bundle mBundle) {
-        super(context);
+        super(context, mBundle);
 
         if (mBundle == null)
             return;
-        mUrl = mBundle.getString(REST_URL);
-
-        this.mContext = context;
+        mUrl = mBundle.getString(URL_KEY);
     }
 
     @Nullable
@@ -59,7 +54,6 @@ public class RestLoader extends AsyncTaskLoader<String> {
                             mRequest.getStream(),
                             mEncoding
                     );
-
 
                     mRequest.closeConnection();
 

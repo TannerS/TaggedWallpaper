@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,14 +22,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
-
+import java.io.File;
 import java.util.UUID;
-
 import io.dev.tanners.backgroundsetter.BackgroundSet;
 import io.dev.tanners.backgroundsetter.BackgroundSetter;
-import io.dev.tanners.downloader.Downloader;
-import io.dev.tanners.downloader.network.DownloaderConnection;
 import io.dev.tanners.snackbarbuilder.SimpleSnackBarBuilder;
+import io.dev.tanners.wallpaperresources.ImageRequester;
+import io.dev.tanners.wallpaperresources.callbacks.post.download.OnPostDownload;
+import io.dev.tanners.wallpaperresources.loader.rest.download.RestDownloadLoader;
+import io.dev.tanners.wallpaperresources.models.photos.download.Download;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.support.permissions.PermissionRequester;
 
@@ -287,32 +290,84 @@ public class ImageDisplayActivity extends SupportActivity {
      * Download image
      */
     private void downloadImage() {
-
-        Downloader mImageDownloader = new Downloader(this);
-        mImageDownloader.downloadFile(
-                generateUUID(),
+        ImageRequester mImageRequester = new ImageRequester(this);
+        mImageRequester.getDownloadPhoto(
                 mPhoto.getLinks().getDownload_location(),
-                new DownloaderConnection.ErrorCallBack() {
+                "wallpaper",
+                new OnPostDownload() {
                     @Override
-                    public void displayError(String message) {
-                        displayCustomSnackbar(message);
+                    public void onPostCall(Download mData) {
+                        // not needed, may remove
                     }
 
                     @Override
-                    public void displayNoError(String message) {
-                        displayCustomSnackbar(message);
-                    }
-
-                    @Override
-                    public void displayError() {
-                    }
-
-                    @Override
-                    public void displayNoError() {
-                        displayCustomSnackbar("Image downloaded");
+                    public void onPostCall(RestDownloadLoader.RestDownloadLoaderReturn mData) {
+                        if(mData.isGood && mData.mFile != null) {
+                            callMediaScanner(ImageDisplayActivity.this, mData.mFile);
+                        } else if(mData.errorMessage != null) {
+                            try {
+                                throw new Exception(mData.errorMessage);
+                            } catch (Exception e) {
+                                displayCustomSnackbar(e.getMessage());
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
         );
+
+//        public void getDownloadPhoto(String query, String albumName, OnPostDownload mCallback) {
+
+//        mImageDownloader.downloadFile(
+//                generateUUID(),
+//                mPhoto.getLinks().getDownload_location(),
+//                new DownloaderConnection.ErrorCallBack() {
+//                    @Override
+//                    public void displayError(String message) {
+//                        displayCustomSnackbar(message);
+//                    }
+//
+//                    @Override
+//                    public void displayNoError(String message) {
+//                        displayCustomSnackbar(message);
+//                    }
+//
+//                    @Override
+//                    public void displayError() {
+//                    }
+//
+//                    @Override
+//                    public void displayNoError() {
+//                        displayCustomSnackbar("Image downloaded");
+//                    }
+//                }
+//        );
+
+
+    }
+
+    /**
+     * updates gallery by scanner the newly added image
+     */
+    public void callMediaScanner(Context mContext, File mFile) {
+        // https://stackoverflow.com/questions/9414955/trigger-mediascanner-on-specific-path-folder-how-to
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            MediaScannerConnection.scanFile(
+                    mContext, new String[]{
+                            mFile.getAbsolutePath()
+                    },
+                    null,
+                    (path, uri) -> {
+                        //something that you want to do
+                    });
+        } else {
+            mContext.sendBroadcast(
+                    new Intent(Intent.ACTION_MEDIA_MOUNTED,
+                            Uri.parse("file://" + mFile.getAbsolutePath()
+                            )
+                    )
+            );
+        }
     }
 
     private String getShareMessage(String mData)

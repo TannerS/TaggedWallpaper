@@ -1,4 +1,4 @@
-package io.dev.tanners.wallpaperresources.network;
+package io.dev.tanners.wallpaperresources.loader.rest;
 
 import android.content.Context;
 

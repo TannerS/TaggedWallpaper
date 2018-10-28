@@ -1,4 +1,4 @@
-package io.dev.tanners.wallpaperresources.network;
+package io.dev.tanners.wallpaperresources.loader.rest;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,20 +8,20 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import io.dev.tanners.wallpaperresources.callbacks.post.search.OnPostSearch;
-import io.dev.tanners.wallpaperresources.models.photos.search.PhotoSearch;
+import io.dev.tanners.wallpaperresources.callbacks.post.single.OnPostSingle;
+import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 
-public class ImageLoaderSearch extends ImageLoader {
-    public ImageLoaderSearch(Context mContext) {
+public class ImageLoaderSingle extends ImageLoader<String> {
+    public ImageLoaderSingle(Context mContext) {
         super(mContext);
     }
 
     @Override
     protected int getLoaderId() {
-        return 653456;
+        return 457853;
     }
 
-    public void loadLoader(String mUrl, final OnPostSearch OnPost)
+    public void loadLoader(String mUrl, final OnPostSingle OnPost)
     {
         super.loadLoader(mUrl, getLoaderId(), new LoaderManager.LoaderCallbacks<String>() {
             @NonNull
@@ -34,18 +34,15 @@ public class ImageLoaderSearch extends ImageLoader {
             public void onLoadFinished(@NonNull Loader<String> loader, String results) {
                 ObjectMapper objectMapper = new ObjectMapper();
 
-                PhotoSearch photoSearch = null;
-
-                if(results == null || results.length() == 0)
-                    return;
+                Photo photo = null;
 
                 try {
-                    photoSearch = objectMapper.readValue(results, PhotoSearch.class);
+                    photo = objectMapper.readValue(results, Photo.class);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                OnPost.onPostCall(photoSearch);
+                OnPost.onPostCall(photo);
             }
 
             @Override

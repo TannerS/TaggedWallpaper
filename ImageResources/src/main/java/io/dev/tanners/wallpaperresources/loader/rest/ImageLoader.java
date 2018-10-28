@@ -1,4 +1,4 @@
-package io.dev.tanners.wallpaperresources.network;
+package io.dev.tanners.wallpaperresources.loader.rest;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,26 +6,27 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import java.util.List;
-import static io.dev.tanners.wallpaperresources.network.RestLoader.REST_URL;
 
-public abstract class ImageLoader {
+import io.dev.tanners.wallpaperresources.loader.rest.download.RestDownloadLoader;
+
+import static io.dev.tanners.wallpaperresources.loader.BaseRestLoader.URL_KEY;
+
+public abstract class ImageLoader<T> {
     protected Context mContext;
 
     public ImageLoader(Context mContext) {
         this.mContext = mContext;
     }
 
-    protected void loadLoader(String mUrl, int id, LoaderManager.LoaderCallbacks<String> mCallback) {
+    protected void loadLoader(String mUrl, int id, LoaderManager.LoaderCallbacks<T> mCallback) {
         // bundle for loader, but not needed for this but can't be null
         Bundle mBundle = new Bundle();
 
-        mBundle.putString(REST_URL, mUrl);
+        mBundle.putString(URL_KEY, mUrl);
 
         LoaderManager mLoaderManager = ((AppCompatActivity) mContext).getSupportLoaderManager();
 
-
-
-        Loader<List<String>> mImageLoader = mLoaderManager.getLoader(id);
+        Loader<List<T>> mImageLoader = mLoaderManager.getLoader(id);
 
         if (mImageLoader == null) {
             mLoaderManager.initLoader(id, mBundle, mCallback).forceLoad();
