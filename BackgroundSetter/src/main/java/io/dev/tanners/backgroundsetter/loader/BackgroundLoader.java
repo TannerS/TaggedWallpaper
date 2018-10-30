@@ -1,4 +1,4 @@
-package io.dev.tanners.backgroundsetter;
+package io.dev.tanners.backgroundsetter.loader;
 
 import android.app.WallpaperManager;
 import android.content.Context;
@@ -10,21 +10,26 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import static io.dev.tanners.backgroundsetter.BackgroundSetter.LOCK_SCREEN;
-import static io.dev.tanners.backgroundsetter.BackgroundSetter.TYPE;
-import static io.dev.tanners.backgroundsetter.BackgroundSetter.URL;
-import static io.dev.tanners.backgroundsetter.BackgroundSetter.WALLPAPER;
+import static io.dev.tanners.backgroundsetter.setter.BackgroundSetter.LOCK_SCREEN;
+import static io.dev.tanners.backgroundsetter.setter.BackgroundSetter.TYPE;
+import static io.dev.tanners.backgroundsetter.setter.BackgroundSetter.URL;
+import static io.dev.tanners.backgroundsetter.setter.BackgroundSetter.WALLPAPER;
 
+/**
+ * Loader to make async request to set background/lock screen
+ */
 public class BackgroundLoader extends AsyncTaskLoader<Boolean> {
     private int mType;
     private String mUrl;
     private Context mContext;
 
+    /**
+     * @param context
+     * @param mBundle
+     */
     public BackgroundLoader(@NonNull Context context, Bundle mBundle) {
         super(context);
 
@@ -36,6 +41,9 @@ public class BackgroundLoader extends AsyncTaskLoader<Boolean> {
         this.mUrl = mBundle.getString(URL);
     }
 
+    /**
+     *
+     */
     @Override
         protected void onStartLoading() {
             super.onStartLoading();
@@ -54,6 +62,9 @@ public class BackgroundLoader extends AsyncTaskLoader<Boolean> {
             }
         }
 
+    /**
+     * @return
+     */
     @Nullable
     @Override
     public Boolean loadInBackground() {
@@ -88,8 +99,6 @@ public class BackgroundLoader extends AsyncTaskLoader<Boolean> {
     /**
      * Connect to image to download
      *
-     * TODO use connection request
-     * TODO make exception pass back to activity
      * @param strUrl
      * @return
      */

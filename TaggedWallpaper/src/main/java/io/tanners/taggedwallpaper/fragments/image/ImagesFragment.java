@@ -3,7 +3,9 @@ package io.tanners.taggedwallpaper.fragments.image;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,6 +24,7 @@ import io.tanners.taggedwallpaper.viewmodels.ImageViewModel;
 
 public abstract class ImagesFragment<T> extends Fragment implements ErrorCallBack
 {
+    public static final String SCROLL_PLACEMENT = "SCROLL_POSITION";
     protected View view;
     protected RecyclerView mRecyclerView;
     protected ProgressBar mProgressBar;
@@ -30,17 +33,49 @@ public abstract class ImagesFragment<T> extends Fragment implements ErrorCallBac
     protected Context mContext;
     protected ImageRequester mRequester;
     protected ImageAdapter mAdapter;
+    protected FloatingActionButton mActionButton;
+
+    /**
+     * Saves state of recyclerview position
+     *
+     * All credit goes too Patrick at https://stackoverflow.com/questions/27816217/how-to-save-recyclerviews-scroll-position-using-recyclerview-state
+     *
+     * @param outState
+     */
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // save position state
+        if(mRecyclerView != null) {
+            outState.putParcelable(SCROLL_PLACEMENT, mRecyclerView.getLayoutManager().onSaveInstanceState());
+        }
+    }
+
+    /**
+     * Restores state of recyclerview position
+     *
+     * All credit goes too Patrick at https://stackoverflow.com/questions/27816217/how-to-save-recyclerviews-scroll-position-using-recyclerview-state
+     *
+     * @param savedInstanceState
+     */
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            // restore position state
+            if(mRecyclerView != null) {
+                mRecyclerView.getLayoutManager().onRestoreInstanceState(
+                        savedInstanceState.getParcelable(SCROLL_PLACEMENT)
+                );
+            }
+        }
+    }
 
     @Override
     public void
     onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         loadRecycler();
-        // set view model to update adapter on data changes
-        // runnable to https://stackoverflow.com/questions/39445330/cannot-call-notifyiteminserted-from-recyclerview-onscrolllistener
-//        loadViewModelListener(photos -> {
-//            mRecyclerView.post(() -> mAdapter.updateAdapter(new ArrayList<T>(photos)));
-//        });
     }
 
     @Override
@@ -53,6 +88,7 @@ public abstract class ImagesFragment<T> extends Fragment implements ErrorCallBac
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_images, container, false);
+        loadActionButton();
         // return view
         return view;
     }
@@ -108,5 +144,16 @@ public abstract class ImagesFragment<T> extends Fragment implements ErrorCallBac
     @Override
     public void displayNoError(String mMessage) {
         // no need for implementation
+    }
+
+    protected void loadActionButton()
+    {
+        mActionButton = view.findViewById(R.id.list_up_arow_action);
+
+        mActionButton.setOnClickListener(v -> {
+            if(mRecyclerView != null) {
+                mRecyclerView.scrollToPosition(0);
+            }
+        });
     }
 }

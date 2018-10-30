@@ -216,6 +216,13 @@ public class ConnectionRequester {
         connection.setRequestProperty("charset", mCharset);
     }
 
+    /**
+     * Download file
+     *
+     * @param mFile
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public void fileDownloader(File mFile) throws FileNotFoundException, IOException
     {
         // set stream to write to passed in file
@@ -234,6 +241,11 @@ public class ConnectionRequester {
         os.close();
     }
 
+    /**
+     * Build connection request
+     *
+     * @throws IOException
+     */
     public void build() throws IOException {
         // set options
         setConfig();
@@ -266,10 +278,21 @@ public class ConnectionRequester {
         }
     }
 
+    /**
+     * Check if connection is ok
+     *
+     * @return
+     */
     public boolean isConnectionOk() {
         return connection != null;
     }
 
+    /**
+     * Get connection stream
+     *
+     * @return
+     * @throws IOException
+     */
     public InputStream getStream() throws IOException {
         if(connection != null) {
             return connection.getInputStream();
