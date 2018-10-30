@@ -12,17 +12,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import java.util.ArrayList;
-
+import java.util.List;
 import io.dev.tanners.snackbarbuilder.SimpleSnackBarBuilder;
 import io.dev.tanners.wallpaperresources.ImageRequester;
-import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.adapters.image.ImageAdapter;
 import io.tanners.taggedwallpaper.interfaces.ErrorCallBack;
 import io.tanners.taggedwallpaper.viewmodels.ImageViewModel;
 
-public abstract class ImagesFragment extends Fragment implements ErrorCallBack
+public abstract class ImagesFragment<T> extends Fragment implements ErrorCallBack
 {
     protected View view;
     protected RecyclerView mRecyclerView;
@@ -34,14 +32,15 @@ public abstract class ImagesFragment extends Fragment implements ErrorCallBack
     protected ImageAdapter mAdapter;
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void
+    onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         loadRecycler();
         // set view model to update adapter on data changes
         // runnable to https://stackoverflow.com/questions/39445330/cannot-call-notifyiteminserted-from-recyclerview-onscrolllistener
-        loadViewModelListener(photos -> {
-            mRecyclerView.post(() -> mAdapter.updateAdapter(photos));
-        });
+//        loadViewModelListener(photos -> {
+//            mRecyclerView.post(() -> mAdapter.updateAdapter(new ArrayList<T>(photos)));
+//        });
     }
 
     @Override
@@ -64,7 +63,7 @@ public abstract class ImagesFragment extends Fragment implements ErrorCallBack
         mContext = context;
     }
 
-    protected abstract void loadViewModelListener(Observer<ArrayList<Photo>> mObserver);
+    protected abstract void loadViewModelListener(Observer<List<T>> mObserver);
 
     protected void loadImageRequester() {
         mRequester = new ImageRequester(getContext());

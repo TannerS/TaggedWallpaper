@@ -13,15 +13,18 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
-
-import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.R;
 
-//public abstract class ImageAdapter<T> extends RecyclerView.Adapter<ImageAdapter<T>.ImageViewHolder> {
 public abstract class ImageAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     protected Context mContext;
     protected ArrayList<T> mItems;
 
+    /**
+     * Constructor
+     *
+     * @param mContext
+     * @param mItems
+     */
     public ImageAdapter(Context mContext, ArrayList<T> mItems)
     {
         this.mContext = mContext;
@@ -30,8 +33,6 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<RecyclerView.
             this.mItems = new ArrayList<T>();
         else
             this.mItems = mItems;
-
-        setHasStableIds(true);
     }
 
     public ImageAdapter(Context mContext)
@@ -40,19 +41,20 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<RecyclerView.
     }
 
     /**
-     * update adapter with new images
+     * Update adapter with new images
      *
      * @param mItems
      */
     public void updateAdapter(ArrayList<T> mItems) {
-        this.mItems.clear();
-        this.mItems.addAll(mItems);
-
-        notifyDataSetChanged();
+        if(mItems != null) {
+            this.mItems = mItems;
+            this.notifyDataSetChanged();
+        }
     }
 
     /**
-     * set image to be loaded into current view
+     * Set image to be loaded into current view
+     *
      * @param mUrl
      * @param view
      */
@@ -63,6 +65,12 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<RecyclerView.
                 .load(mUrl), view);
     }
 
+    /**
+     * Set up any image
+     *
+     * @param id
+     * @param view
+     */
     private void setUpImage(int id, ImageView view)
     {
         // load image view using glide
@@ -71,6 +79,8 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<RecyclerView.
     }
 
     /**
+     * Load image per view
+     *
      * @param mRequest
      * @param view
      */
@@ -98,17 +108,34 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<RecyclerView.
         return mItems == null ? 0 : mItems.size();
     }
 
+    /**
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @Override
     public abstract RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType);
 
+    /**
+     * @param holder
+     * @param position
+     */
     @Override
     public abstract void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) ;
 
+    /**
+     * @param position
+     * @return
+     */
     @Override
     public long getItemId(int position) {
         return position;
     }
 
+    /**
+     * @param position
+     * @return
+     */
     @Override
     public int getItemViewType(int position) {
         return 1;

@@ -7,40 +7,24 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-
-import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
+import java.util.List;
 
 /**
  * Used if needed for any sub class functionality and to separate logic
  */
-public class ImageViewModel extends AndroidViewModel {
-    protected MutableLiveData<ArrayList<Photo>> mPhotos;
+public class ImageViewModel<T> extends AndroidViewModel {
+    protected LiveData<List<T>> mItems = new MutableLiveData<>();
 
     public ImageViewModel(@NonNull Application application) {
         super(application);
-        mPhotos = new MutableLiveData<ArrayList<Photo>>();
-        mPhotos.setValue(new ArrayList<Photo>());
+        ((MutableLiveData<List<T>>) mItems).setValue(new ArrayList<T>());
     }
 
-    public void addData(ArrayList<Photo> mPhotos) {
-        ArrayList<Photo> temp = this.mPhotos.getValue();
-        temp.addAll(mPhotos);
-        this.mPhotos.setValue(temp);
+    public void addData(List<T> mPhotos) {
+        ((MutableLiveData<List<T>>) this.mItems).setValue(mPhotos);
     }
 
-    public MutableLiveData<ArrayList<Photo>> getmPhotos() {
-        return mPhotos;
-    }
-
-    public void setmPhotos(MutableLiveData<ArrayList<Photo>> mPhotos) {
-        this.mPhotos = mPhotos;
-    }
-
-    public ArrayList<Photo> getmPhotosValue() {
-        return mPhotos.getValue();
-    }
-
-    public void setmPhotosValue(ArrayList<Photo> mPhotos) {
-        this.mPhotos.setValue(mPhotos);
+    public LiveData<List<T>> getmItems() {
+        return mItems;
     }
 }

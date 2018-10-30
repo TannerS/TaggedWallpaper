@@ -46,12 +46,12 @@ public class SearchActivity extends SupportActivity implements IGetTag {
 
     /**
      * check for network functionality
-     * TODO prob remove this in main act and here
+     *
      * @param isOn
      */
     @Override
     protected void onNetworkChange(boolean isOn) {
-        // TODO based on result, load results
+        // not used right now
     }
 
     protected void loadFragments() {

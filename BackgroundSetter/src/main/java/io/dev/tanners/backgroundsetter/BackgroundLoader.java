@@ -96,20 +96,13 @@ public class BackgroundLoader extends AsyncTaskLoader<Boolean> {
     private InputStream getNetworkConnection(String strUrl) throws IOException {
         java.net.URL url = null;
 
-//        try {
-            url = new  java.net.URL(strUrl);
-            // connect to image url
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            // set to get input
-            connection.setDoInput(true);
-            connection.connect();
-            // return stream
-            return connection.getInputStream();
-            // TODO throw back exception to caller
-//        } catch (MalformedURLException e) {
-//            return null;
-//        } catch (IOException e) {
-//            return null;
-//        }
+        url = new  java.net.URL(strUrl);
+        // connect to image url
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        // set to get input
+        connection.setDoInput(true);
+        connection.connect();
+        // return stream
+        return connection.getInputStream();
     }
 }

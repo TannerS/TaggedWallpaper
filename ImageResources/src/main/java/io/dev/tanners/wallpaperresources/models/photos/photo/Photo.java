@@ -2,7 +2,6 @@ package io.dev.tanners.wallpaperresources.models.photos.photo;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import io.dev.tanners.wallpaperresources.models.Urls.Urls;
 import io.dev.tanners.wallpaperresources.models.User.User;
 import io.dev.tanners.wallpaperresources.models.links.Links;
@@ -66,8 +65,6 @@ public class Photo implements Parcelable {
     public void setUser(User user) {
         this.user = user;
     }
-
-
 
     protected Photo(Parcel in) {
         id = in.readString();

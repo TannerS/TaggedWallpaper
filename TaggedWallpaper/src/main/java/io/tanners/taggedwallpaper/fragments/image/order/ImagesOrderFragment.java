@@ -30,7 +30,7 @@ public abstract class ImagesOrderFragment extends ImagesHelperFragment
         // set view model to update adapter on data changes
         // runnable to https://stackoverflow.com/questions/39445330/cannot-call-notifyiteminserted-from-recyclerview-onscrolllistener
         loadViewModelListener(photos -> {
-            mRecyclerView.post(() -> mAdapter.updateAdapter(photos));
+            mRecyclerView.post(() -> mAdapter.updateAdapter(new ArrayList<Photo>(photos)));
         });
         // call proper requested functionality
         loadEntryPointData();
@@ -46,7 +46,9 @@ public abstract class ImagesOrderFragment extends ImagesHelperFragment
                 return;
             // get view model
             OrderImageViewModel mViewModel = (OrderImageViewModel) getViewModel();
+            // TODO fix
             mViewModel.addData(mData);
+//            mAdapter.updateAdapter(mData);
             // increment for next call
             mViewModel.incrementImagePage();
             // since the data is in a background thread, you need to restore the state in that thread

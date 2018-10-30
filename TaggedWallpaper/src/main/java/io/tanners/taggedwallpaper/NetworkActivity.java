@@ -24,25 +24,6 @@ public class NetworkActivity extends AppCompatActivity {
         mNetworkChangeReceiver = new NetworkChangeReceiver();
     }
 
-    /**
-     * https://stackoverflow.com/questions/4238921/detect-whether-there-is-an-internet-connection-available-on-android
-     *
-     * Method to check if a network connection is available
-     *
-     * @return boolean
-     */
-//    protected boolean isNetworkAvailable() {
-//        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-//
-//        NetworkInfo mNetworkInfo = null;
-//
-//        if (connectivityManager != null) {
-//            mNetworkInfo = connectivityManager.getActiveNetworkInfo();
-//        }
-//
-//        return mNetworkInfo != null && mNetworkInfo.isConnected();
-//    }
-
     protected class NetworkChangeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -75,6 +56,12 @@ public class NetworkActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * Behavior of activity depends on if there is a current network connection
+     *
+     * @param isOn
+     */
     protected void onNetworkChange(boolean isOn) {
         throw new IllegalStateException("Needs to be implemented in child class");
     }

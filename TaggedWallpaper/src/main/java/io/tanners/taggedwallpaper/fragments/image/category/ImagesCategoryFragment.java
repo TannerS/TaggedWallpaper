@@ -2,6 +2,7 @@ package io.tanners.taggedwallpaper.fragments.image.category;
 
 import android.arch.lifecycle.Observer;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -40,9 +42,21 @@ public class ImagesCategoryFragment extends ImagesHelperFragment {
         return new ImagesCategoryFragment();
     }
 
+    /**
+     *
+     */
     @Override
     protected void onScroll() {
         // not needed
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    protected RecyclerView.OnScrollListener loadListener() {
+        // don't need it for this, so override
+        return null;
     }
 
     /**
@@ -63,11 +77,18 @@ public class ImagesCategoryFragment extends ImagesHelperFragment {
         return view;
     }
 
+    /**
+     * Load listener if needed
+     * @param mObserver
+     */
     @Override
-    protected void loadViewModelListener(Observer<ArrayList<Photo>> mObserver) {
+    protected void loadViewModelListener(Observer<List<Photo>> mObserver) {
         // not used due to dynamic changes
     }
 
+    /**
+     * Load adapter type
+     */
     protected void loadAdapter() {
         mAdapter = new ImageCategoryAdapter(mContext);
     }

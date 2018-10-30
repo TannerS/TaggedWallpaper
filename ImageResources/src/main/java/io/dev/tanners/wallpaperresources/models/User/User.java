@@ -1,5 +1,7 @@
 package io.dev.tanners.wallpaperresources.models.User;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Embedded;
 import android.os.Parcel;
 import android.os.Parcelable;
 

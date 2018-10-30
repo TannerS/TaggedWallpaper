@@ -30,7 +30,6 @@ public class ImageLoaderDownload extends ImageLoader<RestDownloadLoader.RestDown
         return -2;
     }
 
-    // TODO make third request https://unsplash.com/documentation#track-a-photo-download
     public void loadLoader(String mUrl, String mAlbumName, final OnPostDownload OnPost)
     {
         if(mBundle == null)

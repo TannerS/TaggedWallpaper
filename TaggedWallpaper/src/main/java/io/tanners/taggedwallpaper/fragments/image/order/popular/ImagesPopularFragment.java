@@ -2,20 +2,12 @@ package io.tanners.taggedwallpaper.fragments.image.order.popular;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import io.dev.tanners.wallpaperresources.callbacks.post.search.OnPostSearch;
 import io.dev.tanners.wallpaperresources.config.ConfigPhotosAll;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
-import io.dev.tanners.wallpaperresources.models.photos.search.PhotoSearch;
 import io.tanners.taggedwallpaper.fragments.image.order.ImagesOrderFragment;
-import io.tanners.taggedwallpaper.viewmodels.order.OrderImageViewModel;
 import io.tanners.taggedwallpaper.viewmodels.order.popular.PopularOrderImageViewModel;
 
 public class ImagesPopularFragment extends ImagesOrderFragment {
@@ -23,8 +15,8 @@ public class ImagesPopularFragment extends ImagesOrderFragment {
     public static final String POPULAR = "Popular";
 
     @Override
-    protected void loadViewModelListener(Observer<ArrayList<Photo>> mObserver) {
-        getViewModel().getmPhotos().observe(this, mObserver);
+    protected void loadViewModelListener(Observer<List<Photo>> mObserver) {
+        getViewModel().getmItems().observe(this, mObserver);
     }
 
     @Override

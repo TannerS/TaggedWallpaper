@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.ImageDisplayActivity;
@@ -22,10 +20,17 @@ import io.tanners.taggedwallpaper.adapters.image.ImageAdapter;
  */
 public class ImageOrderAdapter extends ImageAdapter<Photo> {
 
+    /**
+     * @param mContext
+     * @param mItems
+     */
     public ImageOrderAdapter(Context mContext, ArrayList<Photo> mItems) {
         super(mContext, mItems);
     }
 
+    /**
+     * @param mContext
+     */
     public ImageOrderAdapter(Context mContext) {
         this(mContext, null);
         // https://stackoverflow.com/a/38138206/2449314
@@ -57,22 +62,28 @@ public class ImageOrderAdapter extends ImageAdapter<Photo> {
         return new ResultImageViewHolder(mContext, view);
     }
 
+    /**
+     *
+     */
     public class ResultImageViewHolder extends RecyclerView.ViewHolder {
         public ImageView image;
 
+        /**
+         * @param mContext
+         * @param view
+         */
         public ResultImageViewHolder(final Context mContext, View view) {
             super(view);
+
             image = view.findViewById(R.id.image_background);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Photo result = mItems.get(getAdapterPosition());
 
-                    Intent intent = new Intent(mContext, ImageDisplayActivity.class);
-                    intent.putExtra(ImageDisplayActivity.RESULT, (Parcelable) result);
+            view.setOnClickListener(view1 -> {
+                Photo result = mItems.get(getAdapterPosition());
 
-                    mContext.startActivity(intent);
-                }
+                Intent intent = new Intent(mContext, ImageDisplayActivity.class);
+                intent.putExtra(ImageDisplayActivity.PHOTO_ITEM_ENTRY_POINT, (Parcelable) result);
+
+                mContext.startActivity(intent);
             });
         }
     }

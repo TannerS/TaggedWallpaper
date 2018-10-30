@@ -9,7 +9,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,19 +26,26 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import java.io.File;
-import java.util.UUID;
+import java.util.Date;
 import io.dev.tanners.backgroundsetter.BackgroundSet;
 import io.dev.tanners.backgroundsetter.BackgroundSetter;
 import io.dev.tanners.snackbarbuilder.SimpleSnackBarBuilder;
 import io.dev.tanners.wallpaperresources.ImageRequester;
 import io.dev.tanners.wallpaperresources.callbacks.post.download.OnPostDownload;
+import io.dev.tanners.wallpaperresources.callbacks.post.single.OnPostSingle;
 import io.dev.tanners.wallpaperresources.loader.rest.download.RestDownloadLoader;
 import io.dev.tanners.wallpaperresources.models.photos.download.Download;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
+import io.tanners.taggedwallpaper.db.ImageDatabase;
+import io.tanners.taggedwallpaper.db.ImageEntry;
+import io.tanners.taggedwallpaper.db.ImageExecutor;
 import io.tanners.taggedwallpaper.support.permissions.PermissionRequester;
 
+//public class ImageDisplayActivity extends SupportActivity implements LoaderManager.LoaderCallbacks<Boolean> {
 public class ImageDisplayActivity extends SupportActivity {
-    public final static String RESULT = "RESULT";
+    public final static String PHOTO_ITEM_ENTRY_POINT = "PHOTO_ITEM_ENTRY_POINT";
+    public final static String DATABASE_ITEM_ENTRY_POINT = "DATABASE_ITEM_ENTRY_POINT";
+
     private Photo mPhoto;
     private ImageView mainImage;
     private ImageView profileImage;
@@ -45,6 +55,10 @@ public class ImageDisplayActivity extends SupportActivity {
     private View bottomBorder;
     private ScrollView mContainer;
     private final int IMAGE_DOWNLOAD = 256;
+    private ImageDatabase mDb;
+//    private int imageLoaderId = 99999;
+    private ImageView mFavoriteStar;
+    private boolean isFavorite = false;
 
     /**
      * When activity is created
@@ -55,12 +69,16 @@ public class ImageDisplayActivity extends SupportActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
-        getPhotoData();
-        setUpToolBar(R.id.display_toolbar, Color.parseColor(mPhoto.getColor()));
         loadResources();
-        setResources();
+        dbInit();
+        getEntryPoint();
+        //loadLoader();
     }
 
+    /**
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -68,6 +86,12 @@ public class ImageDisplayActivity extends SupportActivity {
         return true;
     }
 
+    /**
+     * Able to set home/lock screen download and share
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -97,6 +121,57 @@ public class ImageDisplayActivity extends SupportActivity {
         }
     }
 
+    /**
+     * Init the database object to check for favorites
+     */
+    protected void dbInit()
+    {
+        mDb = ImageDatabase.getInstance(getApplicationContext());
+    }
+
+    /**
+     * Save current photo to db
+     */
+    private void saveCurrentImage()
+    {
+        // get executor to be able to run insert on separate thread
+        ImageExecutor.getInstance().mDiskIO().execute(() -> {
+            Log.i("DATABASE_STORAGE", "SAVING***********************************************************************");
+            mDb.getImageDao().insertPhotoEntry(createDatabaseObject());
+        });
+    }
+
+    /**
+     * Del current photo from db
+     */
+    private void delCurrentImage()
+    {
+        // get executor to be able to run insert on separate thread
+        ImageExecutor.getInstance().mDiskIO().execute(() -> {
+            Log.i("DATABASE_STORAGE", "REMOVING***********************************************************************");
+            mDb.getImageDao().deletePhotoEntry(createDatabaseObject());
+        });
+    }
+
+    /**
+     * Convert photo object to ImageEntry to insert into database
+     *
+     * @return
+     */
+    private ImageEntry createDatabaseObject()
+    {
+        ImageEntry mEntry = new ImageEntry();
+        mEntry.setId(mPhoto.getId());
+        mEntry.setImageUrl(mPhoto.getUrls().getRegular());
+        mEntry.setTimestamp(new Date());
+
+        return mEntry;
+    }
+
+    /**
+     * Custom background callback on wallpaper set
+     * @return
+     */
     private BackgroundSetter.BackgroundCallback getBackgroundCallBack()
     {
         return results -> {
@@ -119,6 +194,11 @@ public class ImageDisplayActivity extends SupportActivity {
         };
     }
 
+    /**
+     * Behavior of activity depends on if there is a current network connection
+     *
+     * @param isOn
+     */
     protected void onNetworkChange(boolean isOn) {
         if(!isOn) {
             final Snackbar mSnackbar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_actvity_container),
@@ -136,8 +216,33 @@ public class ImageDisplayActivity extends SupportActivity {
         }
     }
 
-    private void getPhotoData() {
-        mPhoto = getIntent().getParcelableExtra(RESULT);
+    /**
+     * Activity can be started via photo object click or database object click.
+     * This will handle both cases and load page accordingly
+     */
+    private void getEntryPoint() {
+        if(getIntent().hasExtra(PHOTO_ITEM_ENTRY_POINT)) {
+            mPhoto = getIntent().getParcelableExtra(PHOTO_ITEM_ENTRY_POINT);
+            setResources();
+        }
+        else if (getIntent().hasExtra(DATABASE_ITEM_ENTRY_POINT)) {
+            loadDataFromDataBase(getIntent().getParcelableExtra(DATABASE_ITEM_ENTRY_POINT));
+        }
+    }
+
+    /**
+     * Use ImageEntry object to load photo object from api
+     */
+    private void loadDataFromDataBase(ImageEntry mEntry)
+    {
+        ImageRequester mImageRequester = new ImageRequester(this);
+
+        mImageRequester.getPhoto(mEntry.getId(), mData -> {
+            mPhoto = mData;
+            setResources();
+            // since this only happens via database call, then it must been a favorite
+            setFavoriteStar(true);
+        });
     }
 
     /**
@@ -151,11 +256,56 @@ public class ImageDisplayActivity extends SupportActivity {
         userUsername = findViewById(R.id.user_username);
         bottomBorder = findViewById(R.id.bottom_border);
         mContainer = findViewById(R.id.display_actvity_container);
+        mFavoriteStar = findViewById(R.id.favorite_star);
+        // assume not a favorite till noted other wise
+        setFavoriteStar(false);
+        // set actions when liking / un-liking image
+        mFavoriteStar.setOnClickListener(
+                new View.OnClickListener() {
+                    /**
+                     * Click action for favorites button
+                     * @param v
+                     */
+                    @Override
+                    public void onClick(View v) {
+                        if(!isFavorite) {
+                            // change icon to show saved image
+                            setFavoriteStar(true);
+                            // save movie
+                            saveCurrentImage();
+                            // display message to UI
+                            displayCustomSnackbar("Wallpaper saved", Snackbar.LENGTH_SHORT);
+                        } else {
+                            // change icon to show removed image
+                            setFavoriteStar(false);
+                            // remove movie
+                            delCurrentImage();
+                            // display message to UI
+                            displayCustomSnackbar("Wallpaper removed", Snackbar.LENGTH_SHORT);
+                        }
+                    }
+                }
+        );
     }
 
+    private void setFavoriteStar(boolean mSet)
+    {
+        if(mSet)
+            mFavoriteStar.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_black_24dp));
+        else
+            mFavoriteStar.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_border_black_24dp));
+
+        isFavorite = mSet;
+    }
+
+    /**
+     * Set UI resources
+     */
     private void setResources() {
         loadMainImage();
         loadProfileImage();
+        setUpToolBar(R.id.display_toolbar, Color.parseColor(mPhoto.getColor()));
+
         imageTitle.setText(mPhoto.getDescription());
         userName.setText(mPhoto.getUser().getName());
         userUsername.setText(mPhoto.getUser().getUsername());
@@ -163,6 +313,9 @@ public class ImageDisplayActivity extends SupportActivity {
         mContainer.setBackgroundColor(Color.parseColor(mPhoto.getColor()));
     }
 
+    /**
+     * Load main image for activity
+     */
     private void loadMainImage() {
         // set up transition
         DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
@@ -178,6 +331,9 @@ public class ImageDisplayActivity extends SupportActivity {
                 .into(mainImage);
     }
 
+    /**
+     * Load profile image of user who supplied the photo
+     */
     private void loadProfileImage() {
         // set up transition
         DrawableTransitionOptions transitionOptions = new DrawableTransitionOptions().crossFade();
@@ -229,7 +385,6 @@ public class ImageDisplayActivity extends SupportActivity {
     protected boolean checkPermissions(int permissionCode) {
         // request image downloading permissions
         // result will be in onRequestPermissionsResult
-        // TODO handle all/needed permissions, someday ...
         return PermissionRequester.newInstance(this).requestNeededPermissions(new String[]{
                         android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         android.Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -281,16 +436,10 @@ public class ImageDisplayActivity extends SupportActivity {
         }
     }
 
-    private String generateUUID()
-    {
-        return UUID.randomUUID().toString();
-    }
-
     /**
-     * Download image
+     * Download image click action
      */
     private void downloadImage() {
-        Log.i("DOWNLOAD", mPhoto.getLinks().getDownload_location());
         ImageRequester mImageRequester = new ImageRequester(this);
         mImageRequester.getDownloadPhoto(
                 mPhoto.getId(),
@@ -346,11 +495,19 @@ public class ImageDisplayActivity extends SupportActivity {
         }
     }
 
+    /**
+     * Share message for image share action
+     * @param mData
+     * @return
+     */
     private String getShareMessage(String mData)
     {
         return "Please enjoy this wallpaper!: " + mData;
     }
 
+    /**
+     * Share image action
+     */
     private void shareImage() {
         // create new intent
         Intent shareIntent = new Intent();
@@ -367,10 +524,83 @@ public class ImageDisplayActivity extends SupportActivity {
         startActivity(Intent.createChooser(shareIntent, "Share too..."));
     }
 
+    /**
+     * Snack bar message for current activity
+     * @param mMessage
+     */
     private void displayCustomSnackbar(String mMessage) {
         SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.display_actvity_container),
                 mMessage,
                 Snackbar.LENGTH_INDEFINITE,
                 "Close");
     }
+
+    /**
+     * Snack bar message for current activity
+     * @param mMessage
+     */
+    private void displayCustomSnackbar(String mMessage, int length) {
+        SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.display_actvity_container),
+                mMessage,
+                length,
+                "Close");
+    }
+
+//
+//    /**
+//     * Load the loader for the favorites (need loader for UI interaction)
+//     */
+//    private void loadLoader()
+//    {
+//        // create bundle to pass into loader
+//        Bundle mBundle = new Bundle();
+//        mBundle.putString(FavoriteImageLoader.IMAGE_ID_BUNDLE_KEY, mPhoto.getId());
+//        // use loader to get page data
+//        LoaderManager mLoaderManager = getSupportLoaderManager();
+//        Loader<Boolean> mMovieLoader = mLoaderManager.getLoader(imageLoaderId);
+//        // check loader instance
+//        if(mMovieLoader != null)
+//            mLoaderManager.initLoader(imageLoaderId, null, this).forceLoad();
+//        else
+//            mLoaderManager.restartLoader(imageLoaderId, null, this).forceLoad();
+//    }
+//
+//    /**
+//     * Load loader
+//     * @param id
+//     * @param args
+//     * @return
+//     */
+//    @NonNull
+//    @Override
+//    public Loader<Boolean> onCreateLoader(int id, @Nullable Bundle args) {
+//        return new FavoriteImageLoader(this, args);
+//    }
+//
+//    /**
+//     * The loader looks to see if movie is a favorite, this will do the needed
+//     * task after those results
+//     *
+//     * @param loader
+//     * @param data
+//     */
+//    @Override
+//    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
+//        // data is the result if move is a favorite or not
+//        if(data)
+//        {
+//            // set bool that will be used for the onclick to favorite or un-favorite a movie
+//            isFavorite = true;
+//            // set image to show it is a favorite
+//            mFavoriteStar.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_black_24dp));
+//        }
+//    }
+//
+//    /**
+//     * @param loader
+//     */
+//    @Override
+//    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
+//        // not needed
+//    }
 }

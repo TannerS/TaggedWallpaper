@@ -83,9 +83,6 @@ public class PhotoSearch implements Parcelable {
         }
     };
 
-
-
-    // TODO take into account limit of pages, maybe if no results dont hit null and thorw exception?
     /*
     {
   "total": 133,

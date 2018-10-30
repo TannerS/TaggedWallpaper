@@ -3,14 +3,9 @@ package io.dev.tanners.wallpaperresources;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
-
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-
 import javax.net.ssl.HttpsURLConnection;
-
 import io.dev.tanners.wallpaperresources.builder.ImageUriBuilder;
 import io.dev.tanners.wallpaperresources.callbacks.post.download.OnPostDownload;
 import io.dev.tanners.wallpaperresources.callbacks.post.order.OnPostAll;
@@ -19,7 +14,6 @@ import io.dev.tanners.wallpaperresources.callbacks.post.single.OnPostSingle;
 import io.dev.tanners.wallpaperresources.config.ConfigPhotosAll;
 import io.dev.tanners.wallpaperresources.loader.rest.ImageLoaderAllLatest;
 import io.dev.tanners.wallpaperresources.loader.rest.ImageLoaderAllPopular;
-import io.dev.tanners.wallpaperresources.loader.rest.ImageLoaderDownload;
 import io.dev.tanners.wallpaperresources.loader.rest.ImageLoaderDownloadHotLink;
 import io.dev.tanners.wallpaperresources.loader.rest.ImageLoaderSearch;
 import io.dev.tanners.wallpaperresources.loader.rest.ImageLoaderSingle;

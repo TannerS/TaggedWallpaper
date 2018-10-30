@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.apache.commons.io.IOUtils;
 import java.io.IOException;
@@ -45,10 +46,12 @@ public class RestLoader extends BaseRestLoader<String> {
                     .addRequestHeader(HEADER_VERSION_KEY, HEADER_VERSION_VALUE)
                     .addRequestHeader(HEADER_AUTH_KEY, HEADER_AUTH_VALUE)
                     .setRequestType(ConnectionRequester.RequestType.GET)
-                    .setConnectionTimeOut(5000)
-                    .setReadTimeOut(15000);
+                    .setConnectionTimeOut(3000)
+                    .setReadTimeOut(5000);
 
-            if(mRequest.connect() == HttpURLConnection.HTTP_OK) {
+            int statusCode = mRequest.connect();
+
+            if(statusCode == HttpURLConnection.HTTP_OK) {
                 if(mRequest.isConnectionOk()) {
                     String response = IOUtils.toString(
                             mRequest.getStream(),

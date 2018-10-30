@@ -4,11 +4,12 @@ import android.app.Application;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
+import java.util.List;
+
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.viewmodels.ImageViewModel;
 
-public class OrderImageViewModel extends ImageViewModel {
+public class OrderImageViewModel extends ImageViewModel<Photo> {
     private int allImagePageCount;
 
     public OrderImageViewModel(@NonNull Application application) {
@@ -17,14 +18,11 @@ public class OrderImageViewModel extends ImageViewModel {
         allImagePageCount = 1;
     }
 
-    public void addData(ArrayList<Photo> mPhotos) {
-        ArrayList<Photo> temp = this.mPhotos.getValue();
+// TODO find way to add data without or with live data
+    public void addData(List<Photo> mPhotos) {
+        List<Photo> temp = this.mItems.getValue();
         temp.addAll(mPhotos);
-        this.mPhotos.setValue(temp);
-    }
-
-    public void setAllImagePageCount(int allImagePageCount) {
-        this.allImagePageCount = allImagePageCount;
+        ((MutableLiveData)this.mItems).setValue(temp);
     }
 
     public int getAllImagePageCount() {

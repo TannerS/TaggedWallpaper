@@ -1,12 +1,10 @@
 package io.tanners.taggedwallpaper.support.validation;
 
 import java.io.UnsupportedEncodingException;
-import io.tanners.taggedwallpaper.support.exceptions.MaxLimitException;
-import io.tanners.taggedwallpaper.support.exceptions.MinLimitException;
 import io.tanners.taggedwallpaper.support.network.encoder.EncoderUtil;
 
 public class UrlSearchValidation {
-    public static void UrlQueryValidation(String mInput) throws
+    public void UrlQueryValidation(String mInput) throws
             MinLimitException,
             MaxLimitException {
         if(mInput == null)
@@ -28,5 +26,18 @@ public class UrlSearchValidation {
         mQuery = EncoderUtil.encode(mInput);
 
         return mQuery;
+    }
+
+
+    public class MaxLimitException extends Exception {
+        public MaxLimitException(String message) {
+            super(message);
+        }
+    }
+
+    public class MinLimitException extends Exception {
+        public MinLimitException(String message) {
+            super(message);
+        }
     }
 }

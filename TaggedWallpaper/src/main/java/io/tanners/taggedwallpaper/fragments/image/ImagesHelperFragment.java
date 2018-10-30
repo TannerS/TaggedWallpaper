@@ -4,16 +4,28 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.support.network.NetworkUtil;
 
-public abstract class ImagesHelperFragment extends ImagesFragment
+public abstract class ImagesHelperFragment extends ImagesFragment<Photo>
 {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // set listener for list
-        // TODO turn into callback for for base class later to not recreate
-        loadRecyclerView(new RecyclerView.OnScrollListener() {
+        loadRecyclerView(loadListener());
+    }
+
+    protected abstract void onScroll();
+
+    /**
+     * We may not need this, so a method the child can override works great
+     * @return
+     */
+    protected RecyclerView.OnScrollListener loadListener()
+    {
+        return new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (loading) {
@@ -33,10 +45,8 @@ public abstract class ImagesHelperFragment extends ImagesFragment
                     }
                 }
             }
-        });
+        };
     }
-
-    protected abstract void onScroll();
 
     /**
      *
@@ -46,11 +56,14 @@ public abstract class ImagesHelperFragment extends ImagesFragment
         super.loadRecycler();
         // attach adapter to list
         mRecyclerView.setAdapter(mAdapter);
-        // depending on the version of the OS, add listener to the recycler view
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
-            mRecyclerView.addOnScrollListener(mListener);
-        } else {
-            mRecyclerView.setOnScrollListener(mListener);
+
+        if(mListener != null) {
+            // depending on the version of the OS, add listener to the recycler view
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
+                mRecyclerView.addOnScrollListener(mListener);
+            } else {
+                mRecyclerView.setOnScrollListener(mListener);
+            }
         }
     }
 }

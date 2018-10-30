@@ -1,4 +1,3 @@
-
 package io.tanners.taggedwallpaper;
 
 import android.app.SearchManager;
@@ -16,8 +15,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import io.dev.tanners.snackbarbuilder.SimpleSnackBarBuilder;
 import io.tanners.taggedwallpaper.fragments.image.favorites.ImagesFavoriteFragment;
-import io.tanners.taggedwallpaper.support.exceptions.MaxLimitException;
-import io.tanners.taggedwallpaper.support.exceptions.MinLimitException;
 import io.tanners.taggedwallpaper.support.network.NetworkUtil;
 import io.tanners.taggedwallpaper.support.network.encoder.EncoderUtil;
 import io.tanners.taggedwallpaper.support.providers.SearchSuggestionProvider;
@@ -29,20 +26,14 @@ import io.tanners.taggedwallpaper.support.validation.UrlSearchValidation;
 
 /*
 TODO
-        1) viewmodel for all fragments
-        - need to check when to load api call and when to load existing data, which life cycle method
         2) gridview col num base on screen size
         3) material design for all screens
-        5) add favorites selection on details activity
-        6) add room for favorites, executor, and etc
-        7) api guidelines for hot linking
         8) save/restore scroll position (google for guide)
         10) multiple screen sizes
         11) widgets
-        TODO 12) FIND OUT IF FRAGMENTS SHARE THE SAME VIEW MODEL ***
- */
+*/
 public class MainActivity extends TabbedActivity {
-    private final int MAXNUMOFFRAGS = 3;
+    private final int MAXNUMOFFRAGS = 4;
 
     /**
      * @param savedInstanceState
@@ -62,7 +53,7 @@ public class MainActivity extends TabbedActivity {
     }
 
     /**
-     * check for network functionality
+     * Behavior of activity depends on if there is a current network connection
      *
      * @param isOn
      */
@@ -87,6 +78,9 @@ public class MainActivity extends TabbedActivity {
         }
     }
 
+    /**
+     * Load application fragments
+     */
     protected void loadFragments() {
         setUpFragmentAdapters(new ArrayList<FragmentAdapter.FragmentWrapper>() {{
             add(new FragmentAdapter.FragmentWrapper(ImagesCategoryFragment.newInstance(), ImagesCategoryFragment.CATEGORY));
@@ -118,6 +112,10 @@ public class MainActivity extends TabbedActivity {
         getSearchProvider().clearHistory();
     }
 
+    /**
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -147,6 +145,8 @@ public class MainActivity extends TabbedActivity {
     }
 
     /**
+     * Set up Android search bar
+     *
      * @param menu
      */
     private void setUpSearchBar(Menu menu)
@@ -210,10 +210,10 @@ public class MainActivity extends TabbedActivity {
 
             try {
                 // check for proper
-                UrlSearchValidation.UrlQueryValidation(query);
+                (new UrlSearchValidation()).UrlQueryValidation(query);
                 query = UrlSearchValidation.UrlQueryFormatter(query);
                 query = EncoderUtil.encode(query);
-            } catch (MinLimitException | MaxLimitException e) {
+            } catch (UrlSearchValidation.MinLimitException | UrlSearchValidation.MaxLimitException e) {
                 e.printStackTrace();
                 // display to user the error
                 SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.app_main),

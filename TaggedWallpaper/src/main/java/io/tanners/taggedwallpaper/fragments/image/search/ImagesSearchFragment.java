@@ -8,16 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import io.dev.tanners.wallpaperresources.callbacks.post.search.OnPostSearch;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.dev.tanners.wallpaperresources.models.photos.search.PhotoSearch;
 import io.tanners.taggedwallpaper.adapters.image.order.ImageOrderAdapter;
-import io.tanners.taggedwallpaper.fragments.image.ImagesFragment;
 import io.tanners.taggedwallpaper.fragments.image.ImagesHelperFragment;
-import io.tanners.taggedwallpaper.fragments.image.order.ImagesOrderFragment;
-import io.tanners.taggedwallpaper.viewmodels.order.OrderImageViewModel;
 import io.tanners.taggedwallpaper.viewmodels.search.SearchImageViewModel;
 
 public class ImagesSearchFragment extends ImagesHelperFragment {
@@ -88,10 +85,9 @@ public class ImagesSearchFragment extends ImagesHelperFragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    // todo use this in base class, it is used in multiple places
     @Override
-    protected void loadViewModelListener(Observer<ArrayList<Photo>> mObserver) {
-        getViewModel().getmPhotos().observe(this, mObserver);
+    protected void loadViewModelListener(Observer<List<Photo>> mObserver) {
+        getViewModel().getmItems().observe(this, mObserver);
     }
 
     protected void loadAdapter() {
