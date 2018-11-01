@@ -70,8 +70,6 @@ public class RestDownloadLoader extends BaseRestLoader<RestDownloadLoader.RestDo
                     }
                 }
             } else {
-                Log.i("HTTP_CODE", String.valueOf(mUrl));
-                Log.i("HTTP_CODE", String.valueOf(httpStatus));
                 return new RestDownloadLoaderReturn("Error has occurred -> HTTP: " + httpStatus, false);
             }
         } catch (IOException e) {

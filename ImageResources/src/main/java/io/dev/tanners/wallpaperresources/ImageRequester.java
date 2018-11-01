@@ -70,7 +70,6 @@ public class ImageRequester {
     private void getDownloadPhotoHotLink(String id) {
         Uri.Builder mBuilder = ImageUriBuilder.getPhotoDownloadBuilder(id);
         String mUrl = mBuilder.build().toString();
-        Log.d("DOWNLOAD_HOTLINK", mUrl);
 
         Thread thread = new Thread() {
             @Override
@@ -92,7 +91,6 @@ public class ImageRequester {
 
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Log.e("DOWNLOAD_HOTLINK", "ERROR: " + e.getLocalizedMessage());
                 } finally {
                     if (connection != null) {
                         connection.disconnect();

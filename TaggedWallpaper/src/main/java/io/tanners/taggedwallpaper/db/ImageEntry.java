@@ -21,6 +21,7 @@ public class ImageEntry implements Parcelable {
     protected String id;
     protected String imageUrl;
     protected Date timestamp;
+    protected String desc;
 
     public ImageEntry() { }
 
@@ -48,11 +49,20 @@ public class ImageEntry implements Parcelable {
         this.imageUrl = imageUrl;
     }
 
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
     protected ImageEntry(Parcel in) {
         id = in.readString();
         imageUrl = in.readString();
         long tmpTimestamp = in.readLong();
         timestamp = tmpTimestamp != -1 ? new Date(tmpTimestamp) : null;
+        desc = in.readString();
     }
 
     @Override
@@ -65,6 +75,7 @@ public class ImageEntry implements Parcelable {
         dest.writeString(id);
         dest.writeString(imageUrl);
         dest.writeLong(timestamp != null ? timestamp.getTime() : -1L);
+        dest.writeString(desc);
     }
 
     @SuppressWarnings("unused")
@@ -80,4 +91,3 @@ public class ImageEntry implements Parcelable {
         }
     };
 }
-

@@ -55,6 +55,8 @@ public class ImageCategoryAdapter extends ImageAdapter<CategoryItem> {
         mHolder.title.setText(mItem.getmTitle());
         // set up image at url with reference to where the image will be loaded into
         setUpImage(mItem.getmUrl(), mHolder.image);
+        // set up for accessibility
+        mHolder.image.setContentDescription(mItem.getmTitle());
     }
 
     /**

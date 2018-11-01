@@ -37,7 +37,6 @@ import io.tanners.taggedwallpaper.db.ImageEntry;
 import io.tanners.taggedwallpaper.db.ImageExecutor;
 import io.tanners.taggedwallpaper.support.permissions.PermissionRequester;
 
-//public class ImageDisplayActivity extends SupportActivity implements LoaderManager.LoaderCallbacks<Boolean> {
 public class ImageDisplayActivity extends SupportActivity {
     public final static String PHOTO_ITEM_ENTRY_POINT = "PHOTO_ITEM_ENTRY_POINT";
     public final static String DATABASE_ITEM_ENTRY_POINT = "DATABASE_ITEM_ENTRY_POINT";
@@ -52,7 +51,6 @@ public class ImageDisplayActivity extends SupportActivity {
     private ScrollView mContainer;
     private final int IMAGE_DOWNLOAD = 256;
     private ImageDatabase mDb;
-//    private int imageLoaderId = 99999;
     private ImageView mFavoriteStar;
     private boolean isFavorite = false;
 
@@ -68,7 +66,6 @@ public class ImageDisplayActivity extends SupportActivity {
         loadResources();
         dbInit();
         getEntryPoint();
-        //loadLoader();
     }
 
     /**
@@ -79,6 +76,7 @@ public class ImageDisplayActivity extends SupportActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.display_act_menu, menu);
+
         return true;
     }
 
@@ -132,7 +130,6 @@ public class ImageDisplayActivity extends SupportActivity {
     {
         // get executor to be able to run insert on separate thread
         ImageExecutor.getInstance().mDiskIO().execute(() -> {
-            Log.i("DATABASE_STORAGE", "SAVING***********************************************************************");
             mDb.getImageDao().insertPhotoEntry(createDatabaseObject());
         });
     }
@@ -144,7 +141,6 @@ public class ImageDisplayActivity extends SupportActivity {
     {
         // get executor to be able to run insert on separate thread
         ImageExecutor.getInstance().mDiskIO().execute(() -> {
-            Log.i("DATABASE_STORAGE", "REMOVING***********************************************************************");
             mDb.getImageDao().deletePhotoEntry(createDatabaseObject());
         });
     }
@@ -160,6 +156,7 @@ public class ImageDisplayActivity extends SupportActivity {
         mEntry.setId(mPhoto.getId());
         mEntry.setImageUrl(mPhoto.getUrls().getRegular());
         mEntry.setTimestamp(new Date());
+        mEntry.setDesc(mPhoto.getDescription());
 
         return mEntry;
     }
@@ -469,8 +466,6 @@ public class ImageDisplayActivity extends SupportActivity {
      * updates gallery by scanner the newly added image
      */
     public void callMediaScanner(Context mContext, File mFile) {
-        Log.i("DOWNLOAD", "FILE LOCATION: " + mFile.getAbsolutePath());
-
         // https://stackoverflow.com/questions/9414955/trigger-mediascanner-on-specific-path-folder-how-to
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             MediaScannerConnection.scanFile(
@@ -541,62 +536,4 @@ public class ImageDisplayActivity extends SupportActivity {
                 length,
                 "Close");
     }
-
-//
-//    /**
-//     * Load the loader for the favorites (need loader for UI interaction)
-//     */
-//    private void loadLoader()
-//    {
-//        // create bundle to pass into loader
-//        Bundle mBundle = new Bundle();
-//        mBundle.putString(FavoriteImageLoader.IMAGE_ID_BUNDLE_KEY, mPhoto.getId());
-//        // use loader to get page data
-//        LoaderManager mLoaderManager = getSupportLoaderManager();
-//        Loader<Boolean> mMovieLoader = mLoaderManager.getLoader(imageLoaderId);
-//        // check loader instance
-//        if(mMovieLoader != null)
-//            mLoaderManager.initLoader(imageLoaderId, null, this).forceLoad();
-//        else
-//            mLoaderManager.restartLoader(imageLoaderId, null, this).forceLoad();
-//    }
-//
-//    /**
-//     * Load loader
-//     * @param id
-//     * @param args
-//     * @return
-//     */
-//    @NonNull
-//    @Override
-//    public Loader<Boolean> onCreateLoader(int id, @Nullable Bundle args) {
-//        return new FavoriteImageLoader(this, args);
-//    }
-//
-//    /**
-//     * The loader looks to see if movie is a favorite, this will do the needed
-//     * task after those results
-//     *
-//     * @param loader
-//     * @param data
-//     */
-//    @Override
-//    public void onLoadFinished(@NonNull Loader<Boolean> loader, Boolean data) {
-//        // data is the result if move is a favorite or not
-//        if(data)
-//        {
-//            // set bool that will be used for the onclick to favorite or un-favorite a movie
-//            isFavorite = true;
-//            // set image to show it is a favorite
-//            mFavoriteStar.setImageDrawable(getResources().getDrawable(R.drawable.ic_star_black_24dp));
-//        }
-//    }
-//
-//    /**
-//     * @param loader
-//     */
-//    @Override
-//    public void onLoaderReset(@NonNull Loader<Boolean> loader) {
-//        // not needed
-//    }
 }

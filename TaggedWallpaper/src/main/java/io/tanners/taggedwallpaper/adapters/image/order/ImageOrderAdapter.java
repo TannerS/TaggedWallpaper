@@ -48,6 +48,8 @@ public class ImageOrderAdapter extends ImageAdapter<Photo> {
         Photo mItem = mItems.get(position);
         // set up image
         setUpImage(mItem.getUrls().getRegular(), mHolder.image);
+        // set up for accessibility
+        mHolder.image.setContentDescription(mItem.getDescription());
     }
 
     /**

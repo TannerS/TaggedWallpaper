@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,13 +42,13 @@ public class ImageFavoriteAdapter extends ImageAdapter<ImageEntry> {
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Log.i("SHIT", "BIND VIEW HOLDER");
-
         ResultImageViewHolder mHolder = (ResultImageViewHolder) holder;
         // get current list item
         ImageEntry mItem = mItems.get(position);
         // set up image
         setUpImage(mItem.getImageUrl(), mHolder.image);
+        // set up for accessibility
+        mHolder.image.setContentDescription(mItem.getDesc());
     }
 
     /**
