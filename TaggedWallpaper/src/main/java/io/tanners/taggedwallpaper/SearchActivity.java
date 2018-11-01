@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import java.io.UnsupportedEncodingException;
 import io.tanners.taggedwallpaper.fragments.image.search.ImagesSearchFragment;

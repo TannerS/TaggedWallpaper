@@ -3,6 +3,7 @@ package io.tanners.taggedwallpaper.adapters.image.category;
 import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,13 +71,7 @@ public class ImageCategoryAdapter extends ImageAdapter<CategoryItem> {
         public CategoryViewHolder(final Context mContext, View view) {
             super(view);
             // each category gets handled as a search to the next activity
-            view.setOnClickListener(view1 -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                    MainActivity.openIntentForQuery(mContext, title.getText().toString());
-                } else {
-                    MainActivity.openIntentForQuery(mContext, title.getText().toString());
-                }
-            });
+            view.setOnClickListener(v -> MainActivity.openIntentForQuery(mContext, title.getText().toString()));
             // load resources
             this.title = (TextView) view.findViewById(R.id.row_item_text);
             this.image = (ImageView) view.findViewById(R.id.row_image_background);

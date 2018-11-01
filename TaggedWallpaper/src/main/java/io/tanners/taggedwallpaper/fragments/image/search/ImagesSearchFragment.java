@@ -4,10 +4,12 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.dev.tanners.wallpaperresources.callbacks.post.search.OnPostSearch;
@@ -27,6 +29,11 @@ public class ImagesSearchFragment extends ImagesHelperFragment {
         if (getArguments() != null) {
             mQuery = getArguments().getString(TAG);
         }
+        // set view model to update adapter on data changes
+        // runnable to https://stackoverflow.com/questions/39445330/cannot-call-notifyiteminserted-from-recyclerview-onscrolllistener
+        loadViewModelListener(photos -> {
+            mRecyclerView.post(() -> mAdapter.updateAdapter(new ArrayList<Photo>(photos)));
+        });
     }
 
     @Override
@@ -43,18 +50,19 @@ public class ImagesSearchFragment extends ImagesHelperFragment {
 
     protected void loadData() {
         loading = true;
-        mRequester.getSearchPhoto(mQuery, String.valueOf(getViewModel().getSearchImagePageCount()), "5", new OnPostSearch() {
-            @Override
-            public void onPostCall(PhotoSearch mData) {
-                // get view model
-                SearchImageViewModel mViewModel = getViewModel();
-                // set data into view model
-                mViewModel.addData(mData.getResults());
 
-                getViewModel().incrementImageSearchPage();
+        mRequester.getSearchPhoto(mQuery, String.valueOf(getViewModel().getSearchImagePageCount()), "5", mData -> {
+            // get view model
+            SearchImageViewModel mViewModel = getViewModel();
+            // set data into view model
+            mViewModel.addData(mData.getResults());
 
-                loading = false;
-            }
+            Log.i("TANNER_SEARCH", String.valueOf(getViewModel().getSearchImagePageCount()));
+            Log.i("TANNER_SEARCH", mData.getResults().get(0).getId());
+
+            getViewModel().incrementImageSearchPage();
+
+            loading = false;
         });
     }
 

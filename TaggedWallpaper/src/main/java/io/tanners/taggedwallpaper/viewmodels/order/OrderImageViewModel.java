@@ -18,13 +18,6 @@ public class OrderImageViewModel extends ImageViewModel<Photo> {
         allImagePageCount = 1;
     }
 
-// TODO find way to add data without or with live data
-    public void addData(List<Photo> mPhotos) {
-        List<Photo> temp = this.mItems.getValue();
-        temp.addAll(mPhotos);
-        ((MutableLiveData)this.mItems).setValue(temp);
-    }
-
     public int getAllImagePageCount() {
         return allImagePageCount;
     }

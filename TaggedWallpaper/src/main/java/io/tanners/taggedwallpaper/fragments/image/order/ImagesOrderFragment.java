@@ -40,15 +40,15 @@ public abstract class ImagesOrderFragment extends ImagesHelperFragment
 
     protected void loadImageDataByType(ConfigPhotosAll.Order mOrder) {
         loading = true;
+
         mRequester.getPhotos(String.valueOf(((OrderImageViewModel)getViewModel()).getAllImagePageCount()), "5", mOrder, mData -> {
             // check for response data
             if(mData == null)
                 return;
             // get view model
             OrderImageViewModel mViewModel = (OrderImageViewModel) getViewModel();
-            // TODO fix
+
             mViewModel.addData(mData);
-//            mAdapter.updateAdapter(mData);
             // increment for next call
             mViewModel.incrementImagePage();
             // since the data is in a background thread, you need to restore the state in that thread
