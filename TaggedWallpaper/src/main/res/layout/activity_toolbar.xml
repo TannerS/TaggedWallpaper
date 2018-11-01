@@ -8,37 +8,26 @@
     android:elevation="4dp"
     app:elevation="4dp">
 
-    <android.support.design.widget.CollapsingToolbarLayout
-        android:id="@+id/collapsingToolBar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <android.support.v7.widget.Toolbar
         android:layout_gravity="start|top"
-        app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-        app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
-        app:layout_scrollFlags="scroll|exitUntilCollapsed"
-        app:titleEnabled="false">
+        android:id="@+id/universal_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/universal_toolbar"
+        <android.support.design.widget.TabLayout
+            android:id="@+id/universal_tab_layout"
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/universal_tab_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:tabGravity="fill"
-                app:tabMode="fixed"
-                android:layout_gravity="bottom|center"
-                android:scrollbars="horizontal"
-                app:tabTextColor="@android:color/black"
-                app:tabSelectedTextColor="@android:color/holo_blue_light"
-                app:tabIndicatorColor="@android:color/black"
-                app:tabIndicatorHeight="5dp"/>
-
-    </android.support.design.widget.CollapsingToolbarLayout>
+            android:layout_height="wrap_content"
+            app:tabGravity="fill"
+            app:tabMode="fixed"
+            android:layout_gravity="bottom|center"
+            android:scrollbars="horizontal"
+            app:tabTextColor="@android:color/black"
+            app:tabSelectedTextColor="@android:color/holo_blue_light"
+            app:tabIndicatorColor="@android:color/black"
+            app:tabIndicatorHeight="3dp"/>
 
 </android.support.design.widget.AppBarLayout>
 

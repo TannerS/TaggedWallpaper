@@ -67,6 +67,8 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
     implementation "android.arch.persistence.room:runtime:1.1.1"
     annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
+    implementation 'com.google.android.gms:play-services-ads:17.0.0'
+    implementation 'com.google.firebase:firebase-ads:17.0.0'
 
     implementation('com.google.api-client:google-api-client:1.23.0') {
         exclude module: 'guava-jdk5'
@@ -78,7 +80,6 @@ dependencies {
     // json parsing
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.9.5'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.5'
 
@@ -88,7 +89,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
 
     // firebase
-    implementation 'com.google.firebase:firebase-database:16.0.3'
+    implementation 'com.google.firebase:firebase-database:16.0.4'
     implementation 'com.google.firebase:firebase-core:16.0.4'
 
     // other

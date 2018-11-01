@@ -11,6 +11,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import io.dev.tanners.snackbarbuilder.SimpleSnackBarBuilder;
@@ -42,6 +47,7 @@ public class MainActivity extends TabbedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setUpAds();
         setUpToolBar(R.id.universal_toolbar);
         // set up fragment tabs
         setUpTabs(R.id.universal_view_pager, R.id.universal_tab_layout, MAXNUMOFFRAGS);
@@ -50,6 +56,16 @@ public class MainActivity extends TabbedActivity {
         // handle search queries
         // used for start, may not be needed
         handleSearch(getIntent());
+    }
+
+    private void setUpAds()
+    {
+        MobileAds.initialize(this, "ca-app-pub-4262647661282282~2350424539");
+
+        AdView mAdView = (AdView) findViewById(R.id.ad_banner);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     /**

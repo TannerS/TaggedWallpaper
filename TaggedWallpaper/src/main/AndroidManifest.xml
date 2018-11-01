@@ -15,6 +15,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-4262647661282282~2350424539"/>
         <provider
             android:name=".support.providers.SearchSuggestionProvider"
             android:authorities="io.tanners.taggedwallpaper.support.providers.SearchSuggestionProvider" />
