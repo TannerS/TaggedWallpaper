@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import java.io.UnsupportedEncodingException;
 import io.tanners.taggedwallpaper.fragments.image.search.ImagesSearchFragment;
@@ -14,8 +13,8 @@ import io.tanners.taggedwallpaper.support.network.NetworkUtil;
 import io.tanners.taggedwallpaper.support.network.encoder.EncoderUtil;
 
 public class SearchActivity extends SupportActivity implements IGetTag {
-    public final static String TAG = "SEARCH_QUERY";
-    private String tag;
+    public final static String SEARCH_QUERY_INTENT_EXTRA_KEY = "SEARCH_QUERY_INTENT_EXTRA";
+    private String mSearchQuery;
 
     /**
      * @param savedInstanceState
@@ -25,12 +24,12 @@ public class SearchActivity extends SupportActivity implements IGetTag {
         super.onCreate(savedInstanceState);
         // load ui
         setContentView(R.layout.activity_search);
-        // other activities pass tag of category or search query using the intent and passed into class as a tag
-        // to be fair it should only load this with a tag
-        if(getIntent().hasExtra(TAG)) {
+        // other activities pass mSearchQuery of category or search query using the intent and passed into class as a mSearchQuery
+        // to be fair it should only load this with a mSearchQuery
+        if(getIntent().hasExtra(SEARCH_QUERY_INTENT_EXTRA_KEY)) {
             try {
-                tag = getIntent().getStringExtra(TAG);
-                tag = EncoderUtil.encode(tag);
+                mSearchQuery = getIntent().getStringExtra(SEARCH_QUERY_INTENT_EXTRA_KEY);
+                mSearchQuery = EncoderUtil.encode(mSearchQuery);
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -42,7 +41,7 @@ public class SearchActivity extends SupportActivity implements IGetTag {
         // set page to be a child of parent activity, this will show the back arrow to return to back activity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // change title
-        getSupportActionBar().setTitle(tag);
+        getSupportActionBar().setTitle(mSearchQuery);
     }
 
     /**
@@ -58,7 +57,7 @@ public class SearchActivity extends SupportActivity implements IGetTag {
     protected void loadFragments() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        ImagesSearchFragment mFragment = ImagesSearchFragment.newInstance(tag);
+        ImagesSearchFragment mFragment = ImagesSearchFragment.newInstance(mSearchQuery);
         fragmentTransaction.add(R.id.search_fragment_container, mFragment);
         fragmentTransaction.commit();
     }
@@ -81,11 +80,11 @@ public class SearchActivity extends SupportActivity implements IGetTag {
     }
 
     /**
-     * get current tag (search result, clicked category, etc)
+     * get current mSearchQuery (search result, clicked category, etc)
      * @return
      */
     @Override
-    public String getTag() {
-        return this.tag;
+    public String getmSearchQuery() {
+        return this.mSearchQuery;
     }
 }

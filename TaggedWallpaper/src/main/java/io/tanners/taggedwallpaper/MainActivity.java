@@ -9,7 +9,6 @@ import android.provider.SearchRecentSuggestions;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -32,11 +31,10 @@ import io.tanners.taggedwallpaper.support.validation.UrlSearchValidation;
 
 /*
 TODO
+        1) fix loading progress bar for search and default list
         2) gridview col num base on screen size
         3) material design for all screens
-        8) save/restore scroll position (google for guide)
         10) multiple screen sizes
-        11) widgets
 */
 public class MainActivity extends TabbedActivity {
     private final int MAXNUMOFFRAGS = 4;
@@ -273,7 +271,7 @@ public class MainActivity extends TabbedActivity {
     {
         Intent intent = new Intent(context, SearchActivity.class);
         // pass tag (search query) into activity to load results
-        intent.putExtra(SearchActivity.TAG, query);
+        intent.putExtra(SearchActivity.SEARCH_QUERY_INTENT_EXTRA_KEY, query);
         /*
             If set in an Intent passed to Context.startActivity(),
             this flag will cause the launched activity to be brought

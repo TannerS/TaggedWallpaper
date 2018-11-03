@@ -51,9 +51,7 @@ public abstract class ImagesOrderFragment extends ImagesHelperFragment
             mViewModel.addData(mData);
             // increment for next call
             mViewModel.incrementImagePage();
-            // since the data is in a background thread, you need to restore the state in that thread
-            // this was mentioned in here: https://stackoverflow.com/questions/27816217/how-to-save-recyclerviews-scroll-position-using-recyclerview-state
-//            mMovieRecyclerView.getLayoutManager().onRestoreInstanceState(mRecyclerviewLayoutSavedState);
+
             mProgressBar.setVisibility(View.GONE);
 
             loading = false;

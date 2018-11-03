@@ -16,7 +16,7 @@ import io.tanners.taggedwallpaper.adapters.image.ImageAdapter;
 import io.tanners.taggedwallpaper.model.categories.CategoryItem;
 
 /**
- * Class to handle a single array recyclerlist such that we will use this for the image categories
+ * Class to handle a single array recycler list such that we will use this for the image categories
  */
 public class ImageCategoryAdapter extends ImageAdapter<CategoryItem> {
 
@@ -63,7 +63,6 @@ public class ImageCategoryAdapter extends ImageAdapter<CategoryItem> {
     /**
      * recycled views to handle images and text for the images category
      */
-//    public class CategoryViewHolder extends ImageAdapter.ImageViewHolder {
     public class CategoryViewHolder extends RecyclerView.ViewHolder{
         public TextView title;
         public ImageView image;
