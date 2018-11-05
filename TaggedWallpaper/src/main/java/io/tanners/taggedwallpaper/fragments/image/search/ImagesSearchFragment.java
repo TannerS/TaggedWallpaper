@@ -56,12 +56,9 @@ public class ImagesSearchFragment extends ImagesHelperFragment {
             SearchImageViewModel mViewModel = getViewModel();
             // set data into view model
             mViewModel.addData(mData.getResults());
-
-            Log.i("TANNER_SEARCH", String.valueOf(getViewModel().getSearchImagePageCount()));
-            Log.i("TANNER_SEARCH", mData.getResults().get(0).getId());
-
+            // increase for next page
             getViewModel().incrementImageSearchPage();
-
+            // no longer loading new data
             loading = false;
         });
     }

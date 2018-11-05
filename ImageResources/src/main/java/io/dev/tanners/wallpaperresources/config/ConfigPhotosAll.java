@@ -1,5 +1,8 @@
 package io.dev.tanners.wallpaperresources.config;
 
+/**
+ * Configuration for all returned photos
+ */
 public class ConfigPhotosAll extends ConfigBase {
     public enum Order {
         LATEST("latest"),

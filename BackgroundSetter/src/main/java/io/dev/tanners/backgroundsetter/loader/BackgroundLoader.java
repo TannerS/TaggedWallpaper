@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -42,7 +41,7 @@ public class BackgroundLoader extends AsyncTaskLoader<Boolean> {
     }
 
     /**
-     *
+     * When starting to load
      */
     @Override
         protected void onStartLoading() {
@@ -78,7 +77,6 @@ public class BackgroundLoader extends AsyncTaskLoader<Boolean> {
                         mType
                 );
             } catch (IOException e) {
-                Log.i("IMAGE_SET_LOAD_BK", "Error with stream");
                 return false;
             }
         } else {
@@ -88,7 +86,6 @@ public class BackgroundLoader extends AsyncTaskLoader<Boolean> {
                 // set wallpaper
                 WallpaperManager.getInstance(mContext).setBitmap(bitmap);
             } catch (IOException e) {
-                Log.i("IMAGE_SET_LOAD_BK", "Error with stream");
                 return false;
             }
         }
@@ -104,7 +101,7 @@ public class BackgroundLoader extends AsyncTaskLoader<Boolean> {
      */
     private InputStream getNetworkConnection(String strUrl) throws IOException {
         java.net.URL url = null;
-
+        // get url object
         url = new  java.net.URL(strUrl);
         // connect to image url
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();

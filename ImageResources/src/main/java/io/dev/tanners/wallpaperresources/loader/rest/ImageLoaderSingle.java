@@ -32,6 +32,9 @@ public class ImageLoaderSingle extends ImageLoader<String> {
 
             @Override
             public void onLoadFinished(@NonNull Loader<String> loader, String results) {
+                if(results == null || results.length() == 0)
+                    return;
+
                 ObjectMapper objectMapper = new ObjectMapper();
 
                 Photo photo = null;

@@ -128,7 +128,6 @@ public abstract class ImagesFragment<T> extends Fragment implements ErrorCallBac
         mProgressBar = (ProgressBar) view.findViewById(R.id.universal_progressbar);
         mRecyclerViewLayoutManager = new GridLayoutManager(getContext(), 1);
         mRecyclerViewLayoutManager.setSmoothScrollbarEnabled(true);
-        mRecyclerViewLayoutManager.setAutoMeasureEnabled(false);
         mRecyclerView.setLayoutManager(mRecyclerViewLayoutManager);
     }
 

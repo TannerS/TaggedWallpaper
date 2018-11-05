@@ -1,7 +1,9 @@
 package io.dev.tanners.wallpaperresources.config;
 
+/**
+ * Configuration for a single photo by id
+ */
 public class ConfigPhotoById extends ConfigBase {
-//    public static final String GET_PHOTO_BY_ID_METHOD = "photos/:id";
     public static final String GET_PHOTO_BY_ID_METHOD = "photos";
 
     /*

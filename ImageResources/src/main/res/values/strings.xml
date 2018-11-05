@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">WallpaperResources</string>
+    <string name="ERR_EXTERNAL_STORAGE_NOT_WRITABLE">External storage is not writable</string>
+    <string name="ERR_GENERIC_ERROR_HAS_OCCURED">Error has occurred:</string>
+    <string name="ERR_GENERIC_HTTP_ERROR_HAS_OCCURED"><![CDATA[Error has occurred -> HTTP:]]></string>
+    <string name="ERR_CONNECTION_FAILURE_GENERIC">Connection failure</string>
+    <string name="ERR_HTTP_STATUS">HTTP error code:</string>
 </resources>

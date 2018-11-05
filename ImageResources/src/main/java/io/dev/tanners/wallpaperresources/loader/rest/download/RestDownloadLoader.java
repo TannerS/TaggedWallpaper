@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.UUID;
 import io.dev.tanners.connectionrequester.ConnectionRequester;
+import io.dev.tanners.wallpaperresources.R;
 import io.dev.tanners.wallpaperresources.loader.BaseRestLoader;
 import static io.dev.tanners.wallpaperresources.config.ConfigBase.HEADER_AUTH_KEY;
 import static io.dev.tanners.wallpaperresources.config.ConfigBase.HEADER_AUTH_VALUE;
@@ -41,7 +42,7 @@ public class RestDownloadLoader extends BaseRestLoader<RestDownloadLoader.RestDo
         File mFile = null;
 
         if (!isExternalStorageWritable()) {
-            return new RestDownloadLoaderReturn("External storage is not writable", false);
+            return new RestDownloadLoaderReturn(mContext.getString(R.string.ERR_EXTERNAL_STORAGE_NOT_WRITABLE), false);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -66,14 +67,14 @@ public class RestDownloadLoader extends BaseRestLoader<RestDownloadLoader.RestDo
                         mFile = getNewFile(this.getUUID());
                         mRequest.fileDownloader(mFile);
                     } catch (FileNotFoundException e) {
-                        return new RestDownloadLoaderReturn("Error has occurred: " + e.getLocalizedMessage(), false);
+                        return new RestDownloadLoaderReturn(mContext.getString(R.string.ERR_GENERIC_ERROR_HAS_OCCURED) + e.getLocalizedMessage(), false);
                     }
                 }
             } else {
-                return new RestDownloadLoaderReturn("Error has occurred -> HTTP: " + httpStatus, false);
+                return new RestDownloadLoaderReturn(mContext.getString(R.string.ERR_GENERIC_HTTP_ERROR_HAS_OCCURED) + httpStatus, false);
             }
         } catch (IOException e) {
-            return new RestDownloadLoaderReturn("Error has occurred: " + e.getLocalizedMessage(), false);
+            return new RestDownloadLoaderReturn(mContext.getString(R.string.ERR_GENERIC_ERROR_HAS_OCCURED) + e.getLocalizedMessage(), false);
         } finally {
             mRequest.closeConnection();
         }
@@ -119,9 +120,7 @@ public class RestDownloadLoader extends BaseRestLoader<RestDownloadLoader.RestDo
         // Get the directory for the user's public pictures directory.
         File file = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), mAlbumName);
-        if (!file.mkdirs()) {
-            Log.e("STORAGE", "Directory not created");
-        }
+        if (!file.mkdirs()) { }
         return file;
     }
 

@@ -14,6 +14,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Make wrapper class for HttpUrlConnection
+ */
 public class ConnectionRequester {
     // type of connection
     public static enum RequestType {
@@ -53,7 +56,8 @@ public class ConnectionRequester {
     }
 
     /**
-     * set connecton type
+     * Set connection type
+     *
      * @param type
      */
     public ConnectionRequester setRequestType(RequestType type) {
@@ -63,7 +67,8 @@ public class ConnectionRequester {
     }
 
     /**
-     * charste for data
+     * Charset for data
+     *
      * @param charset
      */
     public ConnectionRequester setCharSet(String charset)
@@ -74,7 +79,8 @@ public class ConnectionRequester {
     }
 
     /**
-     * timeout
+     * Set timeout
+     *
      * @param time
      */
     public ConnectionRequester setConnectionTimeOut(int time)
@@ -85,7 +91,8 @@ public class ConnectionRequester {
     }
 
     /**
-     * reading timeout
+     * Read timeout
+     *
      * @param time
      */
     public ConnectionRequester setReadTimeOut(int time)
@@ -96,7 +103,7 @@ public class ConnectionRequester {
     }
 
     /**
-     * add passed in headers to http packet
+     * Add passed in headers to http request
      *
      * @param entries
      */
@@ -115,7 +122,7 @@ public class ConnectionRequester {
     }
 
     /**
-     * add passed in header to http packet
+     * aAd passed in header to http request
      *
      * @param key
      * @param value
@@ -130,7 +137,7 @@ public class ConnectionRequester {
     }
 
     /**
-     * add body
+     * Add post body
      *
      * @param body
      */
@@ -142,7 +149,7 @@ public class ConnectionRequester {
     }
 
     /**
-     * this will set the headers into the connection since the add header methods can be called multiple times
+     * This will set the headers into the connection
      */
     private void setHeaders()
     {
@@ -158,7 +165,7 @@ public class ConnectionRequester {
     }
 
     /**
-     * set body
+     * Set post body
      */
     private void setBody()
     {
@@ -189,7 +196,7 @@ public class ConnectionRequester {
     }
 
     /**
-     * default settings
+     * Default settings
      */
     private void setConfig()
     {
@@ -254,7 +261,7 @@ public class ConnectionRequester {
     }
 
     /**
-     * connect to url
+     * Make connection
      *
      * @return
      */
@@ -268,7 +275,7 @@ public class ConnectionRequester {
     }
 
     /**
-     * close connection
+     * Close connection
      */
     public void closeConnection()
     {

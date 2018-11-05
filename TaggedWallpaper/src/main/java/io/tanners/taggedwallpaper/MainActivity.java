@@ -29,13 +29,6 @@ import io.tanners.taggedwallpaper.fragments.image.order.popular.ImagesPopularFra
 import io.tanners.taggedwallpaper.adapters.fragment.FragmentAdapter;
 import io.tanners.taggedwallpaper.support.validation.UrlSearchValidation;
 
-/*
-TODO
-        1) fix loading progress bar for search and default list
-        2) gridview col num base on screen size
-        3) material design for all screens
-        10) multiple screen sizes
-*/
 public class MainActivity extends TabbedActivity {
     private final int MAXNUMOFFRAGS = 4;
 
@@ -87,9 +80,9 @@ public class MainActivity extends TabbedActivity {
             // no network connection, warn user
         } else {
             SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.app_main),
-                    "No network connection",
+                    getString(R.string.ERR_NO_NETWORK_CONNECTION),
                     Snackbar.LENGTH_INDEFINITE,
-                    "Close");
+                    getString(R.string.SNACKBAR_CLOSE));
         }
     }
 
@@ -225,7 +218,7 @@ public class MainActivity extends TabbedActivity {
 
             try {
                 // check for proper
-                (new UrlSearchValidation()).UrlQueryValidation(query);
+                (new UrlSearchValidation()).UrlQueryValidation(this, query);
                 query = UrlSearchValidation.UrlQueryFormatter(query);
                 query = EncoderUtil.encode(query);
             } catch (UrlSearchValidation.MinLimitException | UrlSearchValidation.MaxLimitException e) {
@@ -234,7 +227,7 @@ public class MainActivity extends TabbedActivity {
                 SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.app_main),
                         e.getMessage(),
                         Snackbar.LENGTH_INDEFINITE,
-                        "Close");
+                        getString(R.string.SNACKBAR_CLOSE));
                 return;
             } catch (UnsupportedEncodingException e){
                 e.printStackTrace();

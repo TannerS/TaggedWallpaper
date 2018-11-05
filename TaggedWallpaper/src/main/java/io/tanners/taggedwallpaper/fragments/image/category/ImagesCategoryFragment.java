@@ -120,7 +120,6 @@ public class ImagesCategoryFragment extends ImagesHelperFragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.e("FIREBASE", "Failed to read value.", databaseError.toException());
                 // display error
                 displayError(databaseError.toException().getMessage());
             }

@@ -1,12 +1,13 @@
 package io.dev.tanners.wallpaperresources.config;
 
-
+/**
+ * Configuration for a photo search
+ */
 public class ConfigPhotoSearch extends ConfigBase {
     public static final String GET_SEARCH_PHOTOS_METHOD_P1 = "search";
     public static final String GET_SEARCH_PHOTOS_METHOD_P2 = "photos";
     // Other queries are page & per_page in base class
     public static final String QUERY_QUERY_KEY = "query";
-    public static final String QUERY_QUERY_VALUE = "";
 
     /*
     {

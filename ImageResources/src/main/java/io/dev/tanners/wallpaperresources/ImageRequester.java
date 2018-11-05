@@ -86,7 +86,7 @@ public class ImageRequester {
                     int responseCode = connection.getResponseCode();
 
                     if (responseCode != HttpsURLConnection.HTTP_OK) {
-                        throw new IOException("HTTP error code: " + responseCode);
+                        throw new IOException(mContext.getString(R.string.ERR_HTTP_STATUS) + responseCode);
                     }
 
                 } catch (IOException e) {

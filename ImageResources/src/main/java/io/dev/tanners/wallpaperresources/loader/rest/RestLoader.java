@@ -13,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import io.dev.tanners.connectionrequester.ConnectionRequester;
+import io.dev.tanners.wallpaperresources.R;
 import io.dev.tanners.wallpaperresources.loader.BaseRestLoader;
 
 import static io.dev.tanners.wallpaperresources.config.ConfigBase.HEADER_AUTH_KEY;
@@ -62,7 +63,7 @@ public class RestLoader extends BaseRestLoader<String> {
 
                     return response;
                 } else {
-                    throw new Exception("Connection failure");
+                    throw new Exception(mContext.getString(R.string.ERR_CONNECTION_FAILURE_GENERIC));
                 }
             }
         } catch (IOException e1) {

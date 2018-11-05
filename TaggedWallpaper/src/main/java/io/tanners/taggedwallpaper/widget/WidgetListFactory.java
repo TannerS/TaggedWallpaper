@@ -55,9 +55,7 @@ public class WidgetListFactory implements RemoteViewsService.RemoteViewsFactory 
         initCategoryListener(new ValueEventListener() {
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("FIREBASE", "Failed to read value.", databaseError.toException());
-            }
+            public void onCancelled(DatabaseError databaseError) { }
 
             // if data changes or is present at start
             @Override

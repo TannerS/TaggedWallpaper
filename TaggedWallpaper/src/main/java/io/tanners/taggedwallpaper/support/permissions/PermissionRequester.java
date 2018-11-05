@@ -48,7 +48,13 @@ public class PermissionRequester {
 
             // request if any non granted permissions
             if (needed_permissions.size() >= 1)
-                ActivityCompat.requestPermissions((Activity) mActivity, needed_permissions.toArray(new String[needed_permissions.size()]), code);
+                ActivityCompat.requestPermissions(
+                        (Activity) mActivity,
+                        needed_permissions.toArray(
+                                new String[needed_permissions.size()]
+                        ),
+                        code
+                );
             // return a bool if any permissions needed
             return needed_permissions.size() == 0;
         }

@@ -29,7 +29,12 @@ public abstract class BackgroundSetter {
      * @param mCallback
      * @throws Exception
      */
-    protected void loadLoader(String mUrl, int id, int type, LoaderManager.LoaderCallbacks<Boolean> mCallback) throws Exception {
+    protected void loadLoader(
+            String mUrl,
+            int id,
+            int type,
+            LoaderManager.LoaderCallbacks<Boolean> mCallback
+    ) throws Exception {
         // bundle for loader
         Bundle mBundle = new Bundle();
 
@@ -42,14 +47,12 @@ public abstract class BackgroundSetter {
             case WALLPAPER:
                 mBundle.putInt(TYPE, type);
                 break;
-            default:
-                throw new Exception("INVALID STATE FOR BACKGROUND LOADER");
         }
 
         LoaderManager mLoaderManager = ((AppCompatActivity) mContext).getSupportLoaderManager();
-
+        // get loader by id
         Loader<Boolean> mBackgroundLoader = mLoaderManager.getLoader(id);
-
+        // load loader
         if (mBackgroundLoader == null) {
             mLoaderManager.initLoader(id, mBundle, mCallback).forceLoad();
         } else {
@@ -57,7 +60,8 @@ public abstract class BackgroundSetter {
         }
     }
 
-    // for each loader must have it's own unique id, this method is over loaded with the child class having the id for its own loader
+    // for each loader must have it's own unique id, this method is over
+    // loaded with the child class having the id for its own loader
     protected abstract int getLoaderId();
 
     public interface BackgroundCallback

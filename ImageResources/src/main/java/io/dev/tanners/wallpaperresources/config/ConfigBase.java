@@ -1,7 +1,8 @@
 package io.dev.tanners.wallpaperresources.config;
 
-import android.net.Uri;
-
+/**
+ * API configuration
+ */
 public class ConfigBase {
     public enum Protocol {
         HTTP("http"),

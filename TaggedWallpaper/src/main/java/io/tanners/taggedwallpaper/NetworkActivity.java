@@ -63,6 +63,6 @@ public class NetworkActivity extends AppCompatActivity {
      * @param isOn
      */
     protected void onNetworkChange(boolean isOn) {
-        throw new IllegalStateException("Needs to be implemented in child class");
+        throw new IllegalStateException(getString(R.string.ERR_ILLEGAL_STATE_NEED_CHIL_IMPLEMENTATION));
     }
 }

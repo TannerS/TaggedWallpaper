@@ -1,7 +1,6 @@
 package io.dev.tanners.backgroundsetter;
 
 import android.content.Context;
-
 import io.dev.tanners.backgroundsetter.setter.BackgroundSetter;
 import io.dev.tanners.backgroundsetter.setter.home.Background;
 import io.dev.tanners.backgroundsetter.setter.lock.LockScreen;

@@ -10,8 +10,6 @@ import android.widget.RemoteViews;
 import io.tanners.taggedwallpaper.R;
 import io.tanners.taggedwallpaper.SearchActivity;
 
-import static io.tanners.taggedwallpaper.SearchActivity.SEARCH_QUERY_INTENT_EXTRA_KEY;
-
 /**
  * Implementation of App Widget functionality.
  */

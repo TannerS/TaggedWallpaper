@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -172,16 +171,16 @@ public class ImageDisplayActivity extends SupportActivity {
             String mMessage = "";
 
             if(results) {
-                mMessage = "Image set.";
+                mMessage = getString(R.string.WALLPAPER_IMAGE_SET_OK);
             } else {
-                mMessage = "Error has occurred, image not set.";
+                mMessage = getString(R.string.ERR_WALLPAPER_IMAGE_SET_FAIL);
             }
 
             final Snackbar mResultMessageSnackBar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_actvity_container),
                     mMessage,
                     Snackbar.LENGTH_INDEFINITE);
 
-            mResultMessageSnackBar.setAction("Close", v -> mResultMessageSnackBar.dismiss());
+            mResultMessageSnackBar.setAction(getString(R.string.SNACKBAR_CLOSE), v -> mResultMessageSnackBar.dismiss());
             // show message
             mResultMessageSnackBar.show();
         };
@@ -195,10 +194,10 @@ public class ImageDisplayActivity extends SupportActivity {
     protected void onNetworkChange(boolean isOn) {
         if(!isOn) {
             final Snackbar mSnackbar = SimpleSnackBarBuilder.createSnackBar(findViewById(R.id.display_actvity_container),
-                    "NO NETWORK CONNECTION, CLOSING...",
+                    getString(R.string.ERR_NO_NETWORK_CONNECTION),
                     Snackbar.LENGTH_INDEFINITE);
 
-            mSnackbar.setAction("Close", (View.OnClickListener) v -> {
+            mSnackbar.setAction(getString(R.string.SNACKBAR_CLOSE), (View.OnClickListener) v -> {
                 // close snackbar
                 mSnackbar.dismiss();
                 // close activity
@@ -267,14 +266,14 @@ public class ImageDisplayActivity extends SupportActivity {
                             // save movie
                             saveCurrentImage();
                             // display message to UI
-                            displayCustomSnackbar("Wallpaper saved", Snackbar.LENGTH_SHORT);
+                            displayCustomSnackbar(getString(R.string.WALLPAPER_SAVED), Snackbar.LENGTH_SHORT);
                         } else {
                             // change icon to show removed image
                             setFavoriteStar(false);
                             // remove movie
                             delCurrentImage();
                             // display message to UI
-                            displayCustomSnackbar("Wallpaper removed", Snackbar.LENGTH_SHORT);
+                            displayCustomSnackbar(getString(R.string.WALLPAPER_REMOVED), Snackbar.LENGTH_SHORT);
                         }
                     }
                 }
@@ -447,7 +446,7 @@ public class ImageDisplayActivity extends SupportActivity {
                     @Override
                     public void onPostCall(RestDownloadLoader.RestDownloadLoaderReturn mData) {
                         if(mData.isGood && mData.mFile != null) {
-                            displayCustomSnackbar("Image downloaded");
+                            displayCustomSnackbar(getString(R.string.IMAGE_DOWNLOADED));
                             callMediaScanner(ImageDisplayActivity.this, mData.mFile);
                         } else if(mData.errorMessage != null) {
                             try {
@@ -493,7 +492,7 @@ public class ImageDisplayActivity extends SupportActivity {
      */
     private String getShareMessage(String mData)
     {
-        return "Please enjoy this wallpaper!: " + mData;
+        return getString(R.string.WALLPAPER_SHARE_MESSAGE) + mData;
     }
 
     /**
@@ -512,7 +511,7 @@ public class ImageDisplayActivity extends SupportActivity {
                 )
         );
         shareIntent.setType("text/plain");
-        startActivity(Intent.createChooser(shareIntent, "Share too..."));
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.GENERIC_SHARE_TO)));
     }
 
     /**
@@ -523,7 +522,7 @@ public class ImageDisplayActivity extends SupportActivity {
         SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.display_actvity_container),
                 mMessage,
                 Snackbar.LENGTH_INDEFINITE,
-                "Close");
+                getString(R.string.SNACKBAR_CLOSE));
     }
 
     /**
@@ -534,6 +533,6 @@ public class ImageDisplayActivity extends SupportActivity {
         SimpleSnackBarBuilder.createAndDisplaySnackBar(findViewById(R.id.display_actvity_container),
                 mMessage,
                 length,
-                "Close");
+                getString(R.string.SNACKBAR_CLOSE));
     }
 }
