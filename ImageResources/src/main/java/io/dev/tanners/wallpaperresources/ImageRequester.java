@@ -17,6 +17,7 @@ import io.dev.tanners.wallpaperresources.loader.rest.ImageLoaderAllPopular;
 import io.dev.tanners.wallpaperresources.loader.rest.ImageLoaderDownloadHotLink;
 import io.dev.tanners.wallpaperresources.loader.rest.ImageLoaderSearch;
 import io.dev.tanners.wallpaperresources.loader.rest.ImageLoaderSingle;
+import io.dev.tanners.wallpaperresources.support.ImageDownloadHotlinkAsync;
 
 public class ImageRequester {
     private Context mContext;
@@ -62,43 +63,15 @@ public class ImageRequester {
      *
      * https://unsplash.com/documentation#track-a-photo-download
      *
-     * This is on a runnable since it is not important if it makes a
-     * successful request or not
+     * This is on a asynctask since we do not care about rotation or etc
+     * for this like we would worry about in normal cases to use a loader
      *
      * @param id
      */
     private void getDownloadPhotoHotLink(String id) {
         Uri.Builder mBuilder = ImageUriBuilder.getPhotoDownloadBuilder(id);
         String mUrl = mBuilder.build().toString();
-
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                HttpsURLConnection connection = null;
-
-                try {
-                    connection = (HttpsURLConnection) (new URL(mUrl)).openConnection();
-                    connection.setReadTimeout(3000);
-                    connection.setConnectTimeout(5000);
-                    connection.setRequestMethod("GET");
-                    connection.setDoInput(false);
-                    connection.connect();
-                    int responseCode = connection.getResponseCode();
-
-                    if (responseCode != HttpsURLConnection.HTTP_OK) {
-                        throw new IOException(mContext.getString(R.string.ERR_HTTP_STATUS) + responseCode);
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (connection != null) {
-                        connection.disconnect();
-                    }
-                }
-            }
-        };
-
-        thread.start();
+        // start async for request
+        new ImageDownloadHotlinkAsync().execute(mUrl);
     }
 }
