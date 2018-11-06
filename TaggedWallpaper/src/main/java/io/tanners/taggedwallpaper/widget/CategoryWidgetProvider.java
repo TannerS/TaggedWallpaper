@@ -69,7 +69,8 @@ public class CategoryWidgetProvider extends AppWidgetProvider {
         );
         // set template
         mRemoteViews.setPendingIntentTemplate(R.id.widget_gridview, searchPendingIntent);
-        // TODO set empty view
+        // set empty view
+        mRemoteViews.setEmptyView(R.id.widget_gridview, R.id.empty_view);
 //        mRemoteViews.setEmptyView(R.id.widget_gridview, R.id.widget_gridview_empty);
         // return views
         return mRemoteViews;

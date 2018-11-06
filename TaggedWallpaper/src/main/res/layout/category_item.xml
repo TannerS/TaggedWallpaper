@@ -12,14 +12,14 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:contentDescription="Category Image"
+            android:contentDescription="@string/content_desc_category_image"
             android:id="@+id/row_image_background"
             android:layout_width="match_parent"
             android:layout_height="150dp">
         </ImageView>
 
         <ImageView
-            android:contentDescription="Wallpaper Title Gradient"
+            android:contentDescription="@string/content_desc_wallpaper_title_gradient"
             android:layout_width="match_parent"
             android:layout_gravity="center"
             android:foregroundGravity="center"
@@ -40,7 +40,6 @@
         </TextView>
 
     </FrameLayout>
-
 
 </android.support.v7.widget.CardView>
 

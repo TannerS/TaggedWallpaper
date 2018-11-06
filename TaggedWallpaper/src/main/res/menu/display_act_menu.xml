@@ -7,7 +7,7 @@
     tools:context="io.tanners.taggedwallpaper.ImageDisplayActivity">
 
     <item
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:icon="@drawable/ic_more_vert_white_48dp"
         android:visible="true"
         android:title="" >
@@ -15,25 +15,24 @@
         <menu>
             <item  android:id="@+id/homescreen_menu_item"
                 android:icon="@drawable/ic_wallpaper_black_48dp"
-                android:title="Set Homescreen"
+                android:title="@string/menu_item_set_homescreen"
                 app:showAsAction="collapseActionView"
                 android:visible="true"/>
             <item  android:id="@+id/lockscreen_menu_item"
                 android:icon="@drawable/ic_stay_primary_portrait_black_48dp"
-                android:title="Set Lockscreen"
+                android:title="@string/menu_item_set_lockscreen"
                 app:showAsAction="never"
                 android:visible="true"/>
             <item  android:id="@+id/download_menu_item"
                 android:icon="@drawable/ic_file_download_black_48dp"
-                android:title="Download"
+                android:title="@string/menu_item_download"
                 app:showAsAction="never"
                 android:visible="true"/>
             <item  android:id="@+id/share_menu_item"
                 android:icon="@drawable/ic_share_black_48dp"
-                android:title="Share"
+                android:title="@string/menu_item_share"
                 app:showAsAction="never"
                 android:visible="true"/>
         </menu>
     </item>
-
 </menu>

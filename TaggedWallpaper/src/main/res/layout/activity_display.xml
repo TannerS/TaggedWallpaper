@@ -44,7 +44,7 @@
             app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
             <ImageView
-                android:contentDescription="Main Wallpaper Image"
+                android:contentDescription="@string/content_desc_main_wallpaper_image"
                 android:id="@+id/main_image"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
@@ -70,7 +70,7 @@
         </FrameLayout>
 
         <ImageView
-            android:contentDescription="User Profile Image"
+            android:contentDescription="@string/content_desc_user_profile_image"
             android:id="@+id/profile_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
@@ -124,7 +124,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
-            android:contentDescription="Favorite This Wallpaper"
+            android:contentDescription="@string/content_desc_favorite_this_wallpaper"
             android:id="@+id/favorite_star"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

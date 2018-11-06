@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.design.widget.FloatingActionButton
-        android:contentDescription="Scroll To Top"
+        android:contentDescription="@string/content_desc_scroll_to_top"
         android:clickable="true"
         android:focusable="true"
         android:id="@+id/list_up_arow_action"

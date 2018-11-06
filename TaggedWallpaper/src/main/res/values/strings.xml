@@ -19,5 +19,19 @@
     <string name="WALLPAPER_SHARE_MESSAGE">Please enjoy this wallpaper!:</string>
     <string name="GENERIC_SHARE_TO">Share too...</string>
     <string name="ERR_ILLEGAL_STATE_NEED_CHIL_IMPLEMENTATION">Needs to be implemented in child class</string>
+    <string name="content_desc_main_wallpaper_image">Main Wallpaper Image</string>
+    <string name="content_desc_user_profile_image">User Profile Image</string>
+    <string name="content_desc_favorite_this_wallpaper">Favorite This Wallpaper</string>
+    <string name="content_desc_category_image">Category Image</string>
+    <string name="content_desc_wallpaper_title_gradient">Wallpaper Title Gradient</string>
+    <string name="content_desc_empty_widget_background_placeholder">Empty widget background placeholder</string>
+    <string name="content_desc_scroll_to_top">Scroll To Top</string>
+    <string name="content_desc_wallpaper_image">Wallpaper Image</string>
+    <string name="menu_item_set_homescreen">Set Homescreen</string>
+    <string name="menu_item_set_lockscreen">Set Lockscreen</string>
+    <string name="menu_item_download">Download</string>
+    <string name="menu_item_share">Share</string>
+    <string name="menu_item_clear_history">Clear History</string>
+    <string name="menu_item_search">Search</string>
 
 </resources>
