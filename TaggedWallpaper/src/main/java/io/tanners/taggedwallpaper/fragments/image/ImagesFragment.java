@@ -3,6 +3,7 @@ package io.tanners.taggedwallpaper.fragments.image;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -10,10 +11,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import java.util.List;
 import io.dev.tanners.snackbarbuilder.SimpleSnackBarBuilder;
 import io.dev.tanners.wallpaperresources.ImageRequester;
@@ -27,13 +28,13 @@ public abstract class ImagesFragment<T> extends Fragment implements ErrorCallBac
     public static final String SCROLL_PLACEMENT = "SCROLL_POSITION";
     protected View view;
     protected RecyclerView mRecyclerView;
-    protected ProgressBar mProgressBar;
     protected GridLayoutManager mRecyclerViewLayoutManager;
     protected boolean loading;
     protected Context mContext;
     protected ImageRequester mRequester;
     protected ImageAdapter mAdapter;
     protected FloatingActionButton mActionButton;
+    protected Parcelable mLayoutManagerSavedState;
 
     /**
      * Saves state of recyclerview position
@@ -47,7 +48,10 @@ public abstract class ImagesFragment<T> extends Fragment implements ErrorCallBac
         super.onSaveInstanceState(outState);
         // save position state
         if(mRecyclerView != null) {
-            outState.putParcelable(SCROLL_PLACEMENT, mRecyclerView.getLayoutManager().onSaveInstanceState());
+            outState.putParcelable(
+                    SCROLL_PLACEMENT,
+                    mRecyclerView.getLayoutManager().onSaveInstanceState()
+            );
         }
     }
 
@@ -61,13 +65,10 @@ public abstract class ImagesFragment<T> extends Fragment implements ErrorCallBac
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+
         if (savedInstanceState != null) {
             // restore position state
-            if(mRecyclerView != null) {
-                mRecyclerView.getLayoutManager().onRestoreInstanceState(
-                        savedInstanceState.getParcelable(SCROLL_PLACEMENT)
-                );
-            }
+            mLayoutManagerSavedState = savedInstanceState.getParcelable(SCROLL_PLACEMENT);
         }
     }
 
@@ -76,6 +77,19 @@ public abstract class ImagesFragment<T> extends Fragment implements ErrorCallBac
     onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         loadRecycler();
+    }
+
+    /**
+     * Must be ran after loading adapter data
+     * Used for rotations and etc
+     */
+    protected void restoreListState()
+    {
+        if(mRecyclerView != null && mLayoutManagerSavedState != null) {
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(
+                    mLayoutManagerSavedState
+            );
+        }
     }
 
     @Override
@@ -125,7 +139,6 @@ public abstract class ImagesFragment<T> extends Fragment implements ErrorCallBac
     protected void loadRecyclerView()
     {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.universal_grideview);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.universal_progressbar);
         mRecyclerViewLayoutManager = new GridLayoutManager(getContext(), 1);
         mRecyclerViewLayoutManager.setSmoothScrollbarEnabled(true);
         mRecyclerView.setLayoutManager(mRecyclerViewLayoutManager);
@@ -155,4 +168,6 @@ public abstract class ImagesFragment<T> extends Fragment implements ErrorCallBac
             }
         });
     }
+
+    protected abstract void loadDataBasedOnPreviousState();
 }

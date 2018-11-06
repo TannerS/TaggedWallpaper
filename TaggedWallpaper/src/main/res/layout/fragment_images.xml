@@ -7,7 +7,7 @@
     android:id="@+id/fragment_images_container">
 
     <include
-        android:id="@+id/include"
+        android:id="@+id/fragment_grid_view_common"
         layout="@layout/fragment_grid_view_common"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,7 +28,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/include"
-        app:layout_constraintEnd_toEndOf="@+id/include" />
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_grid_view_common"
+        app:layout_constraintEnd_toEndOf="@+id/fragment_grid_view_common" />
 
 </android.support.constraint.ConstraintLayout>

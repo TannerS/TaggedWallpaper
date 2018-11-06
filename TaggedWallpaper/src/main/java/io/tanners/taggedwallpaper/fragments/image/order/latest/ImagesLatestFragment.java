@@ -2,9 +2,8 @@ package io.tanners.taggedwallpaper.fragments.image.order.latest;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-
+import java.util.ArrayList;
 import java.util.List;
-
 import io.dev.tanners.wallpaperresources.config.ConfigPhotosAll;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.fragments.image.order.ImagesOrderFragment;
@@ -26,8 +25,21 @@ public class ImagesLatestFragment extends ImagesOrderFragment {
 
     @Override
     protected void loadEntryPointData() {
-        // load init data
-        loadImageDataByType(ConfigPhotosAll.Order.LATEST);
+        loadDataBasedOnPreviousState();
+    }
+
+    @Override
+    protected void loadDataBasedOnPreviousState() {
+        // get data from view model
+        List<Photo> mPhotos = getViewModel().getmItems().getValue();
+        // if viewmdoel has data
+        if(mPhotos != null && mPhotos.size() > 0) {
+            // load it into adapter
+            mAdapter.updateAdapter(new ArrayList<Photo>(mPhotos));
+        } else {
+            // load init data
+            loadImageDataByType(ConfigPhotosAll.Order.LATEST);
+        }
     }
 
     @Override

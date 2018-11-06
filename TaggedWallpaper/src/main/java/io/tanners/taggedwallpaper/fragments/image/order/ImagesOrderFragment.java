@@ -1,25 +1,12 @@
 package io.tanners.taggedwallpaper.fragments.image.order;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import java.util.ArrayList;
-
-import io.dev.tanners.wallpaperresources.ImageRequester;
 import io.dev.tanners.wallpaperresources.config.ConfigPhotosAll;
-//import io.dev.tanners.wallpaperresources.models.photos.photos.Photos;
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.adapters.image.order.ImageOrderAdapter;
-import io.tanners.taggedwallpaper.fragments.image.ImagesFragment;
 import io.tanners.taggedwallpaper.fragments.image.ImagesHelperFragment;
-import io.tanners.taggedwallpaper.support.network.NetworkUtil;
-import io.tanners.taggedwallpaper.viewmodels.ImageViewModel;
 import io.tanners.taggedwallpaper.viewmodels.order.OrderImageViewModel;
 
 public abstract class ImagesOrderFragment extends ImagesHelperFragment
@@ -34,6 +21,8 @@ public abstract class ImagesOrderFragment extends ImagesHelperFragment
         });
         // call proper requested functionality
         loadEntryPointData();
+        // restore cycle state (if needed)
+        restoreListState();
     }
 
     protected abstract void loadEntryPointData();
@@ -51,8 +40,6 @@ public abstract class ImagesOrderFragment extends ImagesHelperFragment
             mViewModel.addData(mData);
             // increment for next call
             mViewModel.incrementImagePage();
-
-            mProgressBar.setVisibility(View.GONE);
 
             loading = false;
         });

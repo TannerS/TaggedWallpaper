@@ -11,11 +11,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import io.dev.tanners.snackbarbuilder.SimpleSnackBarBuilder;
@@ -236,7 +234,7 @@ public class MainActivity extends TabbedActivity {
             // save query into history
             getSearchProvider().saveRecentQuery(query, null);
             // make sure its safe to be put into url for any reason
-            openIntentForQuery(this, query);
+            openIntentForSearchQuery(this, query);
         }
     }
 
@@ -260,7 +258,7 @@ public class MainActivity extends TabbedActivity {
      * @param context
      * @param query
      */
-    public static void openIntentForQuery(Context context, String query)
+    public static void openIntentForSearchQuery(Context context, String query)
     {
         Intent intent = new Intent(context, SearchActivity.class);
         // pass tag (search query) into activity to load results
@@ -270,7 +268,7 @@ public class MainActivity extends TabbedActivity {
             this flag will cause the launched activity to be brought
             to the front of its task's history stack if it is already running.
          */
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         // start intent
         context.startActivity(intent);
     }

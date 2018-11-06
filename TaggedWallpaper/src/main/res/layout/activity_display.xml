@@ -63,7 +63,7 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:gravity="bottom|center_horizontal"
-                android:text="PLACE HOLDER DESC"
+                tools:text="PLACE HOLDER DESC"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_16sdp" />
 
@@ -92,7 +92,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:gravity="start"
-            android:text="PLACE HOLDER NAME"
+            tools:text="PLACE HOLDER NAME"
             android:textColor="@color/white"
             android:textSize="@dimen/_16sdp"
             app:layout_constraintEnd_toStartOf="@+id/favorite_star"
@@ -108,7 +108,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:gravity="start"
-            android:text="PLACE HOLDER_USERNAME"
+            tools:text="PLACE HOLDER_USERNAME"
             android:textColor="@color/white"
             android:textSize="@dimen/_10sdp"
             app:layout_constraintEnd_toStartOf="@+id/favorite_star"

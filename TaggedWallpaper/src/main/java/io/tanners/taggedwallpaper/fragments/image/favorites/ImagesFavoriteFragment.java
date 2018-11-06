@@ -4,8 +4,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 import io.tanners.taggedwallpaper.adapters.favorite.ImageFavoriteAdapter;
@@ -86,5 +84,10 @@ public class ImagesFavoriteFragment extends ImagesFragment<ImageEntry> {
         // attach adapter to list
         mRecyclerView.setAdapter(mAdapter);
 
+    }
+
+    @Override
+    protected void loadDataBasedOnPreviousState() {
+        // not used
     }
 }

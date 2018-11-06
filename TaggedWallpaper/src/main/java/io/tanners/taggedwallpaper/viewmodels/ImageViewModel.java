@@ -21,7 +21,9 @@ public class ImageViewModel<T> extends AndroidViewModel {
     }
 
     public void addData(List<T> mPhotos) {
-        ((MutableLiveData<List<T>>) this.mItems).setValue(mPhotos);
+        List<T> temp = (List<T>) this.mItems.getValue();
+        temp.addAll(mPhotos);
+        ((MutableLiveData<List<T>>) this.mItems).setValue(temp);
     }
 
     public LiveData<List<T>> getmItems() {

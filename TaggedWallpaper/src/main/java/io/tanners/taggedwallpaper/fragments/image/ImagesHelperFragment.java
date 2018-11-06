@@ -3,8 +3,6 @@ package io.tanners.taggedwallpaper.fragments.image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.support.network.NetworkUtil;
 
@@ -38,7 +36,6 @@ public abstract class ImagesHelperFragment extends ImagesFragment<Photo>
                 // and all those results are updated, update the list with next set of results
                 if ((mPastCount + mVisibleCount >= mTotalCount) && !loading) {
                     if(NetworkUtil.isNetworkAvailable(mContext)) {
-                        mProgressBar.setVisibility(View.VISIBLE);
                         loading = true;
                         // call proper requested functionality
                         onScroll();

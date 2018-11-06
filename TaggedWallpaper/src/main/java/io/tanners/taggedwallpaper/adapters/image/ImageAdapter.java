@@ -46,6 +46,7 @@ public abstract class ImageAdapter<T> extends RecyclerView.Adapter<RecyclerView.
      */
     public void updateAdapter(ArrayList<T> mItems) {
         if(mItems != null) {
+            this.mItems.clear();
             this.mItems.addAll(mItems);
 
             notifyDataSetChanged();

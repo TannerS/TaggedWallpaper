@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import java.io.UnsupportedEncodingException;
 import io.tanners.taggedwallpaper.fragments.image.search.ImagesSearchFragment;
 import io.tanners.taggedwallpaper.interfaces. IGetTag;
-import io.tanners.taggedwallpaper.support.network.NetworkUtil;
 import io.tanners.taggedwallpaper.support.network.encoder.EncoderUtil;
 
 public class SearchActivity extends SupportActivity implements IGetTag {
@@ -35,9 +34,7 @@ public class SearchActivity extends SupportActivity implements IGetTag {
             }
         }
         setUpToolBar(R.id.universal_toolbar);
-        // check for network and/or load fragments
-        onNetworkChange(NetworkUtil.isNetworkAvailable(this));
-        loadFragments();
+        loadFragments(savedInstanceState);
         // set page to be a child of parent activity, this will show the back arrow to return to back activity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // change title
@@ -54,12 +51,21 @@ public class SearchActivity extends SupportActivity implements IGetTag {
         // not used right now
     }
 
-    protected void loadFragments() {
+    protected void loadFragments(Bundle savedInstanceState) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        ImagesSearchFragment mFragment = ImagesSearchFragment.newInstance(mSearchQuery);
-        fragmentTransaction.add(R.id.search_fragment_container, mFragment);
-        fragmentTransaction.commit();
+        ImagesSearchFragment mFragment = null;
+
+        if (savedInstanceState == null) {
+            mFragment = ImagesSearchFragment.newInstance(mSearchQuery);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.search_fragment_container, mFragment, ImagesSearchFragment.FRAGMENT_TAG);
+            fragmentTransaction.commit();
+        } else {
+            mFragment = (ImagesSearchFragment) getSupportFragmentManager().findFragmentByTag(ImagesSearchFragment.FRAGMENT_TAG);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.search_fragment_container, mFragment);
+            fragmentTransaction.commit();
+        }
     }
 
     /**

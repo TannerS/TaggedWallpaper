@@ -3,7 +3,6 @@ package io.tanners.taggedwallpaper.fragments.image.category;
 import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
 import io.dev.tanners.wallpaperresources.models.photos.photo.Photo;
 import io.tanners.taggedwallpaper.adapters.image.category.ImageCategoryAdapter;
-import io.tanners.taggedwallpaper.adapters.image.order.ImageOrderAdapter;
-import io.tanners.taggedwallpaper.fragments.image.ImagesFragment;
 import io.tanners.taggedwallpaper.fragments.image.ImagesHelperFragment;
 import io.tanners.taggedwallpaper.model.categories.CategoryItem;
 import io.tanners.taggedwallpaper.viewmodels.ImageViewModel;
@@ -97,6 +93,11 @@ public class ImagesCategoryFragment extends ImagesHelperFragment {
     protected ImageViewModel getViewModel() {
         // not needed
         return null;
+    }
+
+    @Override
+    protected void loadDataBasedOnPreviousState() {
+        // not used
     }
 
     /**
