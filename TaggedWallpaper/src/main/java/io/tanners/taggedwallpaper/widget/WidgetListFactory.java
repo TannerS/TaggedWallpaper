@@ -78,7 +78,7 @@ public class WidgetListFactory implements RemoteViewsService.RemoteViewsFactory 
 
                 AppWidgetManager.getInstance(mContext).notifyAppWidgetViewDataChanged(
                         mWidgetId,
-                        R.layout.category_widget
+                        R.id.widget_gridview
                 );
             }
         });

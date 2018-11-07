@@ -44,6 +44,7 @@
             app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
             <ImageView
+                android:transitionName="@string/main_activity_to_details_main_image_transition"
                 android:contentDescription="@string/content_desc_main_wallpaper_image"
                 android:id="@+id/main_image"
                 android:layout_width="match_parent"

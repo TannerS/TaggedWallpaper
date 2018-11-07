@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_activity_to_details_main_image_transition">main_image_follow</string>
+</resources>

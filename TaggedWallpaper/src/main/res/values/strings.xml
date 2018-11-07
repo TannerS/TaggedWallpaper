@@ -33,5 +33,6 @@
     <string name="menu_item_share">Share</string>
     <string name="menu_item_clear_history">Clear History</string>
     <string name="menu_item_search">Search</string>
+    <string name="main_activity_to_details_main_image_transition">main_image_follow</string>
 
 </resources>

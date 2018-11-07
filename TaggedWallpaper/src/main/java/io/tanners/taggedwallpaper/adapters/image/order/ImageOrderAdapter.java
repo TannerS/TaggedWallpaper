@@ -1,7 +1,10 @@
 package io.tanners.taggedwallpaper.adapters.image.order;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -60,7 +63,7 @@ public class ImageOrderAdapter extends ImageAdapter<Photo> {
     @NonNull
     @Override
     public ResultImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_grid_item, parent, false);
         return new ResultImageViewHolder(mContext, view);
     }
 
@@ -85,9 +88,20 @@ public class ImageOrderAdapter extends ImageAdapter<Photo> {
                 Intent intent = new Intent(mContext, ImageDisplayActivity.class);
                 intent.putExtra(ImageDisplayActivity.PHOTO_ITEM_ENTRY_POINT, (Parcelable) result);
 
-                mContext.startActivity(intent);
+                Bundle mTransitionBundle = getTransitionBundle(image);
+
+                mContext.startActivity(intent, mTransitionBundle);
             });
         }
+    }
+
+    protected Bundle getTransitionBundle(View mView)
+    {
+        return ActivityOptions.makeSceneTransitionAnimation(
+                (Activity) mContext,
+                mView,
+                mView.getTransitionName()
+        ).toBundle();
     }
 }
 

@@ -8,6 +8,7 @@
     style="@style/GridViewItem">
 
     <ImageView
+        android:transitionName="@string/main_activity_to_details_main_image_transition"
         android:background="@color/black"
         android:contentDescription="@string/content_desc_wallpaper_image"
         android:id="@+id/image_background"

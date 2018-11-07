@@ -59,7 +59,7 @@ public class ImageFavoriteAdapter extends ImageAdapter<ImageEntry> {
     @NonNull
     @Override
     public ResultImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_grid_item, parent, false);
         return new ResultImageViewHolder(mContext, view);
     }
 
